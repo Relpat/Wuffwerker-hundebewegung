@@ -67,6 +67,6 @@ test('animated outline stays closed and finite with no separated limb meshes',()
 });
 
 test('switching torso movement off preserves the previous fixed-body contour',()=>{
- const moving=contourAt(poseAt('trot',.2,{bodyMotion:false}));
+ const moving=contourAt(poseAt('trot',.2,{bodyMotion:false,headMotion:false,tailMotion:false}));
  for(let i=0;i<=14;i++)assert.deepEqual(moving[i],CONTOUR[i]);
 });
