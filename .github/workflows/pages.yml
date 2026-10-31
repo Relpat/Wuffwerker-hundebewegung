@@ -1,4 +1,4 @@
-name: Publish static pose to GitHub Pages
+name: Publish current main to GitHub Pages
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout preview branch
+      - name: Checkout current main
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -40,6 +40,13 @@ jobs:
         run: npm run build
         env:
           GITHUB_PAGES: 'true'
+
+      - name: Include unchanged historical demos for comparison
+        run: |
+          mkdir -p dist/versions
+          cp reference/v6.6/Wuffwerker-PixiJS-Rutenhaltung-v6.6.html dist/versions/v6.6.html
+          cp reference/v7.5.1/Wuffwerker-Rumpf-v7.5.1-Biomechanik.html dist/versions/v7.5.1.html
+          cp reference/v8.0.3/Wuffwerker-Kopf-Natuerliche-Haltung-v8.0.3.html dist/versions/v8.0.3.html
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
