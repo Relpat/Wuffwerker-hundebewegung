@@ -3,7 +3,7 @@ name: Publish static pose to GitHub Pages
 on:
   push:
     branches:
-      - feature/statische-grundpose
+      - main
   workflow_dispatch:
 
 permissions:
