@@ -3,10 +3,10 @@
  * the original four-leg gait system or production skinning.
  */
 import { JOINTS } from '../skeleton/stand.js';
+import { torsoAt, torsoDelta } from './body.js';
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const smooth = x => { const t = clamp(x, 0, 1); return t*t*(3 - 2*t); };
-const point = name => ({ x: JOINTS[name][0], y: JOINTS[name][1] });
 
 export const GAITS = Object.freeze({
   stand: { label: 'Stand', period: 1, stride: 0, stance: 1, lift: 0, hind: 0, front: 0 },
@@ -45,19 +45,29 @@ export function pawPath(time, gait, offset) {
   return { x: -reach + 2*reach*smooth(u), y: -gait.lift*Math.sin(Math.PI*u), support: false };
 }
 
-export function poseAt(mode = 'stand', time = 0) {
+export function poseAt(mode = 'stand', time = 0, { bodyMotion = true } = {}) {
   const gait = GAITS[mode];
   if (!gait) throw new Error(`Unknown gait: ${mode}`);
   const joints = Object.fromEntries(Object.entries(JOINTS).map(([key, xy]) => [key, { x: xy[0], y: xy[1] }]));
-  if (mode === 'stand') return { mode, time, joints, support: { front: true, hind: true }, targetError: 0 };
+  const body = torsoAt(mode, time, gait.period, bodyMotion);
+  if (mode === 'stand') return { mode, time, joints, body, support: { front: true, hind: true }, targetError: 0 };
+
+  // Root landmarks and their attached neck/head/tail move in one continuous field.
+  // Distal limb joints below are then solved against paw targets on the floor.
+  for (const [name, p] of Object.entries(joints)) {
+    if (['elbow', 'carpus', 'frontPaw', 'stifle', 'hock', 'hindPaw'].includes(name)) continue;
+    const d = torsoDelta(p.x, p.y, body);
+    p.x += d.x;
+    p.y += d.y;
+  }
 
   const fp = pawPath(time, gait, gait.front);
   const hp = pawPath(time, gait, gait.hind);
   const requestedFront = { x: JOINTS.frontPaw[0] + fp.x, y: JOINTS.frontPaw[1] + fp.y };
   // The rear foot is linked to the hock by a fixed metatarsal offset (v7.5.1).
   const requestedHock = { x: JOINTS.hock[0] + hp.x, y: JOINTS.hock[1] + hp.y };
-  const front = solveLeg(point('shoulder'), requestedFront, 80, 94, +1);
-  const hind = solveLeg(point('hip'), requestedHock, 77, 70, -1);
+  const front = solveLeg(joints.shoulder, requestedFront, 80, 94, +1);
+  const hind = solveLeg(joints.hip, requestedHock, 77, 70, -1);
   joints.elbow = front.knee;
   joints.frontPaw = front.foot;
   joints.carpus = { x: front.knee.x + (front.foot.x-front.knee.x)*.79,
@@ -65,6 +75,6 @@ export function poseAt(mode = 'stand', time = 0) {
   joints.stifle = hind.knee;
   joints.hock = hind.foot;
   joints.hindPaw = { x: hind.foot.x + 17, y: hind.foot.y + 48 };
-  return { mode, time, joints, support: { front: fp.support, hind: hp.support },
+  return { mode, time, joints, body, support: { front: fp.support, hind: hp.support },
     targetError: Math.max(front.error, hind.error) };
 }
