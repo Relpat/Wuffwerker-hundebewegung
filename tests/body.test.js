@@ -5,6 +5,8 @@ import { GAITS, poseAt } from '../src/animation/gaits.js';
 import { CONTOUR, sampleContour } from '../src/geometry/contour.js';
 import { contourAt } from '../src/geometry/animated-contour.js';
 import { JOINTS } from '../src/skeleton/stand.js';
+import {headDelta} from '../src/animation/head.js';
+import {tailDelta} from '../src/animation/tail.js';
 
 const modes = Object.keys(GAITS).filter(mode => mode !== 'stand');
 const dist = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
@@ -40,7 +42,9 @@ test('pelvis/withers/spine are linked to the same deformation field used by the 
       const pose=poseAt(mode,i*gait.period/32);
       for(const key of ['pelvis','withers','spine','neckBase','tailRoot']){
         const original=standJoint(key), delta=torsoDelta(original.x,original.y,pose.body);
-        assert.ok(dist(pose.joints[key],{x:original.x+delta.x,y:original.y+delta.y})<1e-8,`${mode} ${key}`);
+        const h=headDelta(original.x,original.y,pose.head);
+        const t=key==='tailRoot'?tailDelta(original.x,pose.tail):{x:0,y:0};
+        assert.ok(dist(pose.joints[key],{x:original.x+delta.x+h.x+t.x,y:original.y+delta.y+h.y+t.y})<1e-8,`${mode} ${key}`);
       }
       moved ||= Math.abs(pose.joints.spine.y-JOINTS.spine[1])>2;
     }
@@ -65,7 +69,7 @@ test('feet remain on their ground targets in stance while shoulder/hip move',()=
 });
 
 test('turning body motion off restores static torso without removing leg cycles',()=>{
-  const pose=poseAt('run',.17,{bodyMotion:false});
+  const pose=poseAt('run',.17,{bodyMotion:false,headMotion:false,tailMotion:false});
   for(const key of ['hip','shoulder','spine','pelvis','neckBase','occiput'])
     assert.deepEqual(pose.joints[key],standJoint(key));
   assert.deepEqual(contourAt(pose).slice(0,15),CONTOUR.slice(0,15));
