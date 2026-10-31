@@ -4,6 +4,8 @@
  */
 import { JOINTS } from '../skeleton/stand.js';
 import { torsoAt, torsoDelta } from './body.js';
+import { headAt, headDelta } from './head.js';
+import { tailAt, tailDelta } from './tail.js';
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const smooth = x => { const t = clamp(x, 0, 1); return t*t*(3 - 2*t); };
@@ -45,20 +47,31 @@ export function pawPath(time, gait, offset) {
   return { x: -reach + 2*reach*smooth(u), y: -gait.lift*Math.sin(Math.PI*u), support: false };
 }
 
-export function poseAt(mode = 'stand', time = 0, { bodyMotion = true } = {}) {
+export function poseAt(mode = 'stand', time = 0, { bodyMotion = true, headMotion = true, tailMotion = true, tailExpression = 'auto' } = {}) {
   const gait = GAITS[mode];
   if (!gait) throw new Error(`Unknown gait: ${mode}`);
   const joints = Object.fromEntries(Object.entries(JOINTS).map(([key, xy]) => [key, { x: xy[0], y: xy[1] }]));
   const body = torsoAt(mode, time, gait.period, bodyMotion);
-  if (mode === 'stand') return { mode, time, joints, body, support: { front: true, hind: true }, targetError: 0 };
+  const head = headAt(mode, time, gait.period, body, headMotion);
+  const tail = tailAt(mode, time, {enabled:tailMotion, expression:tailExpression});
+  if (mode === 'stand') {
+    if (tail.enabled) {
+      for (const key of ['tailTip','tailRoot']) {
+        const p=joints[key],d=tailDelta(p.x,tail);p.x+=d.x;p.y+=d.y;
+      }
+    }
+    return { mode, time, joints, body, head, tail, support: { front: true, hind: true }, targetError: 0 };
+  }
 
   // Root landmarks and their attached neck/head/tail move in one continuous field.
   // Distal limb joints below are then solved against paw targets on the floor.
   for (const [name, p] of Object.entries(joints)) {
     if (['elbow', 'carpus', 'frontPaw', 'stifle', 'hock', 'hindPaw'].includes(name)) continue;
     const d = torsoDelta(p.x, p.y, body);
-    p.x += d.x;
-    p.y += d.y;
+    const h=headDelta(p.x,p.y,head);
+    const t=(name==='tailTip'||name==='tailRoot')?tailDelta(p.x,tail):{x:0,y:0};
+    p.x += d.x+h.x+t.x;
+    p.y += d.y+h.y+t.y;
   }
 
   const fp = pawPath(time, gait, gait.front);
@@ -75,6 +88,6 @@ export function poseAt(mode = 'stand', time = 0, { bodyMotion = true } = {}) {
   joints.stifle = hind.knee;
   joints.hock = hind.foot;
   joints.hindPaw = { x: hind.foot.x + 17, y: hind.foot.y + 48 };
-  return { mode, time, joints, body, support: { front: fp.support, hind: hp.support },
+  return { mode, time, joints, body, head, tail, support: { front: fp.support, hind: hp.support },
     targetError: Math.max(front.error, hind.error) };
 }
