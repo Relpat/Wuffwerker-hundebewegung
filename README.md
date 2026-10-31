@@ -24,3 +24,15 @@ npm run dev
 ```
 
 Danach die lokale Vite-Adresse im Browser öffnen. Die alten HTML-Demos bleiben unter `reference/` erhalten. Spätere IK-/Skinning-Arbeit beginnt erst nach visueller Bestätigung der statischen Silhouette.
+
+## GitHub Pages Vorschau
+
+Der [Pages-Workflow](.github/workflows/pages.yml) veröffentlicht **nur** den Branch `feature/statische-grundpose`. Die nicht abgenommene Silhouette bleibt außerhalb von `main`.
+
+Einmalige Aktivierung in den [Repository-Einstellungen](https://github.com/Relpat/Wuffwerker-hundebewegung/settings/pages): **Build and deployment → Source → GitHub Actions** auswählen. Falls der erste Workflow wegen fehlender Pages-Aktivierung fehlschlägt, den fehlgeschlagenen Lauf unter **Actions → Publish static pose to GitHub Pages** mit **Re-run all jobs** wiederholen.
+
+Nach erfolgreichem Deploy ist die Vorschau unter
+https://relpat.github.io/Wuffwerker-hundebewegung/
+erreichbar. Bis zu einem erfolgreichen Workflow-Lauf ist das eine vorgesehene, **nicht bestätigte** URL.
+
+Bei jedem Push auf den Entwicklungsbranch wird die Seite erneut gebaut. `npm test` muss erfolgreich sein, bevor ein Deployment erfolgt.
