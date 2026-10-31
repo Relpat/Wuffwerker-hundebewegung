@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wuffwerker – Statische Grundpose</title>
+  <title>Wuffwerker – Rumpf & Wirbelsäule</title>
 </head>
 <body>
   <main>
-    <header class="header"><div class="wordmark">wuffwerker<span>.</span></div><div>Werkstatt · Neustart 01</div></header>
-    <p class="kicker">01 · Anatomische Basis</p>
-    <h1>Ein Hund. Eine Kontur.</h1>
-    <p class="lead">Seitenansicht zum Vergleich der Standpose mit ersten Geh- und Laufzyklen. Die gesamte äußere Silhouette ist ein geschlossener Pfad statt übereinandergelegter Körperteile.</p>
+    <header class="header"><div class="wordmark">wuffwerker<span>.</span></div><div>Werkstatt · Neustart 03</div></header>
+    <p class="kicker">03 · Gekoppelte Körperbewegung</p>
+    <h1>Ein Hund. Eine Bewegung.</h1>
+    <p class="lead">Rumpf, Becken, Schulter und Wirbelsäule bewegen sich jetzt gemeinsam mit den Beinen. Der Schalter »Rumpfbewegung« zeigt den Unterschied direkt.</p>
     <nav class="versions" aria-label="Versionsvergleich">
       <strong>Versionen</strong>
       <span aria-current="page" class="version-current">Aktuell · main</span>
@@ -31,16 +31,17 @@
         <label for="speed">Tempo <input id="speed" type="range" min="0.5" max="1.75" step="0.05" value="1" /> <output id="speed-output">1,00 ×</output></label>
       </div>
     </section>
-    <section class="panel" aria-label="Hundesilhouette in Standpose">
-      <div class="panel-header"><span>STANDPOSE · SEITENANSICHT</span><span id="renderer-status" role="status">PixiJS wird initialisiert …</span></div>
+    <section class="panel" aria-label="Animierte Hundesilhouette in Seitenansicht">
+      <div class="panel-header"><span>BEWEGUNGSSTUDIE · SEITENANSICHT</span><span id="renderer-status" role="status">PixiJS wird initialisiert …</span></div>
       <div id="stage" role="img" aria-label="Einfarbige Hundesilhouette, von links nach rechts ausgerichtet"></div>
       <div class="controls">
+        <label for="body-toggle"><input id="body-toggle" type="checkbox" checked /> Rumpfbewegung</label>
         <label for="skeleton-toggle"><input id="skeleton-toggle" type="checkbox" /> Anatomische Gelenkpunkte anzeigen</label>
-        <p class="note">Markierungen sind nur Kontrollpunkte. Sie deformieren die Kontur noch nicht.</p>
+        <p class="note">Gelenkmarkierungen zeigen die gekoppelten Ansatzpunkte; die Kontur bleibt ein zusammenhängender Pfad.</p>
       </div>
     </section>
     <p class="motion-note" id="gait-hint">Bewegungsprobe wird gestartet.</p>
-    <div class="disclaimer"><strong>Stand der Umsetzung:</strong> Kopf, Hals, Rumpf, die sichtbaren Seitenbeine und eine neutrale Rute bilden einen einzigen geschlossenen Umriss. Die sichtbaren Beine bewegen sich mit vorläufiger Zweiknochen-IK und kontinuierlicher Konturdeformation. Die verdeckten Beine, das vollständige Vierbein-Rig, gewichtetes Skinning und Fell/Texturen fehlen noch. Die freigegebene Rutenlogik v6.6 bleibt als Referenz unberührt.</div>
+    <div class="disclaimer"><strong>Stand der Umsetzung:</strong> Kopf, Hals, Rumpf, die sichtbaren Seitenbeine und eine neutrale Rute bilden einen einzigen geschlossenen Umriss. Rumpf, Schulter, Hüfte und Wirbelsäule folgen jetzt den Gangphasen; die sichtbaren Beine reagieren mit vorläufiger Zweiknochen-IK. Der Schalter erlaubt den direkten Vergleich. Die verdeckten Beine, das vollständige Vierbein-Rig, gewichtetes Skinning und Fell/Texturen fehlen noch. Die freigegebene Rutenlogik v6.6 bleibt als Referenz unberührt.</div>
   </main>
   <script type="module" src="/src/main.js"></script>
 </body>

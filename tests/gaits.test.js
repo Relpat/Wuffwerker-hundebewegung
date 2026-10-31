@@ -66,7 +66,7 @@ test('animated outline stays closed and finite with no separated limb meshes',()
  }
 });
 
-test('motion does not change cranial contour or neck coordinates',()=>{
- const moving=contourAt(poseAt('trot',.2));
+test('switching torso movement off preserves the previous fixed-body contour',()=>{
+ const moving=contourAt(poseAt('trot',.2,{bodyMotion:false}));
  for(let i=0;i<=14;i++)assert.deepEqual(moving[i],CONTOUR[i]);
 });
