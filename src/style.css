@@ -20,3 +20,9 @@ input { accent-color: #26334a; width: 17px; height: 17px; }
 .disclaimer { border-top: 1px solid #e2dbd0; margin-top: 25px; padding-top: 20px; color: #66717e; line-height: 1.65; font-size: 13px; }
 .disclaimer strong { color: #26334a; }
 @media (max-width: 650px) { main { padding: 15px 12px 35px; } .kicker { margin-top: 30px; } .panel { padding: 9px; } #stage { aspect-ratio: 960 / 650; } }
+
+.versions { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin: 0 0 22px; font-size: 12px; }
+.versions strong { margin-right: 4px; }
+.versions a, .version-current { display: inline-flex; padding: 7px 11px; border-radius: 20px; border: 1px solid #dad2c7; text-decoration: none; color: #26334a; font-weight: 750; }
+.versions a:hover, .versions a:focus-visible { border-color: #bf452c; color: #bf452c; }
+.version-current { background: #dceb81; border-color: #cadb67; }
