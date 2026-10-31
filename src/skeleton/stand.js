@@ -1,4 +1,4 @@
-/** Landmarks in the contour's neutral bind space. Static inspection only.
+/** Landmarks in the contour's neutral bind space. Static pose and four-leg gait guides.
  * Connections are anatomical guides, not a working IK rig or skinned bones.
  */
 export const JOINTS = Object.freeze({
@@ -16,4 +16,18 @@ export const BONES = Object.freeze([
   ['withers', 'neckBase'], ['neckBase', 'occiput'], ['occiput', 'jaw'],
   ['pelvis', 'hip'], ['hip', 'stifle'], ['stifle', 'hock'], ['hock', 'hindPaw'],
   ['withers', 'shoulder'], ['shoulder', 'elbow'], ['elbow', 'carpus'], ['carpus', 'frontPaw'],
+]);
+
+/** Far-side appendages are deeper in the image; only their unoccluded parts
+ * are drawn behind the united near-side silhouette. These points are guides,
+ * not four separate torso outlines or a weighted skinning mesh.
+ * Offsets make the hind/far and front/far feet distinguishable in side view.
+ */
+export const FAR_BIND = Object.freeze({
+  farHip: [298,317], farStifle: [345,368], farHock: [348,424], farHindPaw: [365,472],
+  farShoulder: [606,314], farElbow: [595,394], farCarpus: [590,456], farFrontPaw: [590,474],
+});
+export const FAR_BONES = Object.freeze([
+  ['pelvis','farHip'],['farHip','farStifle'],['farStifle','farHock'],['farHock','farHindPaw'],
+  ['withers','farShoulder'],['farShoulder','farElbow'],['farElbow','farCarpus'],['farCarpus','farFrontPaw'],
 ]);
