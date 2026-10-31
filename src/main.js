@@ -1,37 +1,72 @@
 import { Application } from 'pixi.js';
 import { createScene } from './render/scene.js';
+import { GAITS, poseAt } from './animation/gaits.js';
 import './style.css';
 
-const stage = document.querySelector('#stage');
-const status = document.querySelector('#renderer-status');
-const toggle = document.querySelector('#skeleton-toggle');
+const stage=document.querySelector('#stage');
+const status=document.querySelector('#renderer-status');
+const toggle=document.querySelector('#skeleton-toggle');
+const gaitButtons=[...document.querySelectorAll('[data-gait]')];
+const pauseButton=document.querySelector('#pause');
+const speed=document.querySelector('#speed');
+const speedOutput=document.querySelector('#speed-output');
+const hint=document.querySelector('#gait-hint');
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let mode=reducedMotion?'stand':'walk';
+let paused=false;
+let playTime=0;
 
 async function start() {
-  const app = new Application();
-  await app.init({ width: stage.clientWidth, height: stage.clientHeight, autoStart: false,
-    backgroundAlpha: 0, antialias: true,
-    autoDensity: true, resolution: Math.min(devicePixelRatio || 1, 2), preference: 'webgl' });
+  const app=new Application();
+  await app.init({width:stage.clientWidth,height:stage.clientHeight,autoStart:false,
+    backgroundAlpha:0,antialias:true,autoDensity:true,
+    resolution:Math.min(devicePixelRatio||1,2),preference:'webgl'});
   stage.appendChild(app.canvas);
-  const scene = createScene();
+  const scene=createScene();
   app.stage.addChild(scene.root);
-  const redraw = () => { scene.fit(app.screen.width, app.screen.height); app.render(); };
-  toggle.addEventListener('change', () => {
-    scene.skeleton.visible = toggle.checked;
-    app.render();
-  });
-  // Static pose: no animation loop. Render only on resize or a control change.
-  const resizeObserver = new ResizeObserver(() => {
-    app.renderer.resize(stage.clientWidth, stage.clientHeight);
-    redraw();
+  const draw=()=>{scene.setPose(poseAt(mode,playTime));app.render();};
+  const resizeObserver=new ResizeObserver(()=>{
+    app.renderer.resize(stage.clientWidth,stage.clientHeight);
+    scene.fit(app.screen.width,app.screen.height);
+    draw();
   });
   resizeObserver.observe(stage);
-  redraw();
-  status.textContent = 'PixiJS 8 · statische Bind-Pose';
-  document.documentElement.dataset.ready = 'true';
-  window.addEventListener('pagehide', () => { resizeObserver.disconnect(); app.destroy(true); }, { once: true });
+  scene.fit(app.screen.width,app.screen.height);
+  const syncControls=()=>{
+    gaitButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.gait===mode)));
+    pauseButton.textContent=paused?'Weiter':'Pause';
+    pauseButton.disabled=mode==='stand';
+    speedOutput.textContent=`${Number(speed.value).toFixed(2).replace('.',',')} ×`;
+    hint.textContent=mode==='stand'?'Statische anatomische Vergleichspose.':
+      `${GAITS[mode].label}: vorläufige zweibeinige Bewegungsprobe, noch kein Vierbein-Skinning.`;
+  };
+  gaitButtons.forEach(button=>button.addEventListener('click',()=>{
+    mode=button.dataset.gait;
+    playTime=0;
+    paused=false;
+    syncControls();
+    draw();
+  }));
+  pauseButton.addEventListener('click',()=>{paused=!paused;syncControls();});
+  speed.addEventListener('input',syncControls);
+  toggle.addEventListener('change',()=>{scene.skeleton.visible=toggle.checked;draw();});
+  let last=0,raf=0;
+  const tick=(now)=>{
+    const delta=last?Math.min((now-last)/1000,.05):0;
+    last=now;
+    if(!paused && mode!=='stand'){
+      playTime+=delta*Number(speed.value);
+      draw();
+    }
+    raf=requestAnimationFrame(tick);
+  };
+  syncControls(); draw();
+  raf=requestAnimationFrame(tick);
+  status.textContent='PixiJS 8 · bewegliche Kontur';
+  document.documentElement.dataset.ready='true';
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);resizeObserver.disconnect();app.destroy(true);},{once:true});
 }
-
-start().catch(error => {
-  console.error('PixiJS initialization failed', error);
-  status.textContent = 'PixiJS konnte nicht gestartet werden. Konsole prüfen.';
+start().catch(error=>{
+  console.error('PixiJS initialization failed',error);
+  status.textContent='PixiJS konnte nicht gestartet werden. Konsole prüfen.';
 });
