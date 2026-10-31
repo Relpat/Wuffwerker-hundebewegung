@@ -48,3 +48,9 @@ In `main` folgt jetzt auch der Rumpf den Gangphasen. Becken/Hüfte und Schulter/
 Der Schalter **Rumpfbewegung** ermöglicht einen Vorher-Nachher-Vergleich ohne Änderung der Gangart. Die Standpose bleibt unverändert. Kopf/Hals und neutrale Rute werden nur passiv mitgeführt, nicht separat animiert. Das ist **noch kein echtes gewichtsgebundenes Skinning und kein Vierbein-Rig**.
 
 Details und Grenzen: [docs/03-rumpf-wirbelsaeule.md](docs/03-rumpf-wirbelsaeule.md).
+
+## Entwicklungsstufe 04 – Kopf, Hals und Rute
+
+Die aktuelle Vorschau auf `main` bewegt Hals und Kopf passend zu den Gangphasen; die Rute folgt den **Ausdrucks- und Wedelparametern der natürlichen Rutenform aus v6.6**. Der einzelne, geschlossene Außenumriss bleibt erhalten. Neue Bedienelemente: **Kopf/Hals-Ausgleich**, **Rutenbewegung** und **Ruten-Ausdruck** (automatisch oder sieben wählbare Ausdrücke). Ein gewählter Ruten-Ausdruck lässt sich auch in `Stand` ansehen.
+
+Die restlichen sechs speziellen Rutenformen aus v6.6, ein echtes Vierbein-Rig und gewichtetes Skinning fehlen weiterhin. Die v6.6-Originaldatei bleibt unverändert. Details: [docs/04-kopf-hals-rute.md](docs/04-kopf-hals-rute.md).
