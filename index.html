@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wuffwerker – Statische Grundpose</title>
+</head>
+<body>
+  <main>
+    <header class="header"><div class="wordmark">wuffwerker<span>.</span></div><div>Werkstatt · Neustart 01</div></header>
+    <p class="kicker">01 · Anatomische Basis</p>
+    <h1>Ein Hund. Eine Kontur.</h1>
+    <p class="lead">Statische Seitenansicht zur visuellen Prüfung. Die gesamte äußere Silhouette ist ein geschlossener Pfad statt übereinandergelegter Körperteile.</p>
+    <section class="panel" aria-label="Hundesilhouette in Standpose">
+      <div class="panel-header"><span>STANDPOSE · SEITENANSICHT</span><span id="renderer-status" role="status">PixiJS wird initialisiert …</span></div>
+      <div id="stage" role="img" aria-label="Einfarbige Hundesilhouette, von links nach rechts ausgerichtet"></div>
+      <div class="controls">
+        <label for="skeleton-toggle"><input id="skeleton-toggle" type="checkbox" /> Anatomische Gelenkpunkte anzeigen</label>
+        <p class="note">Markierungen sind nur Kontrollpunkte. Sie deformieren die Kontur noch nicht.</p>
+      </div>
+    </section>
+    <div class="disclaimer"><strong>Stand der Umsetzung:</strong> Kopf, Hals, Rumpf, die sichtbaren Seitenbeine und eine neutrale Rute bilden einen einzigen geschlossenen Umriss. Die verdeckten Beine, ein echtes Knochenrig, IK, Bone-Weights, Animation und Fell/Texturen fehlen bewusst. Die freigegebene Rutenlogik v6.6 bleibt als Referenz unberührt.</div>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
