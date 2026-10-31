@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wuffwerker – Kopf, Hals und Rute</title>
+  <title>Wuffwerker – Vierbein-Gangarten</title>
 </head>
 <body>
   <main>
-    <header class="header"><div class="wordmark">wuffwerker<span>.</span></div><div>Werkstatt · Neustart 04</div></header>
-    <p class="kicker">04 · Kopf, Hals und Rute</p>
+    <header class="header"><div class="wordmark">wuffwerker<span>.</span></div><div>Werkstatt · Neustart 05</div></header>
+    <p class="kicker">05 · Vierbein-Gangarten</p>
     <h1>Ein Hund. Eine Bewegung.</h1>
-    <p class="lead">Jetzt gleichen Hals und Kopf die Rumpfbewegung aus; die Rute reagiert nach der Ausdruckslogik aus v6.6. Die Schalter ermöglichen den direkten Vergleich.</p>
+    <p class="lead">Vier unabhängig getaktete Beine mit Schrittfolge aus v7.5.1. Die beiden hinteren Bildebenen-Beine lassen sich separat einblenden.</p>
     <nav class="versions" aria-label="Versionsvergleich">
       <strong>Versionen</strong>
       <span aria-current="page" class="version-current">Aktuell · main</span>
@@ -35,16 +35,17 @@
       <div class="panel-header"><span>BEWEGUNGSSTUDIE · SEITENANSICHT</span><span id="renderer-status" role="status">PixiJS wird initialisiert …</span></div>
       <div id="stage" role="img" aria-label="Einfarbige Hundesilhouette, von links nach rechts ausgerichtet"></div>
       <div class="controls">
+        <label for="far-toggle"><input id="far-toggle" type="checkbox" checked /> Fernliegende Beine</label>
         <label for="body-toggle"><input id="body-toggle" type="checkbox" checked /> Rumpfbewegung</label>
         <label for="head-toggle"><input id="head-toggle" type="checkbox" checked /> Kopf/Hals-Ausgleich</label>
         <label for="tail-toggle"><input id="tail-toggle" type="checkbox" checked /> Rutenbewegung</label>
         <label for="tail-expression">Ruten-Ausdruck <select id="tail-expression" aria-label="Ruten-Ausdruck"><option value="auto">Automatisch</option><option value="calm">Entspannt</option><option value="happy">Fröhlich</option><option value="excited">Aufgeregt</option><option value="alert">Aufmerksam</option><option value="unsure">Unsicher</option><option value="fearful">Ängstlich</option><option value="tense">Angespannt</option></select></label>
         <label for="skeleton-toggle"><input id="skeleton-toggle" type="checkbox" /> Anatomische Gelenkpunkte anzeigen</label>
-        <p class="note">Gelenkmarkierungen zeigen Ansatzpunkte für Hals und Rute. Seitenansicht: seitliches Wedeln ist nur schwach sichtbar.</p>
+        <p class="note">Gelenkmarkierungen zeigen jetzt auch die fernliegenden Knie und Sprunggelenke. Seitliches Wedeln erscheint in Seitenansicht nur schwach.</p>
       </div>
     </section>
     <p class="motion-note" id="gait-hint">Bewegungsprobe wird gestartet.</p>
-    <div class="disclaimer"><strong>Stand der Umsetzung:</strong> Die durchgehende Silhouette wird durch Bein-, Rumpf-, Hals-/Kopf- und Rutenbewegung deformiert, ohne separate Übermalungen. Die numerischen Ausdrucks- und Wedelregeln der natürlichen Rute folgen v6.6; die dortigen weiteren sechs Rutenformen und die vollständige 3D-Mesh-Darstellung sind noch nicht integriert. Kopf/Hals ist eine vorsichtige Bewegungsstudie, keine anatomisch freigegebene Lösung. Vierbein-Rig und gewichtetes Skinning fehlen. Die historischen Referenzdateien sind unverändert.</div>
+    <div class="disclaimer"><strong>Stand der Umsetzung:</strong> Die durchgehende Silhouette wird durch Bein-, Rumpf-, Hals-/Kopf- und Rutenbewegung deformiert, ohne separate Übermalungen. Die numerischen Ausdrucks- und Wedelregeln der natürlichen Rute folgen v6.6; die dortigen weiteren sechs Rutenformen und die vollständige 3D-Mesh-Darstellung sind noch nicht integriert. Kopf/Hals ist eine vorsichtige Bewegungsstudie, keine anatomisch freigegebene Lösung. Vier phasenversetzte Bein-Ketten sind vorhanden; voll gewichtetes Skinning und anatomische Freigabe fehlen weiterhin. Die historischen Referenzdateien sind unverändert.</div>
   </main>
   <script type="module" src="/src/main.js"></script>
 </body>
