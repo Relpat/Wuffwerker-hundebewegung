@@ -8,7 +8,8 @@ const toggle = document.querySelector('#skeleton-toggle');
 
 async function start() {
   const app = new Application();
-  await app.init({ resizeTo: stage, backgroundAlpha: 0, antialias: true,
+  await app.init({ width: stage.clientWidth, height: stage.clientHeight, autoStart: false,
+    backgroundAlpha: 0, antialias: true,
     autoDensity: true, resolution: Math.min(devicePixelRatio || 1, 2), preference: 'webgl' });
   stage.appendChild(app.canvas);
   const scene = createScene();
@@ -18,9 +19,11 @@ async function start() {
     scene.skeleton.visible = toggle.checked;
     app.render();
   });
-  // Static pose: no ticker-driven animation, skinning or per-frame reconstruction.
-  app.ticker.stop();
-  const resizeObserver = new ResizeObserver(redraw);
+  // Static pose: no animation loop. Render only on resize or a control change.
+  const resizeObserver = new ResizeObserver(() => {
+    app.renderer.resize(stage.clientWidth, stage.clientHeight);
+    redraw();
+  });
   resizeObserver.observe(stage);
   redraw();
   status.textContent = 'PixiJS 8 · statische Bind-Pose';
