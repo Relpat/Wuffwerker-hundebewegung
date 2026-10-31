@@ -6,6 +6,7 @@ import './style.css';
 const stage=document.querySelector('#stage');
 const status=document.querySelector('#renderer-status');
 const toggle=document.querySelector('#skeleton-toggle');
+const farToggle=document.querySelector('#far-toggle');
 const bodyToggle=document.querySelector('#body-toggle');
 const headToggle=document.querySelector('#head-toggle');
 const tailToggle=document.querySelector('#tail-toggle');
@@ -42,7 +43,7 @@ async function start() {
     pauseButton.disabled=mode==='stand' && !(tailToggle.checked && tailExpression.value!=='auto');
     speedOutput.textContent=`${Number(speed.value).toFixed(2).replace('.',',')} ×`;
     hint.textContent=mode==='stand'&&tailExpression.value==='auto'?'Statische anatomische Vergleichspose.':
-      `${GAITS[mode].label}: ${bodyToggle.checked?'Rumpf aktiv.':'Rumpf aus.'} ${headToggle.checked?'Kopfausgleich aktiv.':'Kopfausgleich aus.'} ${tailToggle.checked?'Rute: '+(tailExpression.selectedOptions[0]?.textContent||'automatisch')+'.':'Rute aus.'} Noch kein Vierbein-Skinning.`;
+      `${GAITS[mode].label}: ${bodyToggle.checked?'Rumpf aktiv.':'Rumpf aus.'} ${headToggle.checked?'Kopfausgleich aktiv.':'Kopfausgleich aus.'} ${tailToggle.checked?'Rute: '+(tailExpression.selectedOptions[0]?.textContent||'automatisch')+'.':'Rute aus.'} Vier getrennte Gangphasen, noch kein gewichtetes Skinning.`;
   };
   gaitButtons.forEach(button=>button.addEventListener('click',()=>{
     mode=button.dataset.gait;
@@ -53,6 +54,7 @@ async function start() {
   }));
   pauseButton.addEventListener('click',()=>{paused=!paused;syncControls();});
   speed.addEventListener('input',syncControls);
+  farToggle.addEventListener('change',()=>{scene.farLegs.visible=farToggle.checked;draw();});
   toggle.addEventListener('change',()=>{scene.skeleton.visible=toggle.checked;draw();});
   bodyToggle.addEventListener('change',()=>{syncControls();draw();});
   for (const control of [headToggle,tailToggle,tailExpression]) control.addEventListener('change',()=>{syncControls();draw();});
@@ -68,7 +70,7 @@ async function start() {
   };
   syncControls(); draw();
   raf=requestAnimationFrame(tick);
-  status.textContent='PixiJS 8 · Kopf/Hals/Rute · Bewegungsstudie';
+  status.textContent='PixiJS 8 · Vierbein-Ganganalyse · Stufe 05';
   document.documentElement.dataset.ready='true';
   window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);resizeObserver.disconnect();app.destroy(true);},{once:true});
 }
