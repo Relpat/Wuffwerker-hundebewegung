@@ -36,3 +36,7 @@ https://relpat.github.io/Wuffwerker-hundebewegung/
 erreichbar. Bis zu einem erfolgreichen Workflow-Lauf ist das eine vorgesehene, **nicht bestätigte** URL.
 
 Bei jedem Push auf `main` wird die Seite erneut gebaut. `npm test` muss erfolgreich sein, bevor ein Deployment erfolgt.
+
+## Entwicklungsstufe 02 – animierte Bewegungsprobe
+
+Auf `main` stehen nun **Stand, Gehen, Trab, Laufen und Passgang** sowie Pause/Weiter und ein Temposchieber bereit. Die Bewegungszyklen der zwei sichtbaren Beine übernehmen Phasen- und Trajektorien-Ideen aus dem freigegebenen `v7.5.1`-Referenzstand; die Gelenkketten haben feste Knochenlängen. Die Silhouette bleibt ein einziges geschlossenes Außenprofil. Dies ist noch **kein vollständiges Vierbein-Rig oder gewichtetes Skinning**. Näheres: [docs/02-bewegungsprobe.md](docs/02-bewegungsprobe.md).
