@@ -1,6 +1,8 @@
 import { CONTOUR } from './contour.js';
 import { JOINTS } from '../skeleton/stand.js';
 import { torsoDelta } from '../animation/body.js';
+import { headDelta } from '../animation/head.js';
+import { tailDelta } from '../animation/tail.js';
 
 const lerp = (a,b,t) => a+(b-a)*t;
 const delta = (p, base) => ({x:p.x-base[0], y:p.y-base[1]});
@@ -10,7 +12,7 @@ const clamp01 = t => Math.max(0,Math.min(1,t));
  * joints. This is NOT a triangulated skinning mesh or inverse-bind system.
  */
 export function contourAt(pose) {
-  if (pose.mode === 'stand') return CONTOUR;
+  if (pose.mode === 'stand' && !pose.tail?.enabled) return CONTOUR;
   const j = pose.joints;
   const body = pose.body;
   const front = [
@@ -44,9 +46,17 @@ export function contourAt(pose) {
   }
   return CONTOUR.map(([op,...p],i)=>{
     const anchors=i>=15&&i<=21?front:i>=24&&i<=34?hind:null;
+    // Commands 36–38 run from haunch to tip; no separate tail mesh.
+    const isTail=i<=1||(i>=36&&i<=38);
     if (op==='Z') return [op];
     const coords=[];
-    for(let k=0;k<p.length;k+=2) coords.push(...deform(p[k],p[k+1],anchors));
+    for(let k=0;k<p.length;k+=2) {
+      const x=p[k],y=p[k+1];
+      const [bx,by]=deform(x,y,anchors);
+      const h=headDelta(x,y,pose.head);
+      const t=isTail?tailDelta(x,pose.tail):{x:0,y:0};
+      coords.push(bx+h.x+t.x,by+h.y+t.y);
+    }
     return [op,...coords];
   });
 }
