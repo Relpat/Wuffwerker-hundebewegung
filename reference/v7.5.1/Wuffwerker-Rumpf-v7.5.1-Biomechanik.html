@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wuffwerker – Rumpfwerkstatt v7.5 · Bewegungsstudie offline</title>
+<style>
+:root{--ink:#26334a;--chalk:#f8f4eb;--red:#bf452c;--lime:#dceb81;--lilac:#eae4f0;--line:#deddd9;--muted:#697386}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--chalk);color:var(--ink);font-family:Inter,'Nunito Sans',system-ui,-apple-system,sans-serif;line-height:1.45}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-offset:3px}.frame{max-width:1256px;margin:0 auto;padding:0 34px}.topbar{height:88px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #d9d3c6}.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink);font-size:25px;font-weight:900;letter-spacing:-1.6px}.mark{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:22px;font-weight:1000;color:var(--chalk);background:var(--ink);transform:rotate(-6deg)}.brand-dot{color:var(--red)}.topright{font-size:12px;color:#77808e;font-weight:800;letter-spacing:.06em;display:flex;align-items:center;gap:9px}.live-dot{width:7px;height:7px;border-radius:50%;background:#93ac55}.intro{display:flex;justify-content:space-between;gap:30px;padding:40px 0 29px;align-items:end}.eyebrow,.mini-label{font-size:11px;letter-spacing:.15em;font-weight:850;color:var(--red);margin:0 0 11px}h1{font-size:clamp(32px,4.3vw,53px);line-height:1.05;letter-spacing:-.055em;margin:0 0 15px;font-weight:900}h1 em{color:var(--red);font-style:normal}.lead{font-size:15px;max-width:630px;margin:0;color:#636d7d}.intro-aside{text-align:right;max-width:320px;padding-bottom:2px}.mini-label{color:#8c96a5}.milestones{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.milestones span{background:#efebe2;border:1px solid #e6dfd2;color:#9498a0;border-radius:20px;padding:6px 10px;font-weight:750;font-size:10px}.milestones .current{background:var(--lime);color:var(--ink);border-color:var(--lime)}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 312px;gap:18px}.playground,.settings{background:#fff;border:1px solid #e7e2d8;border-radius:17px;overflow:hidden;box-shadow:0 10px 28px #26334a07}.stage-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}.stage-title{font-weight:850;font-size:11px;letter-spacing:.11em}.tiny-square{display:inline-block;background:var(--red);height:10px;width:10px;margin-right:8px;border-radius:2px}.stage-tag{font-size:10px;letter-spacing:.06em;font-weight:900;color:#677084;background:#f4f3ef;border-radius:20px;padding:7px 12px}.stage-tag span{color:var(--red)}.canvas-wrap{margin:0 16px;background:linear-gradient(180deg,#f3f0f8,#f6f3ed);border:1px solid #e7e1e7;border-radius:12px;position:relative;aspect-ratio:940/560;overflow:hidden}.canvas-wrap canvas{display:block;width:100%;height:100%}.canvas-status{position:absolute;z-index:3;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;font-weight:750;color:#667084;background:#f3f0f8}.scene-hint{position:absolute;bottom:14px;left:16px;right:16px;z-index:2;font-size:11px;color:#485269;font-weight:700;display:flex;gap:9px;align-items:center;pointer-events:none}.hint-marker{width:9px;height:9px;flex:none;background:var(--red);border-radius:3px}.playbar{padding:16px;display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #f0ece5}.mode-buttons{display:flex;gap:5px;padding:4px;background:#f5f2ed;border-radius:12px}.mode{border:0;border-radius:9px;background:transparent;padding:8px 15px;font-size:12px;font-weight:850;color:#737b87}.mode.active{background:var(--ink);color:#fff;box-shadow:0 2px 5px #26334a20}.pause{border:1px solid #e3dfd6;background:#fff;border-radius:10px;padding:8px 13px;font-size:12px;font-weight:800;color:var(--ink)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);padding:16px 20px 20px;gap:15px}.metrics>div+div{border-left:1px solid #e9e7e3;padding-left:16px}.metric-label{display:block;color:#87919e;font-size:9px;font-weight:900;letter-spacing:.08em;margin-bottom:3px}.metrics strong{font-size:16px;font-weight:900}.settings{padding:20px}.settings-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:900;letter-spacing:.08em;margin-bottom:21px}.settings-number{font-size:10px;color:#adb4bb}.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:25px}.presets button{border:1px solid #e5e1d8;background:#fff;border-radius:8px;padding:10px 3px;font-size:10px;color:#667181;font-weight:850}.presets .selected{background:var(--lime);border-color:#cadb67;color:var(--ink)}.control{margin-bottom:20px}.control-line{display:flex;justify-content:space-between;font-size:12px;font-weight:780;margin-bottom:7px}.control-line output{font-size:11px;color:#9199a4;font-weight:700;font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:var(--red);cursor:pointer;height:6px}.switch-row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f0ece6;padding:14px 1px;font-size:12px;font-weight:800}.switch-row input{width:18px;height:18px;accent-color:var(--ink)}.info-panel{display:flex;gap:10px;background:var(--lilac);border-radius:11px;padding:13px 12px;margin-top:10px}.info-icon{flex:none;display:grid;place-items:center;height:22px;width:22px;background:var(--ink);color:white;font-size:13px;font-weight:900;border-radius:50%}.info-panel strong{font-size:12px}.info-panel p{font-size:11px;line-height:1.5;color:#636e83;margin:5px 0 0}.reset{width:100%;margin-top:16px;border:0;background:transparent;color:#717c89;font-size:11px;font-weight:850;display:flex;justify-content:space-between}.reset span{font-size:18px}.below{display:grid;grid-template-columns:1fr 2.6fr;gap:15px;padding:33px 0 36px;border-bottom:1px solid #ded6c9}.below-kicker{font-size:11px;color:var(--red);font-weight:900;letter-spacing:.1em}.below h2{font-size:24px;margin:0 0 7px;letter-spacing:-.04em}.below p{font-size:13px;line-height:1.7;color:#606b7c;max-width:760px;margin:0}.footer{font-size:11px;padding:24px 0 30px;color:#838d9b}@media(max-width:980px){.intro{align-items:start}.intro-aside{display:none}.workspace{grid-template-columns:1fr}.settings{display:grid;grid-template-columns:1fr 1fr;gap:0 26px}.settings-head,.presets,.info-panel,.reset{grid-column:1/-1}.canvas-wrap{aspect-ratio:940/560}}@media(max-width:600px){.frame{padding:0 14px}.topbar{height:68px}.brand{font-size:22px}.mark{width:34px;height:34px;font-size:20px}.topright{font-size:9px;max-width:135px;text-align:right}.intro{padding:30px 0 22px}.lead{font-size:13px}.stage-head{padding:14px}.canvas-wrap{margin:0 8px;aspect-ratio:940/620}.stage-tag{font-size:8px}.playbar{padding:10px 8px}.mode{padding:7px 10px}.pause{padding:8px 10px}.metrics{gap:4px;padding:12px 10px 16px}.metrics>div+div{padding-left:9px}.metric-label{font-size:8px}.metrics strong{font-size:12px}.settings{padding:17px;display:block}.below{grid-template-columns:1fr;gap:7px}.scene-hint{font-size:9px;left:10px;bottom:8px}}
+
+/* Gait v2: five transport modes, 5 metrics and the footprint sequence */
+.mode-buttons{flex-wrap:wrap;min-width:0;align-content:center}
+.mode{white-space:nowrap;padding:8px 11px}
+.metrics{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:15px 16px}
+.metrics>div+div{padding-left:11px}
+.metrics strong{font-size:15px;white-space:nowrap}
+.sequence{border-top:1px solid #f0ece5;padding:12px 18px 15px;font-size:11px;color:#758093;font-weight:800;letter-spacing:.035em;line-height:1.65}
+.sequence strong{color:var(--ink);margin-left:7px;font-size:12px}
+.sequence span{font-weight:500;margin-left:9px;letter-spacing:0}
+@media(max-width:1130px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.metrics>div{border:0!important;padding-left:0!important}}
+@media(max-width:600px){.playbar{flex-direction:column;align-items:stretch}.mode-buttons{justify-content:center}.pause{align-self:flex-end}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metrics strong{font-size:13px}.sequence{padding:10px;font-size:10px}.sequence span{display:block;margin-left:0}}
+
+
+.expression-settings{border-top:1px solid #e9e4db;padding-top:19px;margin-top:2px;grid-column:1/-1}
+.expression-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:10px 0 17px}
+.expression-button{padding:10px 7px;background:#f9f8f5;border:1px solid #e6e1d9;border-radius:10px;font-size:11px;font-weight:800;color:#536173;line-height:1.3}
+.expression-button[aria-pressed="true"]{background:var(--lime);border-color:#bdce5a;color:var(--ink)}
+.expression-note{background:#f8f4eb;border-radius:11px;padding:12px;font-size:11px;line-height:1.55;color:#5a6372;margin:0 0 8px}
+.expression-note strong{display:block;color:var(--ink);font-size:12px;margin-bottom:4px}
+.expression-note p{margin:0}
+.research-note{font-size:11px;line-height:1.65;color:#717a8a;margin:11px 0 0}
+.research-note a{color:#26334a;text-decoration:underline}
+@media(max-width:980px){.expression-settings{grid-column:1/-1}}
+.direction-readout{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 0!important}
+.direction-readout span{border:1px solid #ded9cc;background:white;color:#34445a;padding:6px 8px;border-radius:8px;font-size:10px;font-weight:800}
+
+.body-settings{margin:7px 0 22px;border:1px solid #e7e0d4;border-radius:13px;padding:17px 14px 1px;background:linear-gradient(160deg,#fbf8f0,#fff)}
+.body-settings .settings-head{margin-bottom:17px}
+.body-settings .control{margin-bottom:17px}
+.body-note{font-size:11px;line-height:1.55;color:#697386;margin:5px 0 18px}
+@media(max-width:980px){.body-settings{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="frame">
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Wuffwerker Bewegungswerkstatt"><span class="mark" aria-hidden="true">W</span><span>wuffwerker<span class="brand-dot">.</span></span></a>
+    <span class="topright"><span class="live-dot"></span> Bewegungswerkstatt · Machbarkeitsdemo</span>
+  </header>
+  <main>
+    <div class="intro">
+      <div><p class="eyebrow">EXPERIMENT 03 · RUMPF 07.5</p><h1>Ein Körper. <em>In Bewegung.</em></h1><p class="lead">Neuer Laufzyklus auf Basis von Gangforschung: Die Körperhöhe folgt Vorder- und Hinterbeinen, der Rumpf sitzt beim Laufen tiefer, und die Beine greifen weiter aus statt ständig zu hüpfen. Schulter, Hüfte und Rute bleiben verbunden.</p></div>
+      <div class="intro-aside"><span class="mini-label">DIE ETAPPEN</span><div class="milestones"><span>01 Beine</span><span>02 Rute ✓</span><span class="current">03 Rumpf</span><span>04 Kopf</span><span>05 Gesamtfigur</span></div></div>
+    </div>
+    <div class="workspace">
+      <section class="playground" aria-label="Interaktive Animationsvorschau">
+        <div class="stage-head"><span class="stage-title"><span class="tiny-square"></span> BEWEGUNGSLABOR</span><div class="stage-tag">OFFLINE CANVAS2D <span>+</span> RUMPF-MESH &amp; IK</div></div>
+        <div class="canvas-wrap" id="canvas-wrap">
+          <div class="canvas-status" id="canvas-status">Lade PixiJS …</div>
+          <div class="scene-hint"><span class="hint-marker"></span><span id="scene-hint">Rumpf und Rute folgen der Pose. Grüne Markierung bedeutet Bodenkontakt.</span></div>
+        </div>
+        <div class="playbar">
+          <div class="mode-buttons" role="group" aria-label="Animationsmodus">
+            <button type="button" class="mode active" data-mode="walk">Gehen</button>
+            <button type="button" class="mode" data-mode="trot">Traben</button>
+            <button type="button" class="mode" data-mode="run">Laufen</button>
+            <button type="button" class="mode" data-mode="pace">Passgang</button>
+            <button type="button" class="mode" data-mode="stand">Chillen</button>
+            <button type="button" class="mode" data-mode="alert">Aufmerksam</button>
+            <button type="button" class="mode" data-mode="ik">IK testen</button>
+          </div>
+          <button type="button" class="pause" id="pause"><span id="pause-symbol">Ⅱ</span> <span id="pause-text">Pause</span></button>
+        </div>
+        <div class="metrics" aria-live="off">
+          <div><span class="metric-label">KNOCHENLÄNGEN</span><strong id="metric-bones">Konstant</strong></div>
+          <div><span class="metric-label">GELENK-ABSTAND ZUM BODEN</span><strong id="metric-knee">–</strong></div>
+          <div><span class="metric-label">ZIELFEHLER</span><strong id="metric-error">0.0 px</strong></div>
+          <div><span class="metric-label">STÜTZENDE PFOTEN</span><strong id="metric-contact">–</strong></div>
+          <div><span class="metric-label">ELLBOGEN / HINTERKNIE</span><strong id="metric-angles">–</strong></div>
+        </div>
+        <div class="sequence">PFOTENFOLGE: <strong id="phase-label">HL → VL → HR → VR</strong> <span>HL = hinten links, VR = vorne rechts (Hundeperspektive)</span></div>
+      </section>
+      <aside class="settings" aria-label="Einstellungen">
+        <div class="settings-head"><span>HUND ANPASSEN</span><span class="settings-number">01—10</span></div>
+        <div class="presets" role="group" aria-label="Körperbau-Voreinstellungen"><button type="button" data-preset="short">Kurzbeinig</button><button class="selected" type="button" data-preset="normal">Normal</button><button type="button" data-preset="tall">Langbeinig</button></div>
+        <div class="control"><div class="control-line"><label for="leg">Beinlänge</label><output id="leg-out">100 %</output></div><input type="range" id="leg" min="70" max="140" value="100" step="1"></div>
+        <div class="control"><div class="control-line"><label for="frontleg">Vorderbeine</label><output id="frontleg-out">100 %</output></div><input type="range" id="frontleg" min="75" max="130" value="100" step="1"></div>
+        <div class="control"><div class="control-line"><label for="hindleg">Hinterbeine</label><output id="hindleg-out">100 %</output></div><input type="range" id="hindleg" min="72" max="130" value="100" step="1"></div>
+        <div class="control"><div class="control-line"><label for="body">Schulter–Hüfte</label><output id="body-out">100 %</output></div><input type="range" id="body" min="78" max="135" value="100" step="1"></div>
+        <div class="body-settings" aria-label="Rumpf anpassen">
+          <div class="settings-head"><span>RUMPF · KÖRPERLINIE</span><span class="settings-number">03—10</span></div>
+          <div class="control"><div class="control-line"><label for="chest">Brusttiefe</label><output id="chest-out">100 %</output></div><input type="range" id="chest" min="70" max="140" value="100" step="1"></div>
+          <div class="control"><div class="control-line"><label for="tuck">Bauchaufzug</label><output id="tuck-out">45 %</output></div><input type="range" id="tuck" min="0" max="100" value="45" step="1"></div>
+          <div class="control"><div class="control-line"><label for="back">Rückenwölbung</label><output id="back-out">35 %</output></div><input type="range" id="back" min="0" max="100" value="35" step="1"></div>
+          <p class="body-note">Der Rumpf verknüpft Schulter, Hüfte, Rutenwurzel und später den Halsansatz. Diese Version verbindet eine ruhigere Rumpfform mit einem gestreckteren Lauf. Vorne und hinten orientiert sich die Körperhöhe sichtbar stärker an den Beinen.</p>
+        </div>
+        <div class="control"><div class="control-line"><label for="stride">Schrittlänge</label><output id="stride-out">100 %</output></div><input type="range" id="stride" min="65" max="120" value="100" step="1"></div>
+        <div class="control"><div class="control-line"><label for="speed">Geschwindigkeit</label><output id="speed-out">1,00 ×</output></div><input type="range" id="speed" min="40" max="160" value="100" step="5"></div>
+        <div class="expression-settings">
+          <div class="settings-head"><span>RUTENAUSDRUCK</span><span class="settings-number">02—07</span></div>
+          <div class="expression-buttons" role="group" aria-label="Rutenbewegung und Ausdruck">
+            <button class="expression-button" type="button" data-expression="auto" aria-pressed="true">Passend zur Pose</button>
+            <button class="expression-button" type="button" data-expression="calm" aria-pressed="false">Entspannt</button>
+            <button class="expression-button" type="button" data-expression="alert" aria-pressed="false">Aufmerksam</button>
+            <button class="expression-button" type="button" data-expression="happy" aria-pressed="false">Fröhlich</button>
+            <button class="expression-button" type="button" data-expression="excited" aria-pressed="false">Aufgeregt</button>
+            <button class="expression-button" type="button" data-expression="unsure" aria-pressed="false">Unsicher</button>
+            <button class="expression-button" type="button" data-expression="fearful" aria-pressed="false">Ängstlich</button>
+            <button class="expression-button" type="button" data-expression="tense" aria-pressed="false">Angespannt</button>
+          </div>
+          <div class="control"><div class="control-line"><label for="wag">Wedel-Ausschlag</label><output id="wag-out">100 %</output></div><input type="range" id="wag" min="0" max="160" value="100" step="5"></div>
+          <div class="control"><div class="control-line"><label for="emotion-intensity">Ausdrucksstärke</label><output id="emotion-intensity-out">100 %</output></div><input type="range" id="emotion-intensity" min="0" max="160" value="100" step="5" aria-describedby="expression-body"></div>
+          <div class="control"><div class="control-line"><label for="tail-length">Rutenlänge</label><output id="tail-length-out">100 %</output></div><input type="range" id="tail-length" min="55" max="155" value="100" step="1" aria-describedby="tailtype-body"></div>
+          <div class="control"><div class="control-line"><label for="tail-thickness">Rutenfülle</label><output id="tail-thickness-out">100 %</output></div><input type="range" id="tail-thickness" min="60" max="180" value="100" step="1" aria-describedby="tailtype-body"></div>
+          <div class="expression-note" aria-live="polite"><strong id="expression-title">Entspannt – lockere Rute</strong><p id="expression-body">Ausgangszustand. Rutenhaltung und Bewegung sind keine sichere Aussage darüber, wie sich ein Hund fühlt.</p><p class="direction-readout"><span id="tail-direction">Ansatz: natürliche Ruheposition</span><span id="tail-curl-state">Krümmung: Grundform</span></p></div>
+          <div class="expression-settings tailtype-settings" aria-label="Rutenform auswählen">
+            <div class="settings-head"><span>RUTENFORM</span><span class="settings-number">05—07</span></div>
+            <div class="expression-buttons" role="group" aria-label="Rutenformen">
+              <button class="expression-button" type="button" data-tailtype="natural" aria-pressed="true">Neutral</button>
+              <button class="expression-button" type="button" data-tailtype="straight" aria-pressed="false">Gerade</button>
+              <button class="expression-button" type="button" data-tailtype="sickle" aria-pressed="false">Sichel</button>
+              <button class="expression-button" type="button" data-tailtype="curl" aria-pressed="false">Gerollt</button>
+              <button class="expression-button" type="button" data-tailtype="otter" aria-pressed="false">Otter</button>
+              <button class="expression-button" type="button" data-tailtype="plume" aria-pressed="false">Plume</button>
+              <button class="expression-button" type="button" data-tailtype="bob" aria-pressed="false">Bobtail</button>
+            </div>
+            <div class="expression-note" aria-live="polite"><strong id="tailtype-title">Neutral – Rutenform</strong><p id="tailtype-body">Allround-Grundform für die Demo.</p></div>
+          </div>
+          <label class="switch-row" for="rear"><span>Wedeln von hinten zeigen</span><input type="checkbox" id="rear" checked></label>
+          <p class="research-note">Wichtig: Eine natürliche Ringelrute ist kein Zeichen von Freude oder Dominanz. Ob eine Rute gehoben, gesenkt oder steif wirkt, beurteilt man gegenüber der normalen Haltung dieses Hundes und zusammen mit dem ganzen Körper. Die Einstellungen sind Illustrationen, keine Gefühlsdiagnosen. Echte Hunderuten haben meist etwa 20–23 Schwanzwirbel; in dieser Demo werden sie zu wenigen Steuergliedern zusammengefasst. <a href="https://www.dogstrust.org.uk/dog-advice/understanding-your-dog/body-language" target="_blank" rel="noopener noreferrer">Dogs Trust</a> · <a href="https://www.aspcapro.org/resource/canine-body-language-tips" target="_blank" rel="noopener noreferrer">ASPCApro</a></p>
+        </div>
+        <div class="switch-row"><label for="bones">Gelenke zeigen</label><input type="checkbox" id="bones" checked></div>
+        <div class="switch-row"><label for="grid">Mesh-Gitter zeigen</label><input type="checkbox" id="grid"></div>
+        <div class="info-panel"><span class="info-icon">i</span><div><strong id="info-title">So erkennst du den Bodenkontakt</strong><p id="info-body">Die kleinen Markierungen am Boden bewegen sich beim Gehen. Stützpfoten bleiben auf derselben Markierung, bis sie wieder abheben.</p></div></div>
+        <button type="button" id="reset" class="reset">Einstellungen zurücksetzen <span>↺</span></button>
+      </aside>
+    </div>
+    <section class="below"><div class="below-kicker">SCHRITT 03 / 05</div><div class="below-body"><h2>Eine richtige Silhouette.</h2><p>Der Rumpf besteht aus einem verformbaren Mesh mit eigener Rücken- und Bauchkurve, Brustkorbtiefe und einer sanften Bewegungsreaktion. Die Bein-Kinematik und die freigegebenen Rutenformen bleiben unverändert. Der Hals endet derzeit noch als Ansatzpunkt für Schritt 4: den Kopf.</p></div></section>
+  </main>
+  <footer class="footer">Wuffwerker · Schritt 03: Rumpf-Prototyp · Kopf folgt als nächster Schritt</footer>
+</div>
+<script>
+/* Wuffwerker offline Canvas2D renderer: a minimal implementation of only the
+   Pixi-style primitives used by this prototype. No CDN or GPU required. */
+(function () {
+  'use strict';
+  const color = (value) => {
+    if (typeof value === 'string') return value;
+    const v = Number.isFinite(value) ? value : 0;
+    return '#' + (v & 0xffffff).toString(16).padStart(6, '0');
+  };
+  const styleParts = (v) => typeof v === 'object' && v !== null
+    ? { c: color(v.color === undefined ? 0x26334a : v.color), a: v.alpha === undefined ? 1 : v.alpha, w: v.width || 1 }
+    : { c: color(v), a: 1, w: 1 };
+
+  class Container {
+    constructor() {
+      this.children = [];
+      this.position = {x: 0, y: 0, set(x, y) {this.x = x; this.y = y;}};
+      this.visible = true;
+      this.alpha = 1;
+    }
+    addChild(...nodes) {this.children.push(...nodes); return nodes[0];}
+    removeChild(node) {this.children = this.children.filter(n => n !== node); return node;}
+  }
+  class Graphics extends Container {
+    constructor() {super(); this.clear();}
+    clear() {this.ops = []; this.path = null; return this;}
+    _shape(kind, a) {this.path = [{kind, a}]; return this;}
+    roundRect(...a) {return this._shape('roundRect', a);}
+    rect(...a) {return this._shape('rect', a);}
+    circle(...a) {return this._shape('circle', a);}
+    ellipse(...a) {return this._shape('ellipse', a);}
+    moveTo(...a) {this.path = [{kind:'moveTo',a}]; return this;}
+    lineTo(...a) {if(!this.path)this.moveTo(0,0); this.path.push({kind:'lineTo', a}); return this;}
+    bezierCurveTo(...a) {if(!this.path)this.moveTo(0,0); this.path.push({kind:'bezierCurveTo', a}); return this;}
+    closePath() {if(this.path)this.path.push({kind:'closePath',a:[]});return this;}
+    fill(v) {if(this.path)this.ops.push({mode:'fill',path:this.path.map(x=>({...x})),style:styleParts(v)});return this;}
+    stroke(v) {if(this.path)this.ops.push({mode:'stroke',path:this.path.map(x=>({...x})),style:styleParts(v)});return this;}
+  }
+  class MeshSimple extends Container {
+    constructor(opts) {
+      super();
+      this.vertices = opts.vertices;
+      this.uvs = opts.uvs;
+      this.indices = opts.indices;
+      this.texture = opts.texture;
+      this.autoUpdate = true;
+      this._pattern = null;
+    }
+  }
+  class Text extends Container {
+    constructor(opts) {super();this.text=opts.text;this.style=opts.style||{};}
+  }
+  function makePath(ctx, ops) {
+    ctx.beginPath();
+    for(const op of ops) {
+      const a=op.a;
+      if(op.kind==='rect')ctx.rect(a[0],a[1],a[2],a[3]);
+      else if(op.kind==='roundRect'){
+        const r=Math.max(0,Math.min(a[4]||0,Math.abs(a[2])/2,Math.abs(a[3])/2));
+        if(ctx.roundRect)ctx.roundRect(a[0],a[1],a[2],a[3],r);
+        else ctx.rect(a[0],a[1],a[2],a[3]);
+      }
+      else if(op.kind==='circle')ctx.arc(a[0],a[1],Math.max(.01,a[2]),0,Math.PI*2);
+      else if(op.kind==='ellipse')ctx.ellipse(a[0],a[1],Math.max(.01,a[2]),Math.max(.01,a[3]),0,0,Math.PI*2);
+      else if(op.kind==='moveTo')ctx.moveTo(a[0],a[1]);
+      else if(op.kind==='lineTo')ctx.lineTo(a[0],a[1]);
+      else if(op.kind==='bezierCurveTo')ctx.bezierCurveTo(...a);
+      else if(op.kind==='closePath')ctx.closePath();
+    }
+  }
+  function drawGraphics(ctx,node){
+    for(const op of node.ops) {
+      ctx.save();ctx.globalAlpha *= Math.max(0,Math.min(1,op.style.a));
+      makePath(ctx,op.path);
+      if(op.mode==='fill'){ctx.fillStyle=op.style.c;ctx.fill();}
+      else {ctx.strokeStyle=op.style.c;ctx.lineWidth=op.style.w;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();}
+      ctx.restore();
+    }
+  }
+  function drawMesh(ctx, node){
+    const v=node.vertices;
+    if(!v?.length)return;
+    const cols = v.length === 34*9*2 ? 9 : 5;
+    const rows = v.length/(cols*2);
+    if(!Number.isInteger(rows) || rows<2)return;
+    const finite = Array.from(v).every(Number.isFinite);
+    if(!finite)return;
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    ctx.beginPath();
+    for(let row=0;row<rows;row++){
+      const i=2*(row*cols);
+      if(row===0)ctx.moveTo(v[i],v[i+1]);else ctx.lineTo(v[i],v[i+1]);
+    }
+    for(let row=rows-1;row>=0;row--){
+      const i=2*(row*cols+cols-1);ctx.lineTo(v[i],v[i+1]);
+    }
+    ctx.closePath();
+    for(let i=0;i<v.length;i+=2){minX=Math.min(minX,v[i]);maxX=Math.max(maxX,v[i]);minY=Math.min(minY,v[i+1]);maxY=Math.max(maxY,v[i+1]);}
+    const source=node.texture?.source;
+    let dark=false;
+    if(source && source.getContext) {
+      try {const p=source.getContext('2d').getImageData(0,0,1,1).data;dark=p[0]<70&&p[1]<80&&p[2]<125;}catch(e){}
+    }
+    if(dark){ctx.fillStyle='#26334a';ctx.fill();return;}
+    const grad=ctx.createLinearGradient(0,minY,0,Math.max(minY+1,maxY));
+    grad.addColorStop(0,'#996744');grad.addColorStop(.25,'#c68e61');grad.addColorStop(.55,'#dfaf7b');grad.addColorStop(.9,'#b48059');grad.addColorStop(1,'#98613e');
+    ctx.fillStyle=grad;ctx.fill();
+    if(source){
+      ctx.save();ctx.clip();ctx.globalAlpha*=.25;
+      if(!node._pattern)node._pattern=ctx.createPattern(source,'repeat');
+      ctx.fillStyle=node._pattern||'#b8845e';ctx.fillRect(minX-2,minY-2,maxX-minX+4,maxY-minY+4);ctx.restore();
+    }
+  }
+  function drawText(ctx,node){
+    const st=node.style;
+    ctx.font=(st.fontWeight||'normal')+' '+(st.fontSize||12)+'px '+(st.fontFamily||'Arial,sans-serif');
+    ctx.fillStyle=color(st.fill||0x26334a);
+    ctx.textBaseline='top';ctx.fillText(node.text,0,0);
+  }
+  function drawNode(ctx,node){
+    if(node.visible===false)return;
+    ctx.save();ctx.globalAlpha*=Number.isFinite(node.alpha)?node.alpha:1;
+    ctx.translate(node.position?.x||0,node.position?.y||0);
+    if(node instanceof Graphics)drawGraphics(ctx,node);
+    if(node instanceof MeshSimple)drawMesh(ctx,node);
+    if(node instanceof Text)drawText(ctx,node);
+    for(const child of node.children||[])drawNode(ctx,child);
+    ctx.restore();
+  }
+  class Application {
+    constructor(){
+      this.stage=new Container();
+      this.canvas=document.createElement('canvas');
+      this.canvas.setAttribute('aria-label','Animierter Hund mit Rumpf, vier Beinen und Rute');
+      this.ticker={add:f=>{this.onTick=f;}};
+      this.frameCount=0;this.lastTime=null;this.running=false;
+    }
+    async init(options){
+      this.canvas.width=options.width;this.canvas.height=options.height;
+      this.ctx=this.canvas.getContext('2d',{alpha:false});
+      if(!this.ctx)throw new Error('Canvas 2D konnte nicht initialisiert werden');
+      document.body.dataset.renderer='canvas2d-offline';
+      this.running=true;
+      const frame=time=>{
+        if(!this.running)return;
+        const dt=this.lastTime===null?16.67:Math.min(50,Math.max(0,time-this.lastTime));
+        this.lastTime=time;
+        try{
+          if(this.onTick)this.onTick({deltaMS:dt});
+          this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+          drawNode(this.ctx,this.stage);
+          this.frameCount++;
+          window.__wuffwerkerRenderedFrames=this.frameCount;
+        } catch(error){
+          this.running=false;
+          const notice=document.querySelector('#canvas-status')||document.createElement('div');
+          notice.className='canvas-status';notice.id='canvas-status';
+          notice.textContent='Zeichnen fehlgeschlagen: '+error.message;
+          document.querySelector('#canvas-wrap')?.appendChild(notice);
+          console.error('Wuffwerker Canvas-Renderer',error);
+          return;
+        }
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    }
+  }
+  window.PIXI={Application,Container,Graphics,MeshSimple,Text,Texture:{from:source=>({source})}};
+})();
+
+</script>
+<script type="module">
+/** Wuffwerker Bewegungswerkstatt 02: gait + anatomy aware IK + textured 3D-projected tail mesh.
+ * World: +x = forward (right), +y = down. All pose math independent of PixiJS.
+ * Educational stylization, NOT an animal-health range-of-motion model.
+ */
+const clamp = (n,min,max) => Math.min(max, Math.max(min,n));
+const mix = (a,b,t) => a+(b-a)*t;
+const smooth = t => {t=clamp(t,0,1);return t*t*(3-2*t);};
+const length = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
+const frac = x => x-Math.floor(x);
+
+/** The sign of bend controls which side of the root→target line the joint lies on.
+ * +1 bows to the left when pointing down; -1 bows to the right.
+ */
+function solveLeg(root, requested, upper, lower, bend=1) {
+  const dx=requested.x-root.x,dy=requested.y-root.y;
+  const raw=Math.hypot(dx,dy),nx=raw<1e-8?0:dx/raw,ny=raw<1e-8?1:dy/raw;
+  const dist=clamp(raw,Math.abs(upper-lower)+.001,upper+lower-.001);
+  const foot={x:root.x+nx*dist,y:root.y+ny*dist};
+  const projection=(upper*upper-lower*lower+dist*dist)/(2*dist);
+  const h=Math.sqrt(Math.max(0,upper*upper-projection*projection));
+  const knee={x:root.x+nx*projection-ny*h*bend,y:root.y+ny*projection+nx*h*bend};
+  return {root,knee,foot,requested,clamped:Math.abs(dist-raw)>.01,
+    targetError:length(foot,requested),upperError:Math.abs(length(root,knee)-upper),
+    lowerError:Math.abs(length(knee,foot)-lower)};
+}
+
+function innerAngle(a,b,c) {
+  const ab={x:a.x-b.x,y:a.y-b.y},cb={x:c.x-b.x,y:c.y-b.y};
+  const d=Math.hypot(ab.x,ab.y)*Math.hypot(cb.x,cb.y);
+  return Math.acos(clamp((ab.x*cb.x+ab.y*cb.y)/(d||1),-1,1))*180/Math.PI;
+}
+
+// Phases mean *touchdown* (fraction of total stride). 0 is the first touchdown.
+// Walk: LH→LF→RH→RF; Trot: LH+RF→RH+LF; Pace: LH+LF→RH+RF.
+const GAITS=Object.freeze({
+  walk:{period:1.30,stride:58,stance:.72,lift:20,
+    offsets:{hindNear:0,frontNear:.75,hindFar:.50,frontFar:.25},order:'HL → VL → HR → VR'},
+  trot:{period:.80,stride:74,stance:.52,lift:25,
+    offsets:{hindNear:0,frontFar:0,hindFar:.50,frontNear:.50},order:'HL + VR → HR + VL'},
+  // Moderately fast, ground-oriented running cycle; calibrated for this stylized rig.
+  // Short aerial gaps between grouped contacts; not a maximal-speed greyhound gallop.
+  run:{period:.76,stride:240,stance:.43,lift:13,
+    offsets:{hindNear:0,hindFar:.035,frontNear:.515,frontFar:.55},order:'Hinterhand-Abdruck → Vorgriff → Vorderhand-Stütze'},
+  pace:{period:1.00,stride:62,stance:.57,lift:21,
+    offsets:{hindNear:0,frontNear:0,hindFar:.50,frontFar:.50},order:'HL + VL → HR + VR'}
+});
+
+/** Local footprint trajectory. Body translates at stride/period in world coordinates.
+ * During stance paw worldX remains fixed, while swing eases paw to its next landing.
+ */
+function gaitPaw(t, offset, hipOffset, ground, stride, period, stance=.72, lift=20, biomechRun=false){
+  const p=t/period+offset, cycle=Math.floor(p), phase=frac(p);
+  let relative, y, support, swingU=0;
+  if(phase<stance){
+    // In stance the paw stays fixed in world space while the body travels over it.
+    relative=hipOffset+(stance*.5-phase)*stride;
+    y=ground;support=true;
+  } else {
+    const u=(phase-stance)/(1-stance);swingU=u;
+    const h00=2*u*u*u-3*u*u+1,h10=u*u*u-2*u*u+u;
+    const h01=-2*u*u*u+3*u*u,h11=u*u*u-u*u;
+    // C1-compatible foot sweep, preserving backward body-relative velocity at
+    // lift-off and touchdown instead of snapping to a different angular slope.
+    const x0=-stance*.5*stride,x1=stance*.5*stride;
+    const tangent=-stride*(1-stance);
+    relative=biomechRun ? hipOffset+h00*x0+h10*tangent+h01*x1+h11*tangent
+       : hipOffset-stance*.5*stride+smooth(u)*stance*stride;
+    // Toe clearance is low in running; much less 'hopping' than v7.4.
+    y=ground-lift*Math.sin(Math.PI*u);
+    support=false;
+  }
+  const bodyWorld=t/period*stride;
+  return {worldX:bodyWorld+relative,relativeX:relative,y,phase:support?'stance':'swing',
+    support,cycle,pawCycle:phase,stanceFraction:stance,swingU};
+}
+
+/** Fixed-length hock→toe chain. A stifle (knee) is NOT the backward-pointing hock.
+ * Rear limbs are three segments: hip→stifle→hock→paw; fronts have shoulder→elbow→paw.
+ * We solve hip→hock with exact two-bone IK and enforce metatarsal length analytically.
+ */
+function poseFourLegs({time=0,mode='walk',legScale=1,frontLegScale=1,hindLegScale=1,bodyScale=1,strideScale=1,speed=1,
+  ground=438,cx=465,customTarget=null}){
+  const moving=Object.hasOwn(GAITS,mode),gait=GAITS[mode]||GAITS.walk;
+  const frontUpper=59*legScale*frontLegScale,frontLower=77*legScale*frontLegScale;
+  const hindUpper=67*legScale*hindLegScale,hindLower=63*legScale*hindLegScale;
+  const hockToe={x:20*legScale*hindLegScale,y:34*legScale*hindLegScale};
+  const hockLength=Math.hypot(hockToe.x,hockToe.y);
+
+  // Running uses a lower trunk and greater available joint flexion under load.
+  // Front and rear heights are separately computed from their own limb proportions.
+  const foreReach = moving ? (mode==='run' ? .85 : .942) : (mode==='alert' ? .986 : .972);
+  const hindReach = moving ? (mode==='run' ? .75 : .932) : (mode==='alert' ? .978 : .948);
+  const torso=220*bodyScale;
+  const stride=gait.stride*legScale*strideScale*(mode==='run'?Math.min(1.1,frontLegScale,hindLegScale):1);
+  const period=gait.period/Math.max(.35,speed);
+  const bodyWorld=moving?time/period*stride:0;
+  const bob=moving?(mode==='run'?1.0:mode==='trot'?2.4:mode==='walk'?.9:1.5)*Math.sin(time/period*4*Math.PI):0;
+
+  const foreX=cx+torso*.34+(mode==='alert'?4:0);
+  const hindX=cx-torso*.34+(mode==='alert'?-2:0);
+
+  // Relaxed stand: slightly looser. Alert stand: front tighter, hindquarters stretched, back almost straight.
+  const shoulderY=ground-(frontUpper+frontLower)*foreReach+bob+(mode==='alert'?3:0);
+  const hindStandHeight=(hindUpper+hindLower+hockToe.y)*hindReach;
+  const hindBaseY=ground-hindStandHeight+bob+(mode==='alert'?2:-1);
+  // No arbitrary extra pelvis slope: the back follows the two anatomical anchors.
+  const bodySlope=mode==='run'?0:(hindBaseY-shoulderY)*0.22;
+
+  const roots={
+    frontNear:{x:foreX+5,y:shoulderY},frontFar:{x:foreX-7,y:shoulderY+2},
+    hindNear:{x:hindX-4,y:hindBaseY+bodySlope},hindFar:{x:hindX+8,y:hindBaseY+2+bodySlope}
+  };
+
+  const result={};
+  for(const name of ['hindFar','frontFar','hindNear','frontNear']){
+    const hind=name.startsWith('hind'),root=roots[name];
+    // Front reach is slightly ahead of the shoulder; hind push-off behind hip.
+    const hipOffset=root.x-cx+(mode==='run'?(hind?-12*hindLegScale:8*frontLegScale):(hind?-12:4));
+    let requested,phase='stance',support=true,pawCycle=0;
+    if(moving){
+      const paw=gaitPaw(time,gait.offsets[name],hipOffset,ground,stride,period,gait.stance,
+        gait.lift*legScale,mode==='run');
+      phase=paw.phase;support=paw.support;pawCycle=paw.pawCycle;
+      requested={x:cx+paw.worldX-bodyWorld,y:paw.y};
+      if(mode==='run'){
+        // The joint angles emerge from a long foot-sweep plus fixed bone lengths.
+        // Early swing permits moderate flexion, then the leg re-extends into
+        // forward placement; never apply a fixed 'knee folding' animation angle.
+        const u=paw.swingU||0;
+        if(!support){
+          const clearance=hind?2.0:1.0;
+          requested.y -= clearance*legScale*Math.sin(Math.PI*u);
+        }
+      }
+    }else{
+      if(mode==='alert'){
+        requested = hind
+          ? {x:root.x-20,y:ground}
+          : {x:root.x-2,y:ground};
+      }else{
+        requested = hind
+          ? {x:root.x-14,y:ground}
+          : {x:root.x+2,y:ground};
+      }
+      if(mode==='ik'&&name==='frontNear'&&customTarget)requested={...customTarget};
+    }
+    if(!hind){
+      const two=solveLeg(root,requested,frontUpper,frontLower,+1);
+      result[name]={...two,name,phase,support,pawCycle,upper:frontUpper,lower:frontLower,
+        joints:[two.root,two.knee,two.foot],jointLengths:[frontUpper,frontLower],
+        muscleFactor:1+Math.max(0,1-frontLegScale)*0.85,
+        angle:innerAngle(two.root,two.knee,two.foot),hock:null,hockAngle:null};
+    }else{
+      const hockTarget={x:requested.x-hockToe.x,y:requested.y-hockToe.y};
+      const two=solveLeg(root,hockTarget,hindUpper,hindLower,-1);
+      const foot={x:two.foot.x+hockToe.x,y:two.foot.y+hockToe.y};
+      result[name]={...two,name,foot,requested,phase,support,pawCycle,knee:two.knee,hock:two.foot,
+        upper:hindUpper,lower:hindLower,third:hockLength,
+        joints:[root,two.knee,two.foot,foot],jointLengths:[hindUpper,hindLower,hockLength],
+        muscleFactor:1+Math.max(0,1-hindLegScale)*1.45,
+        targetError:length(foot,requested),
+        thirdError:Math.abs(length(two.foot,foot)-hockLength),
+        angle:innerAngle(root,two.knee,two.foot),
+        hockAngle:innerAngle(two.knee,two.foot,foot)};
+    }
+  }
+  return {legs:result,torso,ground,cx,bodyWorld,stride,period,mode,foreHeight:ground-shoulderY,hindHeight:ground-hindBaseY,gait:moving?gait:null,frontLegScale,hindLegScale};
+}
+
+/** Linear-blend CPU skinning for a textured quad strip, supporting 2 or 3 bones.
+ * The bind ribbon is segmented along its arc length; vertices near each joint blend
+ * between adjacent rigid bone transforms to soften the elbow/stifle/hock seam.
+ */
+function skinRibbon(ik,positions,rows=28,cols=5,outline=false){
+  const joints=ik.joints||[ik.root,ik.knee,ik.foot];
+  const segLengths=ik.jointLengths||[ik.upper,ik.lower];
+  const cum=[0];for(const L of segLengths)cum.push(cum.at(-1)+L);
+  const total=cum.at(-1),blend=13*segLengths[0]/59;
+  const hind=ik.name.startsWith('hind');
+  const baseWidth=ik.name.startsWith('front')?14:17;
+  const muscleFactor=ik.muscleFactor||1;
+  const sample=(segment,d,lateral)=>{
+    const a=joints[segment],b=joints[segment+1];
+    const dx=(b.x-a.x)/segLengths[segment],dy=(b.y-a.y)/segLengths[segment];
+    const along=d-cum[segment];
+    return {x:a.x+dx*along-dy*lateral,y:a.y+dy*along+dx*lateral};
+  };
+  for(let j=0;j<rows;j++){
+    const s=j/(rows-1),d=s*total;
+    const baseTaper=(.97-.36*s+.13*Math.exp(-Math.pow((s-.52)/.16,2)));
+    const upperBulge=(muscleFactor-1)*(hind?1.0:.6)*Math.exp(-Math.pow((s-.18)/.18,2));
+    const midSupport=(muscleFactor-1)*(hind?.28:.18)*Math.exp(-Math.pow((s-.34)/.16,2));
+    const wide=baseWidth*(baseTaper+upperBulge+midSupport);
+    const width=wide+(outline?2.3:0);
+    let seg=0;while(seg<segLengths.length-1&&d>cum[seg+1])seg++;
+    for(let c=0;c<cols;c++){
+      const u=c/(cols-1),lateral=(u*2-1)*width;
+      let pos=sample(seg,d,lateral);
+      for(let k=1;k<cum.length-1;k++)if(Math.abs(d-cum[k])<blend){
+        const w=smooth((d-cum[k]+blend)/(2*blend));
+        const a=sample(k-1,d,lateral),b=sample(k,d,lateral);
+        pos={x:mix(a.x,b.x,w),y:mix(a.y,b.y,w)};break;
+      }
+      const i=2*(j*cols+c);positions[i]=pos.x;positions[i+1]=pos.y;
+    }
+  }
+  return positions;
+}
+function ribbonGeometry(rows=28,cols=5){
+  const positions=new Float32Array(rows*cols*2),uvs=new Float32Array(rows*cols*2),ind=[];
+  for(let j=0;j<rows;j++)for(let c=0;c<cols;c++){
+    const i=2*(j*cols+c);uvs[i]=c/(cols-1);uvs[i+1]=j/(rows-1);
+    if(j<rows-1&&c<cols-1){const q=j*cols+c;ind.push(q,q+1,q+cols,q+1,q+cols+1,q+cols);}
+  }
+  return {positions,uvs,indices:new Uint32Array(ind)};
+}
+
+
+
+/** Textured body surface, computed independently from rendering.
+ * We model a continuous back and belly contour rather than a rectangle.
+ * +x is forward; each cross-section is a short vertical strip.
+ * Chest depth affects front underside, tuck affects waist, backArch affects spine.
+ * Bone roots remain governed exclusively by poseFourLegs (not stretched by sliders).
+ */
+function gaussian(t,mu,sigma){const d=(t-mu)/sigma;return Math.exp(-d*d);}
+function buildTorsoProfile(pose,{chestScale=1,tuck=.45,backArch=.35,time=0,tailBaseOverride=null}={}){
+ const {cx,torso,legs,mode}=pose;
+ const moving=Object.hasOwn(GAITS,mode);
+ const shoulderL=legs.frontNear.root,shoulderR=legs.frontFar.root;
+ const hipL=legs.hindNear.root,hipR=legs.hindFar.root;
+ const shoulder={x:(shoulderL.x+shoulderR.x)/2,y:(shoulderL.y+shoulderR.y)/2};
+ const hip={x:(hipL.x+hipR.x)/2,y:(hipL.y+hipR.y)/2};
+ const pelvis={x:hip.x-13,y:hip.y-8};
+ const tailRoot=tailBaseOverride||{x:pelvis.x-18,y:pelvis.y-6};
+ const neckBase={x:shoulder.x+29,y:shoulder.y-22};
+ const x0=tailRoot.x-8,x1=neckBase.x+20;
+ const centerY=(shoulder.y+hip.y)*.5-25;
+ const rhythm=moving ? Math.sin(time/(pose.period||1)*Math.PI*2) : 0;
+ const spineFlex=(moving ? (mode==='run'?2.4:mode==='trot'?2.3:mode==='pace'?1.4:1.0) : 0)*rhythm;
+ const sample=t=>{
+   t=clamp(t,0,1);
+   const span=(x1-x0),x=x0+span*t;
+   const left=smooth(t/.20),right=smooth((1-t)/.14);
+   const sleeve=.10+.90*left*right;
+   const spineY = pelvis.y*(1-t)+neckBase.y*t;
+   const shoulderLift=-4.5*gaussian(t,.80,.11);
+   const chestSettle=3.5*gaussian(t,.73,.16);
+   const haunchSoft=1.8*gaussian(t,.20,.14);
+   const mid=spineY-4.5+spineFlex*gaussian(t,.52,.29)+shoulderLift+haunchSoft;
+   const frontMass=7.2*gaussian(t,.76,.17);
+   const rearTrim=3.2*gaussian(t,.18,.17);
+   const topHalf=24+backArch*5.3*gaussian(t,.51,.28)+frontMass*.72-rearTrim*.34+1.2*gaussian(t,.33,.16);
+   const bottomHalf=18+18*chestScale*gaussian(t,.75,.18)-10*tuck*gaussian(t,.50,.18)+frontMass*.58-rearTrim*.18+chestSettle;
+   return {x,top:mid-sleeve*topHalf,bottom:mid+sleeve*bottomHalf,mid};
+ };
+ return {sample,x0,x1,centerY,tailBase:tailRoot,tailRoot,shoulder,hip,pelvis,neckBase,shoulderL,shoulderR,hipL,hipR,mode,chestScale,tuck,backArch};
+}
+function skinTorsoMesh(profile,positions,outline=false,rows=34,cols=9){
+ for(let j=0;j<rows;j++){
+  const t=j/(rows-1),p=profile.sample(t);
+  for(let k=0;k<cols;k++){
+   const v=k/(cols-1),o=outline?2.7:0;
+   const y=mix(p.top-o,p.bottom+o,v);
+   // Slight rounded caps around the haunch and future neck connector.
+   const cap=2.2*Math.pow(2*v-1,2)*(smooth((.13-t)/.13)-smooth((t-.88)/.12));
+   const i=2*(j*cols+k);
+   positions[i]=p.x+cap;
+   positions[i+1]=y;
+  }
+ }
+ return positions;
+}
+function drawTorsoDetails(g,profile,showBones=false){
+ g.clear();
+ const f=t=>profile.sample(t);
+ const a=f(.69),b=f(.76),c=f(.83);
+ g.moveTo(a.x,a.top+21).bezierCurveTo(b.x-2,b.top+27,b.x+8,b.bottom-20,c.x,c.bottom-29)
+  .stroke({color:0x7d563f,width:2.6,alpha:.36,cap:'round'});
+ g.moveTo(f(.18).x,f(.18).top+12).bezierCurveTo(f(.35).x,f(.35).top+7,f(.58).x,f(.58).top+9,f(.78).x,f(.78).top+14)
+  .stroke({color:0xffe0b4,width:3.5,alpha:.38,cap:'round'});
+ g.moveTo(f(.61).x,f(.61).bottom-12).bezierCurveTo(f(.72).x,f(.72).bottom-8,f(.83).x,f(.83).bottom-11,f(.91).x,f(.91).bottom-18)
+  .stroke({color:0xf3cc9c,width:4.8,alpha:.47,cap:'round'});
+ const t=profile.tailRoot;
+ g.circle(t.x+6,t.y,8.5).fill({color:0xb6845b,alpha:.92});
+ if(showBones){
+  const {shoulder,neckBase,pelvis,hipL,hipR,tailRoot}=profile;
+  g.moveTo(pelvis.x,pelvis.y).lineTo(shoulder.x,shoulder.y-18).lineTo(neckBase.x,neckBase.y)
+   .stroke({color:0x26334a,width:2,alpha:.42});
+  g.moveTo(pelvis.x,pelvis.y).lineTo(tailRoot.x,tailRoot.y).stroke({color:0x26334a,width:2,alpha:.42});
+  g.moveTo(pelvis.x,pelvis.y).lineTo(hipL.x,hipL.y).stroke({color:0x26334a,width:1.8,alpha:.35});
+  g.moveTo(pelvis.x,pelvis.y).lineTo(hipR.x,hipR.y).stroke({color:0x26334a,width:1.4,alpha:.25});
+  for(const p of [shoulder,neckBase,pelvis,tailRoot])
+   g.circle(p.x,p.y,4).fill(0xdceb81).stroke({color:0x26334a,width:1});
+  for(const p of [hipL,hipR])
+   g.circle(p.x,p.y,3.2).fill(0xc4e7a7).stroke({color:0x26334a,width:.9,alpha:.8});
+ }
+}
+
+// Rute: local 3D forward kinematics, then shallow 2.5D projection.
+// +x = screen forward (dog faces right); -x = backward, +z = left/right swing in depth.
+// Angle (pitch) is measured upward relative to the straight backward tail.
+// Pose meanings are stylized and relative to each dog's anatomical neutral carriage.
+// curlChange is only a *visual response* for flexible naturally-curled tails,
+// not a biological scale for happiness or arousal.
+const EXPRESSIONS=Object.freeze({
+ auto:{name:'Automatisch',spread:0,hz:0,flex:0,desc:'Richtet sich nach der aktuellen Pose.'},
+ calm:{name:'Entspannt',spread:8,hz:.55,flex:.78,desc:'Die Rute bleibt in der natürlichen Ruheposition. Sie hängt locker oder bewegt sich nur wenig; eine natürliche Ringelung bleibt erhalten.'},
+ alert:{name:'Aufmerksam',spread:6,hz:.55,flex:.36,desc:'Die Rute steigt gegenüber ihrer normalen Haltung etwas an. Sie wird kontrollierter getragen, ohne automatisch angespannt zu sein.'},
+ happy:{name:'Fröhlich',spread:45,hz:2.0,flex:1.0,desc:'Der Ansatz ist neutral bis leicht erhöht. Breites, lockeres Wedeln und weiche Körperspannung sind wichtiger als maximale Rutenhöhe oder Einrollung.'},
+ excited:{name:'Aufgeregt',spread:32,hz:3.25,flex:.82,desc:'Oft höher und deutlich schneller bewegt. Aufregung kann freudig, aber auch angespannt sein.'},
+ unsure:{name:'Unsicher',spread:9,hz:1.0,flex:.40,desc:'Die Rute sinkt gegenüber ihrer normalen Haltung etwas ab. Bei einer Ringelrute darf der Ansatz noch leicht aufwärts zeigen, die Rolle öffnet sich aber sichtbar.'},
+ fearful:{name:'Ängstlich',spread:1.5,hz:.38,flex:.10,desc:'Die Rute fällt deutlich nach unten und kann Richtung Bauch oder zwischen die Hinterbeine eingezogen werden. Die Ringelung lockert sich stark und die Rute wedelt kaum.'},
+ tense:{name:'Angespannt',spread:4,hz:1.8,flex:.12,desc:'Hoch und steif gehalten, wenig freies Wedeln. Das ist nicht dasselbe wie freundliche Aufregung und kein zuverlässiges Aggressionszeichen für sich allein.'}
+});
+const TAIL_TYPES=Object.freeze({
+ natural:{name:'Neutral',desc:'Allround-Grundform für die Demo. Echte Hunderuten haben meist deutlich mehr Wirbel; hier wird mit wenigen Kontrollsegmenten animiert.',widths:[17,15,12,9,5,1.6],lengths:[20,18,17,15,12],rootPitch:0,curl:0,rootYOffset:0,curlExp:1.22,distalCurl:0},
+ straight:{name:'Gerade',desc:'Eher gerade und tiefer getragen – passend für zurückhaltende oder gerade angesetzte Ruten.',widths:[16,14,11,8,4.5,1.4],lengths:[21,19,18,16,13],rootPitch:-18,curl:-8,rootYOffset:2,curlExp:1.16,distalCurl:0},
+ sickle:{name:'Sichel',desc:'Höher getragen und bogenförmig nach oben – angelehnt an typische spitzartige Sichelruten.',widths:[16,14,11,8,4.5,1.4],lengths:[21,19,18,16,14],rootPitch:20,curl:28,rootYOffset:-4,curlExp:1.12,distalCurl:10},
+ curl:{name:'Gerollt',desc:'Anatomische Ringelrute als Basisform, nicht als Stimmungsanzeige. Ihre sichtbare Krümmung darf sich je nach Muskelspannung etwas lockern oder festigen. Hinweis: Der Lagotto-Rassestandard beschreibt normalerweise eine Sichel- statt einer geschlossenen Ringrute.',widths:[14,13,12,11,9,7,5,3,1.4],lengths:[20,19,17,15,13,11,9,7],rootPitch:35,curl:152,rootYOffset:-11,curlExp:.95,distalCurl:64},
+ otter:{name:'Otter',desc:'An der Basis dicker und rundlicher, nach hinten kräftig auslaufend – wie die klassische „Otterrute“ des Labradors.',widths:[21,20,18,15,11,4],lengths:[22,20,18,17,15],rootPitch:-6,curl:-3,rootYOffset:3,curlExp:1.2,distalCurl:0},
+ plume:{name:'Plume',desc:'Länger und buschiger mit weicher Bogenlinie – eine stilisierte Feder- bzw. Plume-Rute.',widths:[18,17,14,11,8,2],lengths:[24,22,21,19,17],rootPitch:7,curl:13,rootYOffset:-1,curlExp:1.16,distalCurl:3},
+ bob:{name:'Bobtail',desc:'Sehr kurze natürliche oder gekürzte Rute. Nur wenige Segmente bleiben sichtbar.',widths:[15,12,8],lengths:[10,8],rootPitch:8,curl:5,rootYOffset:1,curlExp:1.2,distalCurl:0}
+});
+const AUTO_EXPRESSION={walk:'calm',trot:'excited',run:'excited',pace:'calm',stand:'calm',alert:'alert',ik:'calm'};
+function effectiveExpression(state){return state.expression==='auto'?(AUTO_EXPRESSION[state.mode]||'calm'):state.expression;}
+function effectiveTailType(state){return TAIL_TYPES[state.tailType]?state.tailType:'natural';}
+function lerp(a,b,t){return a+(b-a)*t;}
+function widthAtTail(tail,t){
+ const ws=tail.widths,n=ws.length-1;
+ if(n<=0)return ws[0]||8;
+ const f=Math.min(n-1e-7,Math.max(0,t*n)),i=Math.floor(f),u=f-i;
+ return lerp(ws[i],ws[Math.min(n,i+1)],u);
+}
+/** Returns a breed-relative pose target.
+ * Pitch 0° points straight behind the dog, + points UP, - points DOWN.
+ * A naturally curled tail may retain its bend, but fearful carriage should visibly
+ * lower the root and RELAX the curl rather than tilt a still-upright ring.
+ * The values are animation design targets, not measured clinical joint angles.
+ */
+function tailExpressionTargets(type,expression='calm',intensity=1){
+ const strength=clamp(intensity,0,1.6);
+ const resting=type.rootPitch||0;
+ const shift={calm:0,alert:19,happy:10,excited:28,unsure:-25,tense:37};
+ // "Unsicher" need not point down for an innately high/carried ring-tail.
+ const target=expression==='fearful' ? -76
+   :expression==='unsure' ? Math.min(10,resting-25)
+   :resting+(shift[expression]||0);
+ const rootPitch=clamp(lerp(resting,target,strength),-87,85);
+ const ring=type.name==='Gerollt';
+ const sickle=type.name==='Sichel';
+ let curlGoal=1;
+ if(expression==='fearful')curlGoal=ring?.07:(sickle?.30:.72);
+ else if(expression==='unsure')curlGoal=ring?.22:(sickle?.62:.91);
+ else if(expression==='happy')curlGoal=ring?1.04:1;
+ else if(expression==='alert')curlGoal=ring?1.06:1;
+ else if(expression==='excited')curlGoal=ring?1.13:1.04;
+ else if(expression==='tense')curlGoal=ring?1.13:1.03;
+ const curlFactor=clamp(lerp(1,curlGoal,strength),0,1.45);
+ // When very frightened, the tip may turn gently UNDER the rump. This is a
+ // curvature of the dropped tail (opposite sign to the normal upward ring).
+ const tuck=expression==='fearful' ? -53*strength
+   :expression==='unsure' ? -7*strength :0;
+ return {rootPitch,curlFactor,tuck,strength};
+}
+function buildTailPose({cx,centerY,torsoLen,mode,expression='calm',tailType='natural',time=0,legScale=1,wagScale=1,emotionIntensity=1,tailLengthScale=1,tailThicknessScale=1,baseOverride=null}){
+ const preset=EXPRESSIONS[expression]||EXPRESSIONS.calm;
+ const type=TAIL_TYPES[tailType]||TAIL_TYPES.natural;
+ const base=baseOverride?{x:baseOverride.x,y:baseOverride.y+(type.rootYOffset||0),z:0}:{x:cx-torsoLen*.55+4,y:centerY-8+(type.rootYOffset||0),z:0};
+ const widths=type.widths.map(x=>x*legScale*tailThicknessScale), lengths=type.lengths.map(x=>x*legScale*tailLengthScale);
+ const posture=tailExpressionTargets(type,expression,emotionIntensity);
+ const phase=time*2*Math.PI*preset.hz;
+ const points=[base];
+ let x=base.x,y=base.y,z=base.z;
+ for(let i=0;i<lengths.length;i++){
+   const q=lengths.length===1?1:i/(lengths.length-1);
+   const sway=Math.sin(phase-i*.38)*(preset.spread*wagScale*Math.PI/180)*posture.strength;
+   const yaw=sway*(.82+.18*q)+Math.sin(phase*.52-i*.4)*.045*preset.flex*wagScale*posture.strength;
+   const anatomicalBend=((type.curl||0)*Math.pow(q,type.curlExp||1.22)+(type.distalCurl||0)*Math.pow(q,2.15))*posture.curlFactor;
+   const expressiveFlex=(i-2)*2.1*preset.flex*posture.strength;
+   const pitch=(posture.rootPitch+anatomicalBend+posture.tuck*Math.pow(q,1.6)+expressiveFlex)*Math.PI/180;
+   const dx=-Math.cos(pitch)*Math.cos(yaw)*lengths[i];
+   const dy=-Math.sin(pitch)*lengths[i];
+   const dz=Math.cos(pitch)*Math.sin(yaw)*lengths[i];
+   x+=dx;y+=dy;z+=dz;
+   points.push({x,y,z});
+ }
+ return {points,widths,base,expression,preset,phase,legScale,tailType,type,posture};
+}
+function projectTail(p){return {x:p.x+p.z*.10,y:p.y-p.z*.075};}
+function catmull(a,b,c,d,t){return .5*((2*b)+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t);}
+function tailCurve(tail,t){
+ const n=tail.points.length-1, f=Math.min(n-1e-7,Math.max(0,t*n)), i=Math.floor(f), u=f-i;
+ const p=tail.points;
+ const a=p[Math.max(0,i-1)],b=p[i],c=p[i+1],d=p[Math.min(n,i+2)];
+ return {x:catmull(a.x,b.x,c.x,d.x,u),y:catmull(a.y,b.y,c.y,d.y,u),z:catmull(a.z,b.z,c.z,d.z,u)};
+}
+function skinTailMesh(tail, positions, outline=false, rows=28, cols=5){
+ for(let j=0;j<rows;j++){
+   const t=j/(rows-1);
+   const p=projectTail(tailCurve(tail,t));
+   const prev=projectTail(tailCurve(tail,Math.max(0,t-.007)));
+   const next=projectTail(tailCurve(tail,Math.min(1,t+.007)));
+   let dx=next.x-prev.x,dy=next.y-prev.y;
+   const L=Math.hypot(dx,dy)||1;dx/=L;dy/=L;
+   const w=widthAtTail(tail,t)+(outline?2.5:0);
+   for(let k=0;k<cols;k++){
+     const off=(k/(cols-1)*2-1)*w,idx=2*(j*cols+k);
+     positions[idx]=p.x-dy*off;
+     positions[idx+1]=p.y+dx*off;
+   }
+ }
+ return positions;
+}
+// The panel is entirely inside the 940 × 560 PixiJS stage.
+const REAR_PANEL=Object.freeze({x:626,y:92,w:254,h:214});
+function drawRearWag(g, tail, {visible=true,playing=true}){
+ g.clear(); if(!visible)return;
+ const {x,y,w,h}=REAR_PANEL;
+ g.roundRect(x,y,w,h,17).fill({color:0xffffff,alpha:.95});
+ g.roundRect(x,y,w,h,17).stroke({color:0xd9d4df,width:2});
+ g.roundRect(x+12,y+12,w-24,25,10).fill(0xeae4f0);
+ g.moveTo(x+w*.5,y+50).lineTo(x+w*.5,y+h-24).stroke({color:0xe5e2df,width:1,alpha:.8});
+ const hipX=x+w*.5,hipY=y+122;
+ g.ellipse(hipX,hipY+31,48,47).fill(0xe0ae7a).stroke({color:0x26334a,width:2});
+ g.ellipse(hipX-36,hipY+58,14,20).fill({color:0xbb8157,alpha:.9});
+ g.ellipse(hipX+36,hipY+58,14,20).fill({color:0xbb8157,alpha:.9});
+ const root=tail.points[0],baseY=hipY+18;
+ const proj=tail.points.map((p,i)=>({x:hipX+(p.z-root.z)*1.18, y:baseY-(root.x-p.x)*.84-(root.y-p.y)*.22}));
+ // broad reference arc: shows total potential left/right travel, not a happiness score
+ const swing=tail.preset.spread*Math.PI/180;
+ const radius=34 + Math.sin(swing)*48;
+ g.moveTo(hipX-radius,hipY-62).lineTo(hipX+radius,hipY-62).stroke({color:0xc5cf9a,width:2,alpha:.55});
+ g.circle(hipX-radius,hipY-62,3).fill(0xc5cf9a);
+ g.circle(hipX+radius,hipY-62,3).fill(0xc5cf9a);
+ for(let i=0;i<proj.length-1;i++){
+   const a=proj[i],b=proj[i+1];
+   g.moveTo(a.x,a.y).lineTo(b.x,b.y).stroke({color:0x26334a,width:12-i*1.7,cap:'round'});
+   g.moveTo(a.x,a.y).lineTo(b.x,b.y).stroke({color:0xb7845a,width:9-i*1.6,cap:'round'});
+ }
+ const tip=proj.at(-1);g.circle(tip.x,tip.y,4).fill(0xbf452c);
+ g.roundRect(x+16,y+h-34,w-32,22,8).fill({color:0xf8f4eb,alpha:1});
+ // text labels drawn by PIXI Text overlay outside this Graphics
+}
+const $=q=>document.querySelector(q);
+const status=$('#canvas-status');
+if(!window.PIXI){status.textContent='Zeichen-Engine konnte nicht geladen werden.';throw new Error('Renderer not loaded');}
+const PIXI=window.PIXI;
+const app=new PIXI.Application();
+try {await app.init({width:940,height:560,antialias:true,backgroundAlpha:0,resolution:Math.min(2,devicePixelRatio||1),autoDensity:true,preference:'webgl'});}
+catch(e) {status.textContent='Die Vorschau konnte nicht gestartet werden: '+e.message;throw e;}
+$('#canvas-wrap').prepend(app.canvas);
+status.remove();
+
+const state={mode:'walk',playing:true,t:0,animT:0,legScale:1,frontLegScale:1,hindLegScale:1,bodyScale:1,strideScale:1,speed:1,expression:'auto',tailType:'natural',wagScale:1,emotionIntensity:1,tailLengthScale:1,tailThicknessScale:1,chestScale:1,tuck:.45,backArch:.35,showRear:true,showBones:true,showGrid:false,target:{x:555,y:389}};
+const NAMES=['hindFar','frontFar','hindNear','frontNear'];
+const GROUND=438;
+
+const base=new PIXI.Graphics();app.stage.addChild(base);
+const floor=new PIXI.Graphics();app.stage.addChild(floor);
+const far=new PIXI.Container();app.stage.addChild(far);
+const tailLayer=new PIXI.Container();app.stage.addChild(tailLayer);
+const rearWag=new PIXI.Graphics();app.stage.addChild(rearWag);
+const torsoLayer=new PIXI.Container();app.stage.addChild(torsoLayer);
+const torso=new PIXI.Graphics();app.stage.addChild(torso);
+const near=new PIXI.Container();app.stage.addChild(near);
+const outlines=new PIXI.Graphics();app.stage.addChild(outlines);
+const markers=new PIXI.Graphics();app.stage.addChild(markers);
+app.stage.removeChild(rearWag);app.stage.addChild(rearWag);
+const rearLabel=new PIXI.Text({text:'VON HINTEN · WEDELN',style:{fontFamily:'Arial,sans-serif',fontSize:11,fontWeight:'bold',fill:0x26334a}});
+rearLabel.position.set(REAR_PANEL.x+16,REAR_PANEL.y+18);app.stage.addChild(rearLabel);
+const rearNote=new PIXI.Text({text:'Seitlicher Ausschlag',style:{fontFamily:'Arial,sans-serif',fontSize:10,fill:0x667284}});
+rearNote.position.set(REAR_PANEL.x+20,REAR_PANEL.y+REAR_PANEL.h-33);app.stage.addChild(rearNote);
+
+// The image is only a skin texture: every mesh vertex is computed by our own CPU skinning.
+function furTexture(outline=false){
+ const canvas=document.createElement('canvas'); canvas.width=128;canvas.height=256;
+ const c=canvas.getContext('2d');
+ if(outline){c.fillStyle='#26334A';c.fillRect(0,0,128,256);return PIXI.Texture.from(canvas);}
+ const grad=c.createLinearGradient(0,0,128,0);
+ grad.addColorStop(0,'#80583f');grad.addColorStop(.12,'#b77a53');grad.addColorStop(.34,'#dcab77');
+ grad.addColorStop(.56,'#e6b681');grad.addColorStop(.82,'#b4794d');grad.addColorStop(1,'#80583f');
+ c.fillStyle=grad;c.fillRect(0,0,128,256);
+ c.fillStyle='rgba(255,242,210,.13)';
+ let seed=19;function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+ for(let i=0;i<210;i++){const x=rnd()*128,y=rnd()*256;c.fillRect(x,y,1+rnd()*1.9,4+rnd()*7);}
+ return PIXI.Texture.from(canvas);
+}
+const fur=furTexture(),edgeTex=furTexture(true);
+// Dedicated vertical fur gradient for the torso, no external assets.
+function torsoTexture(){
+ const c=document.createElement('canvas');c.width=256;c.height=128;
+ const ctx=c.getContext('2d');
+ const gr=ctx.createLinearGradient(0,0,0,128);
+ gr.addColorStop(0,'#9c693f');gr.addColorStop(.22,'#c99462');gr.addColorStop(.50,'#dfb180');gr.addColorStop(.78,'#ba8258');gr.addColorStop(1,'#895c43');
+ ctx.fillStyle=gr;ctx.fillRect(0,0,256,128);
+ let seed=643;function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+ for(let j=0;j<820;j++){
+  const x=rnd()*256,y=rnd()*128;
+  ctx.fillStyle=rnd()>.40?'rgba(253,227,191,.12)':'rgba(90,59,45,.08)';
+  ctx.fillRect(x,y,2+rnd()*4,.7+rnd()*1.4);
+ }
+ return PIXI.Texture.from(c);
+}
+const torsoTextureFur=torsoTexture();
+const torsoGeom=ribbonGeometry(34,9),torsoEdgeGeom=ribbonGeometry(34,9);
+// Torso uses horizontal t for x, but the shading gradient is vertical across v.
+for(const geom of [torsoGeom,torsoEdgeGeom])for(let j=0;j<34;j++)for(let c=0;c<9;c++){
+ const i=2*(j*9+c);geom.uvs[i]=j/33;geom.uvs[i+1]=c/8;
+}
+const torsoSkin=new PIXI.MeshSimple({texture:torsoTextureFur,vertices:torsoGeom.positions,uvs:torsoGeom.uvs,indices:torsoGeom.indices});
+const torsoBorder=new PIXI.MeshSimple({texture:edgeTex,vertices:torsoEdgeGeom.positions,uvs:torsoEdgeGeom.uvs,indices:torsoEdgeGeom.indices});
+torsoSkin.autoUpdate=torsoBorder.autoUpdate=true;
+torsoLayer.addChild(torsoBorder,torsoSkin);
+const tailGeom=ribbonGeometry(28,5);
+const tailEdgeGeom=ribbonGeometry(28,5);
+const tailSkin=new PIXI.MeshSimple({texture:fur,vertices:tailGeom.positions,uvs:tailGeom.uvs,indices:tailGeom.indices});
+const tailBorder=new PIXI.MeshSimple({texture:edgeTex,vertices:tailEdgeGeom.positions,uvs:tailEdgeGeom.uvs,indices:tailEdgeGeom.indices});
+tailSkin.autoUpdate=true;tailBorder.autoUpdate=true;
+tailLayer.addChild(tailBorder,tailSkin);
+const meshes={};
+function newMesh(texture,outline=false){
+ const geom=ribbonGeometry();const mesh=new PIXI.MeshSimple({texture,vertices:geom.positions,uvs:geom.uvs,indices:geom.indices});
+ mesh.autoUpdate=true;return mesh;
+}
+for(const name of NAMES){
+ const group=name.endsWith('Far')?far:near;
+ const edge=newMesh(edgeTex,true),body=newMesh(fur,false);
+ edge.alpha=name.endsWith('Far')?.55:.94;body.alpha=name.endsWith('Far')?.68:1;
+ group.addChild(edge,body);meshes[name]={edge,body};
+}
+function drawStatic(){
+ base.clear();
+ base.roundRect(0,0,940,560,0).fill(0xf3f0f7);
+ base.circle(790,93,112).fill({color:0xe8e1ef,alpha:.54});
+ base.circle(126,92,58).fill({color:0xece6f2,alpha:.72});
+ base.roundRect(0,438,940,122,0).fill(0xeee9e0);
+ base.rect(0,438,940,3).fill(0xcac4bf);
+ base.roundRect(26,24,238,34,10).fill({color:0xffffff,alpha:.79});
+ base.circle(42,41,5).fill(0xbf452c);
+ base.roundRect(55,37,160,7,4).fill(0xc8c5d3);
+ base.roundRect(225,37,25,7,4).fill(0xdceb81);
+}
+drawStatic();
+const controlMap={leg:'legScale',frontleg:'frontLegScale',hindleg:'hindLegScale',body:'bodyScale',chest:'chestScale',tuck:'tuck',back:'backArch',stride:'strideScale',speed:'speed'};
+function updateControls(){
+ for(const [id,k] of Object.entries(controlMap)){
+  $('#'+id).value=String(Math.round(state[k]*100));
+  $('#'+id+'-out').textContent=id==='speed'?state[k].toFixed(2).replace('.',',')+' ×':Math.round(state[k]*100)+' %';
+ }
+}
+for(const [id,key] of Object.entries(controlMap))$('#'+id).addEventListener('input',e=>{
+ state[key]=Number(e.target.value)/100;updateControls();
+ document.querySelectorAll('[data-preset]').forEach(b=>b.classList.remove('selected'));
+});
+function preset(name){
+ const vals={short:[.78,.94,.88,.98,1.02,1.06,.34,.27],normal:[1,1,1,1,1,1,.45,.35],tall:[1.22,1.04,1.02,1.06,1.02,.94,.56,.30]}[name];
+ [state.legScale,state.frontLegScale,state.hindLegScale,state.bodyScale,state.strideScale,state.chestScale,state.tuck,state.backArch]=vals;updateControls();
+ document.querySelectorAll('[data-preset]').forEach(b=>b.classList.toggle('selected',b.dataset.preset===name));
+}
+document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>preset(b.dataset.preset)));
+function modeSet(mode){
+ state.mode=mode;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));refreshExpressionUI();
+ $('#scene-hint').textContent=
+  mode==='ik'?'Zieh den roten Zielpunkt mit Maus oder Finger. Das Gelenk folgt ihm in beide Richtungen.'
+  :mode==='alert'?'Aufmerksam: startbereit und aufmerksam; die Rute hebt sich, ohne automatisch steif-angespannt zu werden.'
+  :mode==='stand'?'Chillen: ruhig abgestützt, vorne locker gerade, hinten sichtbar gewinkelt und die Rute locker tiefer.'
+  :mode==='walk'?'Vier einzelne Auftritte: HL → VL → HR → VR. Bodenkontakt ist in der Standphase fixiert.'
+  :mode==='trot'?'Diagonalpaare: HL + VR, anschließend HR + VL.'
+  :mode==='run'?'Laufen: tiefer geführter Rumpf, langer Vorgriff der Vorderbeine und Hinterbeinschub. Die Knie und Ellbogen beugen kurz beim Vorschwingen und strecken vor dem Aufsetzen.'
+  :'Gleichseitige Paare: HL + VL, anschließend HR + VR.';
+ $('#info-title').textContent=
+  mode==='ik'?'IK direkt ausprobieren'
+  :mode==='alert'?'Aufmerksame Standpose'
+  :mode==='stand'?'Beinwinkel im Stand'
+  :mode==='run'?'Laufbewegung'
+  :'Pfotenfolge, Standhaltungen und Bodenkontakt';
+ $('#info-body').textContent=
+  mode==='ik'?'Der große rote Punkt ist eine Zielposition. Wird er zu weit verschoben, zeigt die IK den nächstmöglichen Punkt an, statt die Knochen zu strecken.'
+  :mode==='alert'?'Die Vorderpfoten stehen näher unter der Schulter, die Hinterpfoten etwas weiter hinter der Hüfte. Die Rute wird aufmerksamer getragen – nicht automatisch bedrohlich.'
+  :mode==='stand'?'Das ist die entspanntere Haltung. Die Vorderbeine stützen relativ gerade; hinten bleiben Knie und Sprunggelenk sichtbar. Die Rute hängt etwas lockerer und schwingt leicht. Diese Werte sind stilistische Startwerte, keine tiermedizinischen Normen.'
+  :mode==='walk'?'Der Viertakt hat getrennte Auftritte und längere Standphasen. Die Rute pendelt locker mit. Grün bedeutet: Pfote steht am Boden.'
+  :mode==='trot'?'Diagonal gegenüberliegende Beine tragen und schwingen zusammen. Die Rute schwingt etwas aktiver mit.'
+  :mode==='run'?'Die Laufbewegung kombiniert eine tiefere, von der Vorder- und Hinterbeinlänge abhängige Körperhaltung mit größerem Vorgriff. Die Pfoten bleiben in der Stützphase verankert. Früh im Vorschwingen ist etwas Gelenkbeugung natürlich, vor dem Aufsetzen strecken sich die Beine wieder. Forschungsgrundlage: Canine Gangkinematik und Vor-/Hinterbein-Funktionen (siehe README).'
+  :'Vorder- und Hinterbein derselben Seite bewegen sich gemeinsam; der Passgang ist nicht das Standardgehen. Schulter, Becken und Rutenwurzel bleiben trotzdem getrennte Anker.';
+}
+function refreshDirectionUI(){
+ const key=effectiveTailType(state);
+ const p=tailExpressionTargets(TAIL_TYPES[key],effectiveExpression(state),state.emotionIntensity);
+ const angle=p.rootPitch;
+ const direction=angle<-55?'stark abwärts / Richtung Bauch':angle<-17?'abwärts':angle<11?'ungefähr waagerecht':angle<42?'leicht aufwärts':'deutlich aufwärts';
+ $('#tail-direction').textContent='Ansatz: '+direction;
+ const factor=p.curlFactor;
+ const bendText=key==='curl'||key==='sickle'
+  ?(factor<.2?'Rolle fast gelöst':factor<.72?'Rolle gelockert':factor<.95?'Rolle etwas geöffnet':factor>1.075?'Rolle kräftiger':'natürliche Rolle')
+  :'natürliche Form';
+ $('#tail-curl-state').textContent='Krümmung: '+bendText;
+}
+function refreshExpressionUI(){
+ const effective=effectiveExpression(state),p=EXPRESSIONS[effective];
+ document.querySelectorAll('[data-expression]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.expression===state.expression)));
+ $('#expression-title').textContent=p.name+' – '+(state.expression==='auto'?'automatisch gewählt':'manuell gewählt');
+ $('#expression-body').textContent=p.desc;
+ $('#wag-out').textContent=Math.round(state.wagScale*100)+' %';
+ $('#emotion-intensity-out').textContent=Math.round(state.emotionIntensity*100)+' %';
+ refreshDirectionUI();
+}
+function refreshTailTypeUI(){
+ const key=effectiveTailType(state),p=TAIL_TYPES[key];
+ document.querySelectorAll('[data-tailtype]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tailtype===key)));
+ $('#tailtype-title').textContent=p.name+' – Rutenform';
+ $('#tailtype-body').textContent=p.desc;
+ refreshDirectionUI();
+}
+function refreshTailLengthUI(){
+ $('#tail-length-out').textContent=Math.round(state.tailLengthScale*100)+' %';
+}
+function refreshTailThicknessUI(){
+ $('#tail-thickness-out').textContent=Math.round(state.tailThicknessScale*100)+' %';
+}
+document.querySelectorAll('[data-expression]').forEach(b=>b.addEventListener('click',()=>{state.expression=b.dataset.expression;refreshExpressionUI();}));
+document.querySelectorAll('[data-tailtype]').forEach(b=>b.addEventListener('click',()=>{state.tailType=b.dataset.tailtype;refreshTailTypeUI();}));
+$('#wag').addEventListener('input',e=>{state.wagScale=Number(e.target.value)/100;refreshExpressionUI();});
+$('#emotion-intensity').addEventListener('input',e=>{state.emotionIntensity=Number(e.target.value)/100;refreshExpressionUI();});
+$('#tail-length').addEventListener('input',e=>{state.tailLengthScale=Number(e.target.value)/100;refreshTailLengthUI();});
+$('#tail-thickness').addEventListener('input',e=>{state.tailThicknessScale=Number(e.target.value)/100;refreshTailThicknessUI();});
+$('#rear').addEventListener('change',e=>state.showRear=e.target.checked);
+refreshExpressionUI();refreshTailTypeUI();refreshTailLengthUI();refreshTailThicknessUI();
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>modeSet(b.dataset.mode)));
+$('#pause').addEventListener('click',()=>{state.playing=!state.playing;$('#pause-symbol').textContent=state.playing?'Ⅱ':'▶';$('#pause-text').textContent=state.playing?'Pause':'Weiter';});
+$('#bones').addEventListener('change',e=>state.showBones=e.target.checked);
+$('#grid').addEventListener('change',e=>state.showGrid=e.target.checked);
+$('#reset').addEventListener('click',()=>{preset('normal');state.speed=1;updateControls();modeSet('walk');state.t=0;state.animT=0;state.expression='auto';state.tailType='natural';state.wagScale=1;state.emotionIntensity=1;state.tailLengthScale=1;state.tailThicknessScale=1;state.showRear=true;$('#wag').value='100';$('#emotion-intensity').value='100';$('#tail-length').value='100';$('#tail-thickness').value='100';$('#rear').checked=true;refreshExpressionUI();refreshTailTypeUI();refreshTailLengthUI();refreshTailThicknessUI();state.target={x:555,y:389};state.playing=true;$('#pause-symbol').textContent='Ⅱ';$('#pause-text').textContent='Pause';});
+if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){state.playing=false;$('#pause-symbol').textContent='▶';$('#pause-text').textContent='Abspielen';}
+updateControls();
+
+let dragging=false;
+function pointerPos(ev){const r=app.canvas.getBoundingClientRect();return {x:(ev.clientX-r.left)/r.width*940,y:(ev.clientY-r.top)/r.height*560};}
+app.canvas.addEventListener('pointerdown',e=>{if(state.mode!=='ik')return;dragging=true;app.canvas.setPointerCapture(e.pointerId);const p=pointerPos(e);state.target={x:clamp(p.x,40,900),y:clamp(p.y,145,465)};});
+app.canvas.addEventListener('pointermove',e=>{if(!dragging)return;const p=pointerPos(e);state.target={x:clamp(p.x,40,900),y:clamp(p.y,145,465)};});
+app.canvas.addEventListener('pointerup',()=>dragging=false);app.canvas.addEventListener('pointercancel',()=>dragging=false);
+
+// Animated quad-strip meshes and four kinematic chains.
+function paintFrame(){
+ const pose=poseFourLegs({time:state.t,mode:state.mode,legScale:state.legScale,frontLegScale:state.frontLegScale,hindLegScale:state.hindLegScale,bodyScale:state.bodyScale,strideScale:state.strideScale,speed:state.speed,ground:GROUND,cx:465,customTarget:state.target});
+ const {legs,torso:torsoLen,bodyWorld}=pose;
+ floor.clear();
+ const m=80;
+ for(let k=-2;k<20;k++){
+   const x=(k*m-bodyWorld % m);
+   if(x<0||x>940)continue;
+   floor.roundRect(x,443,2,20,1).fill({color:0xa3a6a1,alpha:.36});
+   floor.roundRect(x-3,475,8,3,2).fill({color:0xd1cec6,alpha:.8});
+ }
+ const centerY=legs.frontNear.root.y-30;
+ const pelvisAnchor={x:((legs.hindNear.root.x+legs.hindFar.root.x)/2)-17,y:((legs.hindNear.root.y+legs.hindFar.root.y)/2)-13};
+ const tailRig=buildTailPose({cx:465,centerY,torsoLen,mode:state.mode,expression:effectiveExpression(state),tailType:effectiveTailType(state),time:state.animT,legScale:state.legScale,wagScale:state.wagScale,emotionIntensity:state.emotionIntensity,tailLengthScale:state.tailLengthScale,tailThicknessScale:state.tailThicknessScale,baseOverride:pelvisAnchor});
+ skinTailMesh(tailRig,tailSkin.vertices);
+ skinTailMesh(tailRig,tailBorder.vertices,true);
+ const bodyRig=buildTorsoProfile(pose,{chestScale:state.chestScale,tuck:state.tuck,backArch:state.backArch,time:state.t,tailBaseOverride:tailRig.base});
+ skinTorsoMesh(bodyRig,torsoSkin.vertices);
+ skinTorsoMesh(bodyRig,torsoBorder.vertices,true);
+ drawTorsoDetails(torso,bodyRig,state.showBones);
+ drawRearWag(rearWag,tailRig,{visible:state.showRear});
+ rearLabel.visible=rearNote.visible=state.showRear;
+ for(const name of NAMES){
+  const ik=legs[name];
+  skinRibbon(ik,meshes[name].edge.vertices,28,5,true);
+  skinRibbon(ik,meshes[name].body.vertices,28,5,false);
+ }
+ outlines.clear();markers.clear();
+ if(state.showGrid){
+  const v=torsoSkin.vertices;for(let j=0;j<34;j++)for(let c=0;c<9;c++){
+   const q=2*(j*9+c);
+   if(c<8){const r=q+2;markers.moveTo(v[q],v[q+1]).lineTo(v[r],v[r+1]).stroke({color:0x26334a,width:.48,alpha:.34});}
+   if(j<33){const r=q+18;markers.moveTo(v[q],v[q+1]).lineTo(v[r],v[r+1]).stroke({color:0x26334a,width:.48,alpha:.34});}
+  }
+ }
+ if(state.showBones){
+   const pts=tailRig.points.map(projectTail);
+   for(let i=0;i<pts.length-1;i++)markers.moveTo(pts[i].x,pts[i].y).lineTo(pts[i+1].x,pts[i+1].y).stroke({color:0x26334a,width:1.5,alpha:.65});
+   for(const p of pts)markers.circle(p.x,p.y,3).fill(0xdceb81).stroke({color:0x26334a,width:.8});
+ }
+ if(state.showGrid){
+  const v=tailSkin.vertices;for(let j=0;j<28;j++)for(let c=0;c<5;c++){
+   if(c<4){const a=2*(j*5+c),b=2*(j*5+c+1);markers.moveTo(v[a],v[a+1]).lineTo(v[b],v[b+1]).stroke({color:0x26334a,width:.5,alpha:.32});}
+   if(j<27){const a=2*(j*5+c),b=2*((j+1)*5+c);markers.moveTo(v[a],v[a+1]).lineTo(v[b],v[b+1]).stroke({color:0x26334a,width:.5,alpha:.32});}
+  }
+ }
+ const showGrid=state.showGrid,showBones=state.showBones;
+ const paws=Object.values(legs);
+ for(const leg of paws){
+  const isFar=leg.name.endsWith('Far');
+  const color=isFar?0x815c51:0x9a623c;
+  // Separate foot: joint seam covered by small paw graphic.
+  outlines.ellipse(leg.foot.x+9,leg.foot.y-5,18*state.legScale,9*state.legScale).fill({color,alpha:isFar?.62:1});
+  outlines.ellipse(leg.foot.x+9,leg.foot.y-5,18*state.legScale,9*state.legScale).stroke({color:0x26334a,width:isFar?1:2,alpha:isFar?.45:1});
+  outlines.circle(leg.knee.x,leg.knee.y,9*state.legScale).fill({color:isFar?0xb4866e:0xc98e61,alpha:isFar?.5:.95});
+  if(leg.hock)outlines.circle(leg.hock.x,leg.hock.y,6*state.legScale).fill({color:isFar?0x977365:0xa87d59,alpha:isFar?.5:.95});
+  if(showGrid){
+   const v=meshes[leg.name].body.vertices;for(let j=0;j<28;j++)for(let c=0;c<5;c++) {
+    if(c<4){let a=2*(j*5+c),b=2*(j*5+c+1);markers.moveTo(v[a],v[a+1]).lineTo(v[b],v[b+1]).stroke({color:0x26334a,alpha:.30,width:.7});}
+    if(j<27){let a=2*(j*5+c),b=2*((j+1)*5+c);markers.moveTo(v[a],v[a+1]).lineTo(v[b],v[b+1]).stroke({color:0x26334a,alpha:.30,width:.7});}
+   }
+  }
+  if(showBones){
+   markers.moveTo(leg.root.x,leg.root.y).lineTo(leg.knee.x,leg.knee.y);if(leg.hock)markers.lineTo(leg.hock.x,leg.hock.y);markers.lineTo(leg.foot.x,leg.foot.y).stroke({color:isFar?0x516070:0x26334a,alpha:isFar?.4:.72,width:isFar?1.2:2});
+   markers.circle(leg.root.x,leg.root.y,4).fill(0x26334a);
+   markers.circle(leg.knee.x,leg.knee.y,4).fill(0xdceb81).stroke({color:0x26334a,width:1.4});
+   if(leg.hock)markers.circle(leg.hock.x,leg.hock.y,3.5).fill(0xffd3bb).stroke({color:0x26334a,width:1.3});
+   markers.circle(leg.foot.x,leg.foot.y,3).fill(0xbf452c);
+  }
+  if(Object.hasOwn(GAITS,state.mode)&&leg.phase==='stance'){
+    markers.roundRect(leg.foot.x-10,GROUND+11,20,4,2).fill({color:0x91a73d,alpha:.62});
+  }
+ }
+ if(state.mode==='ik'){
+  const p=state.target,real=legs.frontNear.foot;
+  markers.circle(p.x,p.y,23).stroke({color:0xbf452c,width:2.2,alpha:.55});
+  markers.circle(p.x,p.y,9).fill(0xbf452c).stroke({color:0xffffff,width:3});
+  if(legs.frontNear.clamped){
+   markers.moveTo(p.x,p.y).lineTo(real.x,real.y).stroke({color:0xbf452c,width:1.5,alpha:.7});
+  }
+ }
+ const minJoint=Math.min(...paws.flatMap(l=>l.hock?[GROUND-l.knee.y,GROUND-l.hock.y]:[GROUND-l.knee.y]));
+ const maxErr=Math.max(...paws.map(l=>l.targetError));
+ const standing=paws.filter(l=>l.support).length;
+ const foreAngles=paws.filter(l=>l.name.startsWith('front')).map(l=>l.angle);
+ const rearAngles=paws.filter(l=>l.name.startsWith('hind')).map(l=>l.angle);
+ $('#metric-knee').textContent=Math.round(minJoint)+' px';
+ $('#metric-knee').style.color=minJoint<10?'#bf452c':'#26334a';
+ $('#metric-error').textContent=maxErr.toFixed(1)+' px';
+ $('#metric-error').style.color=maxErr>1?'#bf452c':'#26334a';
+ $('#metric-bones').textContent=paws.every(l=>l.upperError<.001&&l.lowerError<.001&&(l.thirdError??0)<.001)?'Konstant ✓':'Fehler';
+ $('#metric-contact').textContent=standing+'/4';
+ $('#metric-angles').textContent=Math.round(foreAngles.reduce((a,b)=>a+b)/2)+'° / '+Math.round(rearAngles.reduce((a,b)=>a+b)/2)+'°';
+ $('#phase-label').textContent=Object.hasOwn(GAITS,state.mode)?GAITS[state.mode].order:'Ruhestellung';
+}
+app.ticker.add(t=>{if(state.playing){const dt=Math.min(.05,t.deltaMS/1000);state.animT+=dt;if(Object.hasOwn(GAITS,state.mode))state.t+=dt;}paintFrame();});
+modeSet('walk');
+
+</script>
+</body>
+</html>
