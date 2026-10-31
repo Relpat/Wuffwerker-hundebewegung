@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wuffwerker – Rumpf & Wirbelsäule</title>
+  <title>Wuffwerker – Kopf, Hals und Rute</title>
 </head>
 <body>
   <main>
-    <header class="header"><div class="wordmark">wuffwerker<span>.</span></div><div>Werkstatt · Neustart 03</div></header>
-    <p class="kicker">03 · Gekoppelte Körperbewegung</p>
+    <header class="header"><div class="wordmark">wuffwerker<span>.</span></div><div>Werkstatt · Neustart 04</div></header>
+    <p class="kicker">04 · Kopf, Hals und Rute</p>
     <h1>Ein Hund. Eine Bewegung.</h1>
-    <p class="lead">Rumpf, Becken, Schulter und Wirbelsäule bewegen sich jetzt gemeinsam mit den Beinen. Der Schalter »Rumpfbewegung« zeigt den Unterschied direkt.</p>
+    <p class="lead">Jetzt gleichen Hals und Kopf die Rumpfbewegung aus; die Rute reagiert nach der Ausdruckslogik aus v6.6. Die Schalter ermöglichen den direkten Vergleich.</p>
     <nav class="versions" aria-label="Versionsvergleich">
       <strong>Versionen</strong>
       <span aria-current="page" class="version-current">Aktuell · main</span>
@@ -36,12 +36,15 @@
       <div id="stage" role="img" aria-label="Einfarbige Hundesilhouette, von links nach rechts ausgerichtet"></div>
       <div class="controls">
         <label for="body-toggle"><input id="body-toggle" type="checkbox" checked /> Rumpfbewegung</label>
+        <label for="head-toggle"><input id="head-toggle" type="checkbox" checked /> Kopf/Hals-Ausgleich</label>
+        <label for="tail-toggle"><input id="tail-toggle" type="checkbox" checked /> Rutenbewegung</label>
+        <label for="tail-expression">Ruten-Ausdruck <select id="tail-expression" aria-label="Ruten-Ausdruck"><option value="auto">Automatisch</option><option value="calm">Entspannt</option><option value="happy">Fröhlich</option><option value="excited">Aufgeregt</option><option value="alert">Aufmerksam</option><option value="unsure">Unsicher</option><option value="fearful">Ängstlich</option><option value="tense">Angespannt</option></select></label>
         <label for="skeleton-toggle"><input id="skeleton-toggle" type="checkbox" /> Anatomische Gelenkpunkte anzeigen</label>
-        <p class="note">Gelenkmarkierungen zeigen die gekoppelten Ansatzpunkte; die Kontur bleibt ein zusammenhängender Pfad.</p>
+        <p class="note">Gelenkmarkierungen zeigen Ansatzpunkte für Hals und Rute. Seitenansicht: seitliches Wedeln ist nur schwach sichtbar.</p>
       </div>
     </section>
     <p class="motion-note" id="gait-hint">Bewegungsprobe wird gestartet.</p>
-    <div class="disclaimer"><strong>Stand der Umsetzung:</strong> Kopf, Hals, Rumpf, die sichtbaren Seitenbeine und eine neutrale Rute bilden einen einzigen geschlossenen Umriss. Rumpf, Schulter, Hüfte und Wirbelsäule folgen jetzt den Gangphasen; die sichtbaren Beine reagieren mit vorläufiger Zweiknochen-IK. Der Schalter erlaubt den direkten Vergleich. Die verdeckten Beine, das vollständige Vierbein-Rig, gewichtetes Skinning und Fell/Texturen fehlen noch. Die freigegebene Rutenlogik v6.6 bleibt als Referenz unberührt.</div>
+    <div class="disclaimer"><strong>Stand der Umsetzung:</strong> Die durchgehende Silhouette wird durch Bein-, Rumpf-, Hals-/Kopf- und Rutenbewegung deformiert, ohne separate Übermalungen. Die numerischen Ausdrucks- und Wedelregeln der natürlichen Rute folgen v6.6; die dortigen weiteren sechs Rutenformen und die vollständige 3D-Mesh-Darstellung sind noch nicht integriert. Kopf/Hals ist eine vorsichtige Bewegungsstudie, keine anatomisch freigegebene Lösung. Vierbein-Rig und gewichtetes Skinning fehlen. Die historischen Referenzdateien sind unverändert.</div>
   </main>
   <script type="module" src="/src/main.js"></script>
 </body>

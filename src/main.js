@@ -7,6 +7,9 @@ const stage=document.querySelector('#stage');
 const status=document.querySelector('#renderer-status');
 const toggle=document.querySelector('#skeleton-toggle');
 const bodyToggle=document.querySelector('#body-toggle');
+const headToggle=document.querySelector('#head-toggle');
+const tailToggle=document.querySelector('#tail-toggle');
+const tailExpression=document.querySelector('#tail-expression');
 const gaitButtons=[...document.querySelectorAll('[data-gait]')];
 const pauseButton=document.querySelector('#pause');
 const speed=document.querySelector('#speed');
@@ -25,7 +28,7 @@ async function start() {
   stage.appendChild(app.canvas);
   const scene=createScene();
   app.stage.addChild(scene.root);
-  const draw=()=>{scene.setPose(poseAt(mode,playTime,{bodyMotion:bodyToggle.checked}));app.render();};
+  const draw=()=>{scene.setPose(poseAt(mode,playTime,{bodyMotion:bodyToggle.checked,headMotion:headToggle.checked,tailMotion:tailToggle.checked,tailExpression:tailExpression.value}));app.render();};
   const resizeObserver=new ResizeObserver(()=>{
     app.renderer.resize(stage.clientWidth,stage.clientHeight);
     scene.fit(app.screen.width,app.screen.height);
@@ -36,10 +39,10 @@ async function start() {
   const syncControls=()=>{
     gaitButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.gait===mode)));
     pauseButton.textContent=paused?'Weiter':'Pause';
-    pauseButton.disabled=mode==='stand';
+    pauseButton.disabled=mode==='stand' && !(tailToggle.checked && tailExpression.value!=='auto');
     speedOutput.textContent=`${Number(speed.value).toFixed(2).replace('.',',')} ×`;
-    hint.textContent=mode==='stand'?'Statische anatomische Vergleichspose.':
-      `${GAITS[mode].label}: ${bodyToggle.checked?'Rumpf und Wirbelsäule sind mit den Beinphasen gekoppelt.':'Vergleich: Rumpfbewegung ausgeschaltet.'} Vorläufige Zweibein-IK, noch kein Skinning.`;
+    hint.textContent=mode==='stand'&&tailExpression.value==='auto'?'Statische anatomische Vergleichspose.':
+      `${GAITS[mode].label}: ${bodyToggle.checked?'Rumpf aktiv.':'Rumpf aus.'} ${headToggle.checked?'Kopfausgleich aktiv.':'Kopfausgleich aus.'} ${tailToggle.checked?'Rute: '+(tailExpression.selectedOptions[0]?.textContent||'automatisch')+'.':'Rute aus.'} Noch kein Vierbein-Skinning.`;
   };
   gaitButtons.forEach(button=>button.addEventListener('click',()=>{
     mode=button.dataset.gait;
@@ -52,11 +55,12 @@ async function start() {
   speed.addEventListener('input',syncControls);
   toggle.addEventListener('change',()=>{scene.skeleton.visible=toggle.checked;draw();});
   bodyToggle.addEventListener('change',()=>{syncControls();draw();});
+  for (const control of [headToggle,tailToggle,tailExpression]) control.addEventListener('change',()=>{syncControls();draw();});
   let last=0,raf=0;
   const tick=(now)=>{
     const delta=last?Math.min((now-last)/1000,.05):0;
     last=now;
-    if(!paused && mode!=='stand'){
+    if(!paused && (mode!=='stand' || (tailToggle.checked && tailExpression.value!=='auto'))){
       playTime+=delta*Number(speed.value);
       draw();
     }
@@ -64,7 +68,7 @@ async function start() {
   };
   syncControls(); draw();
   raf=requestAnimationFrame(tick);
-  status.textContent='PixiJS 8 · gekoppelte Rumpfbewegung';
+  status.textContent='PixiJS 8 · Kopf/Hals/Rute · Bewegungsstudie';
   document.documentElement.dataset.ready='true';
   window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);resizeObserver.disconnect();app.destroy(true);},{once:true});
 }
