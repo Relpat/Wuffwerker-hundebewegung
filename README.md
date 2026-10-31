@@ -40,3 +40,11 @@ Bei jedem Push auf `main` wird die Seite erneut gebaut. `npm test` muss erfolgre
 ## Entwicklungsstufe 02 – animierte Bewegungsprobe
 
 Auf `main` stehen nun **Stand, Gehen, Trab, Laufen und Passgang** sowie Pause/Weiter und ein Temposchieber bereit. Die Bewegungszyklen der zwei sichtbaren Beine übernehmen Phasen- und Trajektorien-Ideen aus dem freigegebenen `v7.5.1`-Referenzstand; die Gelenkketten haben feste Knochenlängen. Die Silhouette bleibt ein einziges geschlossenes Außenprofil. Dies ist noch **kein vollständiges Vierbein-Rig oder gewichtetes Skinning**. Näheres: [docs/02-bewegungsprobe.md](docs/02-bewegungsprobe.md).
+
+## Entwicklungsstufe 03 – gekoppelte Rumpf- und Wirbelsäulenbewegung
+
+In `main` folgt jetzt auch der Rumpf den Gangphasen. Becken/Hüfte und Schulter/Widerrist bewegen sich mit einem abgestimmten Höhenhub; die Rückenlinie wird sanft gebogen. Das gleiche Deformationsfeld beeinflusst die durchgehende Außenkontur und die Rumpf-Kontrollpunkte. Die sichtbaren Beinsegmente erhalten anschließend eine aktualisierte Zweiknochen-IK und behalten ihre Bodenkontaktziele.
+
+Der Schalter **Rumpfbewegung** ermöglicht einen Vorher-Nachher-Vergleich ohne Änderung der Gangart. Die Standpose bleibt unverändert. Kopf/Hals und neutrale Rute werden nur passiv mitgeführt, nicht separat animiert. Das ist **noch kein echtes gewichtsgebundenes Skinning und kein Vierbein-Rig**.
+
+Details und Grenzen: [docs/03-rumpf-wirbelsaeule.md](docs/03-rumpf-wirbelsaeule.md).
