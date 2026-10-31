@@ -1,18 +1,26 @@
 # Wuffwerker – Hundebewegung
 
-Technischer Neustart auf Basis freigegebener Referenzversionen (Stand 31.10.2026).
+Technischer Neustart auf Basis der akzeptierten Referenzversionen (31.10.2026).
 
-## Referenzen
+## Archivierte Referenzen (unverändert)
 
-Die Dateien unter `reference/` sind historische, **unverändert archivierte** HTML-Demos. Sie sind keine gemeinsame Implementierung und sollen nicht direkt überschrieben werden.
+- `reference/v6.6/`: freigegebene Rutenlogik.
+- `reference/v7.5.1/`: letzte überwiegend akzeptierte Grundlage für Rumpf, Beine, Bewegung.
+- `reference/v8.0.3/`: Orientierung für Kopf/Hals, **nicht** final freigegeben.
+- **v10.0 ist ausdrücklich ausgeschlossen**: fehlerhaftes Skinning wird nicht übernommen.
 
-- `reference/v6.6/`: akzeptierte Rutenlogik.
-- `reference/v7.5.1/`: letzte überwiegend akzeptierte Basis für Rumpf, Beine und Bewegung.
-- `reference/v8.0.3/`: nur vergleichsweise bessere Kopf-/Halsposition, nicht final freigegeben.
-- `reference/v10.0/`: experimenteller Skinning-Prototyp, noch nicht bereitgestellt.
+Die ausführlichen Ziele und Qualitäts-Gates stehen in [docs/Wuffwerker-Neustart-Briefing.md](docs/Wuffwerker-Neustart-Briefing.md). Das Briefing ist ein historischer Projektstand; die ausdrückliche Entscheidung, v10.0 nicht zu verwenden, hat Vorrang.
 
-Die technischen Ziele und Qualitätsprüfungen stehen in [`docs/Wuffwerker-Neustart-Briefing.md`](docs/Wuffwerker-Neustart-Briefing.md).
+## Entwicklungsstufe 01 – statische Kontur
 
-## Arbeitsprinzip
+Die aktuelle Entwicklung erfolgt auf einem separaten Branch. Sie enthält eine echte PixiJS-v8-Anwendung, eine **einzige geschlossene** Seitenkontur und abschaltbare Skelett-Kontrollpunkte. Diese Geometrie ist noch **kein** gewichtetes Skinning-Mesh und wurde noch nicht visuell abgenommen.
 
-Zuerst statische, anatomisch plausible Seitenansicht mit überprüfbarer Topologie und Bind-Pose in einer echten PixiJS-8-Architektur; danach Skinning, IK und Bewegung. Keine optische Kaschierung von Anschlussfehlern durch Übermalungen. Der Hauptbranch bleibt bis zur visuellen Abnahme frei von ungeprüften Neuentwicklungen.
+Details und Grenzen: [docs/01-statische-grundpose.md](docs/01-statische-grundpose.md).
+
+```sh
+npm install
+npm test
+npm run dev
+```
+
+Danach die lokale Vite-Adresse im Browser öffnen. Die alten HTML-Demos bleiben unter `reference/` erhalten. Spätere IK-/Skinning-Arbeit beginnt erst nach visueller Bestätigung der statischen Silhouette.
