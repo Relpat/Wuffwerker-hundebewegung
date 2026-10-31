@@ -21,12 +21,6 @@ input { accent-color: #26334a; width: 17px; height: 17px; }
 .disclaimer strong { color: #26334a; }
 @media (max-width: 650px) { main { padding: 15px 12px 35px; } .kicker { margin-top: 30px; } .panel { padding: 9px; } #stage { aspect-ratio: 960 / 650; } }
 
-.versions { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin: 0 0 22px; font-size: 12px; }
-.versions strong { margin-right: 4px; }
-.versions a, .version-current { display: inline-flex; padding: 7px 11px; border-radius: 20px; border: 1px solid #dad2c7; text-decoration: none; color: #26334a; font-weight: 750; }
-.versions a:hover, .versions a:focus-visible { border-color: #bf452c; color: #bf452c; }
-.version-current { background: #dceb81; border-color: #cadb67; }
-
 .gait-panel { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; margin: 0 0 15px; }
 .gait-buttons,.gait-options {display:flex;flex-wrap:wrap;align-items:center;gap:7px;}
 .gait-panel button { cursor:pointer; border:1px solid #dfd7cd; padding:9px 13px; border-radius:10px; font:inherit; font-weight:780; background:white; color:#26334a; }
@@ -37,3 +31,12 @@ input { accent-color: #26334a; width: 17px; height: 17px; }
 .gait-options input[type="range"] {width:100px;height:20px;}
 .gait-options output {min-width:42px;font-variant-numeric:tabular-nums;}
 .motion-note {font-size:12px;color:#697386;margin:12px 2px 2px;}
+
+.controls label { white-space: nowrap; }
+#body-toggle { accent-color: #bf452c; }
+
+.versions { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin: 0 0 22px; font-size: 12px; }
+.versions strong { margin-right: 4px; }
+.versions a, .version-current { display: inline-flex; padding: 7px 11px; border-radius: 20px; border: 1px solid #dad2c7; text-decoration: none; color: #26334a; font-weight: 750; }
+.versions a:hover, .versions a:focus-visible { border-color: #bf452c; color: #bf452c; }
+.version-current { background: #dceb81; border-color: #cadb67; }
