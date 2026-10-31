@@ -54,3 +54,17 @@ Details und Grenzen: [docs/03-rumpf-wirbelsaeule.md](docs/03-rumpf-wirbelsaeule.
 Die aktuelle Vorschau auf `main` bewegt Hals und Kopf passend zu den Gangphasen; die Rute folgt den **Ausdrucks- und Wedelparametern der natürlichen Rutenform aus v6.6**. Der einzelne, geschlossene Außenumriss bleibt erhalten. Neue Bedienelemente: **Kopf/Hals-Ausgleich**, **Rutenbewegung** und **Ruten-Ausdruck** (automatisch oder sieben wählbare Ausdrücke). Ein gewählter Ruten-Ausdruck lässt sich auch in `Stand` ansehen.
 
 Die restlichen sechs speziellen Rutenformen aus v6.6, ein echtes Vierbein-Rig und gewichtetes Skinning fehlen weiterhin. Die v6.6-Originaldatei bleibt unverändert. Details: [docs/04-kopf-hals-rute.md](docs/04-kopf-hals-rute.md).
+
+## Entwicklungsstufe 05 – vierphasiges Bein-System
+
+Aus der genehmigten v7.5.1-Referenz wurden die vier Kontaktphasen für Gehen,
+Trab, Laufen und Passgang übernommen. Zwei fernliegende Bein-Ketten werden
+hinter dem weiterhin **einteiligen** äußeren Rumpf-/Kopf-/Hals-/Ruten-/Nahbein-
+Umriss dargestellt. Die Checkbox **Fernliegende Beine** blendet sie für den
+Vergleich ein oder aus; die Knochenanzeige umfasst alle vier Ketten.
+
+Die Lauf-Schrittlänge bleibt vorläufig reduziert (100 statt 240 Pixel in v7.5.1),
+damit die neuen IK-Längen erreicht werden. Das ist **kein vollständiges
+gewichtetes Skinning** und noch keine anatomisch abgenommene Bewegung.
+
+Details: [docs/05-vierbein-gangarten.md](docs/05-vierbein-gangarten.md).
