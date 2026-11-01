@@ -31,3 +31,12 @@
   am Boden, nicht an einem über die Bildschirmfläche fortschreitenden Ort.
 - Vor der nächsten Architektur-Stufe stehen anatomische Sichtprüfung,
   verbesserte Fußformen und Gelenk-/Bodenkontaktkorrekturen aus.
+
+## Korrektur 05.1 – anatomische Größe der fernliegenden Beine
+
+- **Fehlerursache:** Die IK-Ketten hatten bereits nominell dieselben Knochenlängen wie die nahen Beine. Die *sichtbaren Umrisse* waren aber viel zu schmal (besonders die Pfoten), und die verdeckten Abschnitte wirkten deshalb wie Miniaturbeine.
+- Die fernliegenden Schaftbreiten sind jetzt an die nahen Beine angepasst. Die Neutralpose verwendet **volle Pfotenabdrücke von ca. 68 px vorne und 73 px hinten** statt der bisherigen kleinen Kappen (ca. 23 px beziehungsweise 20 px).
+- Schulter und Hüfte liegen auf exakt denselben Höhen wie auf der nahen Körperseite; die horizontalen Versätze sind bewusst kleiner als 30 px. Die sichtbaren Standbein-Segmente haben weiterhin exakt dieselben Zweiknochen-IK-Längen.
+- Der Abstand der Füße in der Seitenansicht wird nur für die Ablesbarkeit verwendet. Fernliegende Beine erscheinen durch **Zeichenreihenfolge und leicht abgedunkelte Füllung**, nicht durch proportional kleinere Anatomie.
+- Regressionstest `tests/far-proportions.test.js` vergleicht Standpfotenbreiten, Bodenhöhe, Ansatzhöhen und die IK-Längen über alle Gangzyklen. Die ursprüngliche nahe Hundekontur bleibt unverändert.
+- Weiterhin ein provisorisches Rig ohne gemeinsame Skinning-Topologie; keine bereits anatomisch freigegebene vollständige Hundesilhouette.
