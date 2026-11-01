@@ -21,11 +21,13 @@ export const BONES = Object.freeze([
 /** Far-side appendages are deeper in the image; only their unoccluded parts
  * are drawn behind the united near-side silhouette. These points are guides,
  * not four separate torso outlines or a weighted skinning mesh.
- * Offsets make the hind/far and front/far feet distinguishable in side view.
+ * Horizontal offsets make the far feet distinguishable in side view, but the
+ * roots share the near-side heights and the same full-sized bone lengths.
+ * Distal landmarks approximate the neutral pose from solveLeg (not scaled mini-limbs).
  */
 export const FAR_BIND = Object.freeze({
-  farHip: [298,317], farStifle: [345,368], farHock: [348,424], farHindPaw: [365,472],
-  farShoulder: [606,314], farElbow: [595,394], farCarpus: [590,456], farFrontPaw: [590,474],
+  farHip: [310,317], farStifle: [374.42,359.18], farHock: [348,424], farHindPaw: [365,472],
+  farShoulder: [595,314], farElbow: [551.68,381.26], farCarpus: [563.78,454.52], farFrontPaw: [567,474],
 });
 export const FAR_BONES = Object.freeze([
   ['pelvis','farHip'],['farHip','farStifle'],['farStifle','farHock'],['farHock','farHindPaw'],
