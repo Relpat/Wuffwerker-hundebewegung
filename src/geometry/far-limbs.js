@@ -2,6 +2,8 @@
  * one-piece torso/neck/head/tail/near-leg silhouette. Separate limb contours
  * are required to represent four distinct legs in a two-dimensional view;
  * no patches cover a seam in the torso. No production weighted mesh yet.
+ * Silhouette widths and paw footprints match the existing NEAR side at natural
+ * scale; apparent depth comes from draw order and a muted color, NOT shrinking.
  */
 const add=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
 const normal=(a,b,w)=>{const dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;
@@ -12,9 +14,10 @@ const off=(p,n,sign=1)=>[p.x+n.x*sign,p.y+n.y*sign];
  * Upper section is intentionally hidden by the main body when composited.
  */
 function frontOutline(root,elbow,carpus,paw) {
-  const a=normal(root,elbow,15),b=normal(elbow,carpus,10),c=normal(carpus,paw,8);
-  const toe={x:paw.x+11,y:paw.y+9};
-  const back={x:paw.x-12,y:paw.y+9};
+  // Full-size foreleg: near-side lower limb ~38px across, paw ~67px wide.
+  const a=normal(root,elbow,23),b=normal(elbow,carpus,19),c=normal(carpus,paw,16);
+  const toe={x:paw.x+26,y:paw.y+9};
+  const back={x:paw.x-42,y:paw.y+9};
   return [
     ['M',...off(root,a,-1)],
     ['C',...off(add(root,elbow,.45),a,-1),...off(elbow,b,-1),...off(elbow,b,-1)],
@@ -28,9 +31,10 @@ function frontOutline(root,elbow,carpus,paw) {
   ];
 }
 function hindOutline(hip,stifle,hock,paw) {
-  const a=normal(hip,stifle,19),b=normal(stifle,hock,12),c=normal(hock,paw,9);
-  const toe={x:paw.x+10,y:paw.y+11};
-  const heel={x:paw.x-10,y:paw.y+11};
+  // Full-size hind leg: near-side paw about 73px wide in neutral stance.
+  const a=normal(hip,stifle,29),b=normal(stifle,hock,18),c=normal(hock,paw,15);
+  const toe={x:paw.x+42,y:paw.y+11};
+  const heel={x:paw.x-31,y:paw.y+11};
   return [
     ['M',...off(hip,a,-1)],
     ['C',...off(add(hip,stifle,.55),a,-1),...off(stifle,b,-1),...off(stifle,b,-1)],
