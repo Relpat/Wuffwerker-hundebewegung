@@ -88,3 +88,7 @@ Zehn Posen als Presets mit verständlichen Reglern statt handgesetzter Gelenke: 
 ## Stufe G2 – Lenny-Look
 
 Alle Posen im Wuffwerk-Stil: lockiges Fell ohne Konturen, ferne Beine dunkler, Tiefen-Reihenfolge, Lennys Baukasten-Kopf mit Mimik je Pose. `src/render/lenny.js`, Bilder: `node scripts/lenny.mjs ../wuffwerk`. Details: [docs/09-lenny-look.md](docs/09-lenny-look.md).
+
+## Stufe G4 – Posen-Generator im Browser
+
+Seite `posen.html` (GitHub Pages: …/Wuffwerker-hundebewegung/posen.html): Pose wählen, Regler für Rumpf, Kopf, Rute und Mimik, Fell hell oder dunkel, Skelett zeigen, Übergang abspielen, SVG herunterladen und Werte kopieren. Der Kopf ist der Baukasten-Kopf von wuffwerker.de (`node scripts/sync-baukasten.mjs ../wuffwerk` übernimmt ihn nach `src/vendor/baukasten/`). Kein PixiJS, reines SVG.

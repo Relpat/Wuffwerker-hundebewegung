@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wuffwerker – Posen-Generator</title>
+</head>
+<body>
+  <main>
+    <header class="header"><div class="wordmark">wuffwerker<span>.</span></div><div>Werkstatt · Posen-Generator</div></header>
+    <p class="kicker">G4 · Posen-Generator</p>
+    <h1>Lenny in jeder Pose.</h1>
+    <p class="lead">Pose wählen, mit den Reglern anpassen, als SVG herunterladen oder die Werte kopieren und mir schicken. Alles läuft auf dem echten Skelett, Knochenlängen bleiben immer gleich.</p>
+    <nav class="versions" aria-label="Seiten"><a href="./">Bewegungsstudie</a><span aria-current="page" class="version-current">Posen-Generator</span></nav>
+    <section class="pg" aria-label="Posen-Generator">
+      <div class="panel pg-bild">
+        <div class="panel-header"><span id="pg-titel">LOCKER STEHEN</span><span id="pg-text" role="status"></span></div>
+        <div id="pg-stage" role="img" aria-label="Lenny in der gewählten Pose"></div>
+        <div class="pg-aktionen">
+          <label for="pg-anteil">Übergang <input id="pg-anteil" type="range" min="0" max="1" step="0.01" value="1" /> <output id="pg-anteil-wert">100 %</output></label>
+          <button type="button" id="pg-abspielen">Übergang abspielen</button>
+          <button type="button" id="pg-svg">SVG herunterladen</button>
+          <button type="button" id="pg-kopieren">Werte kopieren</button>
+        </div>
+      </div>
+      <div class="panel pg-regler">
+        <div class="pg-presets" role="group" aria-label="Pose wählen" id="pg-presets"></div>
+        <fieldset><legend>Rumpf</legend><div id="pg-rumpf"></div><p class="note" id="pg-sitz-hinweis" hidden>Sitz und Pfote nutzen die abgenommene Sitz-Pose; der Rumpf ist dort fest.</p></fieldset>
+        <fieldset><legend>Kopf</legend><div id="pg-kopf"></div></fieldset>
+        <fieldset><legend>Ausdruck</legend>
+          <label for="pg-rute">Rute <select id="pg-rute"></select></label>
+          <label for="pg-mimik">Mimik <select id="pg-mimik"></select></label>
+          <label for="pg-fell">Fell <select id="pg-fell"><option value="lenny">Lenny (hell)</option><option value="dunkel">Zweiter Hund (dunkel)</option></select></label>
+          <label for="pg-skelett"><input id="pg-skelett" type="checkbox" /> Skelett zeigen</label>
+        </fieldset>
+        <button type="button" id="pg-zurueck">Pose zurücksetzen</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="/src/posen-seite.js"></script>
+</body>
+</html>

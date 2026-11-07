@@ -43,3 +43,24 @@ input { accent-color: #26334a; width: 17px; height: 17px; }
 
 .controls select {padding:7px 9px;border-radius:8px;border:1px solid #dad2c7;background:white;color:#26334a;font:inherit;font-size:12px;max-width:160px;}
 .controls select:focus-visible {outline:2px solid #bf452c;outline-offset:2px;}
+
+/* G4 Posen-Generator */
+.pg { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 16px; align-items: start; }
+#pg-stage { width: 100%; aspect-ratio: 700 / 410; background: #f3efe8; border: 1px solid #e3dbd0; border-radius: 12px; overflow: hidden; }
+#pg-stage svg { display: block; width: 100%; height: 100%; }
+.pg-aktionen { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 4px 2px; }
+.pg-aktionen input[type="range"] { width: 130px; }
+.pg button { cursor: pointer; border: 1px solid #dfd7cd; padding: 9px 13px; border-radius: 10px; font: inherit; font-weight: 780; background: white; color: #26334a; }
+.pg button[aria-pressed="true"] { background: #26334a; color: white; border-color: #26334a; }
+.pg button:focus-visible, .pg select:focus-visible, .pg input:focus-visible { outline: 2px solid #bf452c; outline-offset: 2px; }
+.pg-presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.pg-presets button { padding: 7px 10px; font-size: 13px; }
+.pg fieldset { border: 1px solid #ebe4d9; border-radius: 12px; margin: 10px 0; padding: 8px 12px 10px; display: grid; gap: 8px; }
+.pg legend { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: #bf452c; padding: 0 4px; }
+.pg-regel { display: grid; grid-template-columns: 7.5em 1fr 4.6em; gap: 8px; align-items: center; font-size: 13px; font-weight: 700; }
+.pg-regel input { width: 100%; height: 20px; }
+.pg-regel output { font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; color: #66717e; white-space: nowrap; }
+.pg select { font: inherit; padding: 5px 8px; border-radius: 8px; border: 1px solid #dfd7cd; background: white; }
+.pg-regel input:disabled { opacity: .4; }
+#pg-stage svg { transition: opacity .15s; }
+@media (max-width: 860px) { .pg { grid-template-columns: 1fr; } .pg-bild { position: sticky; top: 0; z-index: 2; } .pg-bild .panel-header #pg-text, .pg-aktionen label { display: none; } }
