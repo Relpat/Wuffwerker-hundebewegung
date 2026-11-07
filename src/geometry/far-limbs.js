@@ -28,7 +28,7 @@ const sole=(paw,toeJoint,bindAngle,dx,dy)=>{
   const k=1-.5*Math.min(1,Math.abs(Math.atan2(s,c))/(Math.PI/2));
   return {x:paw.x+k*(dx*c-dy*s),y:paw.y+k*(dx*s+dy*c)};
 };
-function frontOutline(root,elbow,carpus,paw,toeJoint,FRONT_HEEL) {
+export function frontOutline(root,elbow,carpus,paw,toeJoint,FRONT_HEEL) {
   // Full-size foreleg: near-side lower limb ~38px across, paw ~52px wide.
   const a=normal(root,elbow,23),b=normal(elbow,carpus,18),c=normal(carpus,paw,11);
   const toe=sole(paw,toeJoint,FRONT.toeAngle,27,12);
@@ -45,7 +45,7 @@ function frontOutline(root,elbow,carpus,paw,toeJoint,FRONT_HEEL) {
     ['Z'],
   ];
 }
-function hindOutline(hip,stifle,hock,paw,toeJoint,HIND_HEEL) {
+export function hindOutline(hip,stifle,hock,paw,toeJoint,HIND_HEEL) {
   // Full-size hind leg: near-side paw about 56px wide in neutral stance.
   const a=normal(hip,stifle,30),b=normal(stifle,hock,17),c=normal(hock,paw,11);
   const k=blend(a,b,20);
@@ -68,5 +68,16 @@ export function farContours(pose) {
   return {
     hind:hindOutline(j.farHip,j.farStifle,j.farHock,j.farHindPaw,j.farHindToe,bindAngle(B,'farHindPaw','farHock')),
     front:frontOutline(j.farShoulder,j.farElbow,j.farCarpus,j.farFrontPaw,j.farFrontToe,bindAngle(B,'farFrontPaw','farCarpus')),
+  };
+}
+
+/** The same leg outlines for the near side (the Lenny look uses them to set
+ * the near legs apart from the body; the body outline already contains them).
+ * Near and far bind poses are identical (FAR_OFFSET 0), so the heel angles are shared. */
+export function nearContours(pose) {
+  const j = pose.joints, B = FAR_BIND;
+  return {
+    hind: hindOutline(j.hip, j.stifle, j.hock, j.hindPaw, j.hindToe, bindAngle(B, 'farHindPaw', 'farHock')),
+    front: frontOutline(j.shoulder, j.elbow, j.carpus, j.frontPaw, j.frontToe, bindAngle(B, 'farFrontPaw', 'farCarpus')),
   };
 }
