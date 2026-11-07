@@ -91,6 +91,7 @@ export const FRONT = Object.freeze({
 });
 export const HIND = Object.freeze({
   ...pantograph(P(H.hip), P(H.stifle), P(H.hock), P(H.hindPaw)),
+  metaAngle: angle(sub(P(H.hindPaw), P(H.hock))),
   toe: len(sub(P(H.hindToe), P(H.hindPaw))),
   toeAngle: angle(sub(P(H.hindToe), P(H.hindPaw))),
 });
@@ -100,18 +101,21 @@ function toeDrop(limb, flex) {
   return Math.max(0, limb.toe * (Math.sin(limb.toeAngle + flex) - Math.sin(limb.toeAngle)));
 }
 
-/** Forelimb: target is the paw (MCP) point of the extended foot. The carpus is
- * placed where it would be for that paw in stance; `carpalFlex` (radians, ≥0)
- * then folds the metacarpus backwards and upwards about the carpus, as in the
- * swing phase, so the paw trails the carpus. `toeFlex` curls the toes. */
-export function solveFront(root, pawTarget, { carpalFlex = 0, toeFlex = 0 } = {}) {
-  // Folding must never push paw or toes through the ground: lift by the extra drop.
-  const paw = { x: pawTarget.x, y: pawTarget.y - toeDrop(FRONT, carpalFlex + toeFlex) };
-  const carpusTarget = { x: paw.x - FRONT.meta * Math.cos(FRONT.metaAngle),
-    y: paw.y - FRONT.meta * Math.sin(FRONT.metaAngle + carpalFlex) };
+/** Forelimb. `paw` is the paw (MCP) point on its ground track; `lift` (px, ≥0)
+ * is the swing height. In swing the carpus rises only by half the lift; the
+ * rest comes from folding the metacarpus backwards (`carpalFlex`, radians),
+ * as in a real dog, so the elbow is not pulled up into the chest. The fold
+ * never lets the toes sink below their stance level minus half the lift. */
+export function solveFront(root, paw, { carpalFlex = 0, toeFlex = 0, lift = 0 } = {}) {
+  const ma = FRONT.metaAngle, ta = FRONT.toeAngle;
+  const x = paw.x - FRONT.meta * Math.cos(ma);
+  let y = paw.y - FRONT.meta * Math.sin(ma) - lift / 2;
+  const toeTip = y + FRONT.meta * Math.sin(ma + carpalFlex) + FRONT.toe * Math.sin(ta + carpalFlex + toeFlex);
+  y -= Math.max(0, toeTip - (paw.y + FRONT.toe * Math.sin(ta) - lift / 2));
+  const carpusTarget = { x, y };
   const s = solvePantograph(FRONT, root, carpusTarget);
-  const frontPaw = add(s.j3, scale(dir(FRONT.metaAngle + carpalFlex), FRONT.meta));
-  const frontToe = add(frontPaw, scale(dir(FRONT.toeAngle + carpalFlex + toeFlex), FRONT.toe));
+  const frontPaw = add(s.j3, scale(dir(ma + carpalFlex), FRONT.meta));
+  const frontToe = add(frontPaw, scale(dir(ta + carpalFlex + toeFlex), FRONT.toe));
   return { scapula: root, shoulder: s.j1, elbow: s.j2, carpus: s.j3, frontPaw, frontToe,
     error: len(sub(s.j3, carpusTarget)) };
 }

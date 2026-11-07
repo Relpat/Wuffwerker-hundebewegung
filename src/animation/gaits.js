@@ -18,13 +18,13 @@ const smooth = x => { const t = clamp(x, 0, 1); return t*t*(3 - 2*t); };
 export const GAITS = Object.freeze({
   stand: { label:'Stand',carpalFlex:0,period:1,stride:0,stance:1,lift:0,hind:0,front:0,
     offsets:{hindNear:0,frontNear:0,hindFar:0,frontFar:0},order:'Vierpunktstand' },
-  walk: { label:'Gehen',carpalFlex:70,period:1.30,stride:58,stance:.72,lift:20,hind:0,front:.75,
+  walk: { label:'Gehen',carpalFlex:100,period:1.30,stride:58,stance:.72,lift:20,hind:0,front:.75,
     offsets:{hindNear:0,frontNear:.75,hindFar:.50,frontFar:.25},order:'HL → VL → HR → VR' },
-  trot: { label:'Trab',carpalFlex:90,period:.80,stride:74,stance:.52,lift:25,hind:0,front:.50,
+  trot: { label:'Trab',carpalFlex:110,period:.80,stride:74,stance:.52,lift:25,hind:0,front:.50,
     offsets:{hindNear:0,frontNear:.50,hindFar:.50,frontFar:0},order:'HL + VR → HR + VL' },
-  run: { label:'Laufen',carpalFlex:100,period:.76,stride:100,stance:.43,lift:15,hind:0,front:.515,
+  run: { label:'Laufen',carpalFlex:120,period:.76,stride:100,stance:.43,lift:15,hind:0,front:.515,
     offsets:{hindNear:0,frontNear:.515,hindFar:.035,frontFar:.55},order:'Hinterhand → Vorderhand' },
-  pace: { label:'Passgang',carpalFlex:75,period:1.00,stride:62,stance:.57,lift:21,hind:0,front:0,
+  pace: { label:'Passgang',carpalFlex:100,period:1.00,stride:62,stance:.57,lift:21,hind:0,front:0,
     offsets:{hindNear:0,frontNear:0,hindFar:.50,frontFar:.50},order:'HL + VL → HR + VR' },
 });
 
@@ -74,15 +74,16 @@ const P = xy => ({x:xy[0],y:xy[1]});
 function placeLimbs(joints, gait, paths) {
   // Stance centre: by default the bind paw; with `gait.center` the paw sweeps
   // around a point at that horizontal offset from its own pivot (scapula/hip).
-  const flexFront = path => ({ carpalFlex: (gait.carpalFlex||0)*DEG*swingFlex(path.u), toeFlex: 15*DEG*swingFlex(path.u) });
+  const flexFront = path => ({ carpalFlex: (gait.carpalFlex||0)*DEG*swingFlex(path.u), toeFlex: 10*DEG*swingFlex(path.u), lift: -path.y });
+  const ground = path => ({ ...path, y: 0 });
   const flexHind = path => ({ toeFlex: 25*DEG*swingFlex(path.u) });
   const target = (paw, pivot, offset, path) => ({
     x: (gait.center ? pivot[0] + offset : paw[0]) + path.x, y: paw[1] + path.y });
   const c = gait.center || { front: 0, hind: 0 };
   const legs = [
-    [false, 'front', solveFront(joints.scapula, target(JOINTS.frontPaw, JOINTS.scapula, c.front, paths.frontNear), flexFront(paths.frontNear))],
+    [false, 'front', solveFront(joints.scapula, target(JOINTS.frontPaw, JOINTS.scapula, c.front, ground(paths.frontNear)), flexFront(paths.frontNear))],
     [false, 'hind', solveHind(joints.hip, target(JOINTS.hindPaw, JOINTS.hip, c.hind, paths.hindNear), flexHind(paths.hindNear))],
-    [true, 'front', solveFront(joints.farScapula, target(FAR_BIND.farFrontPaw, FAR_BIND.farScapula, c.front, paths.frontFar), flexFront(paths.frontFar))],
+    [true, 'front', solveFront(joints.farScapula, target(FAR_BIND.farFrontPaw, FAR_BIND.farScapula, c.front, ground(paths.frontFar)), flexFront(paths.frontFar))],
     [true, 'hind', solveHind(joints.farHip, target(FAR_BIND.farHindPaw, FAR_BIND.farHip, c.hind, paths.hindFar), flexHind(paths.hindFar))],
   ];
   let error = 0;
