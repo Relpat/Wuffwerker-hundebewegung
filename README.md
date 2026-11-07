@@ -80,3 +80,7 @@ Schulterblatt als Drehpunkt des Vorderbeins, dreigliedrige Beine als Pantograph,
 ## Stufe B1 – Ganzkörper-Rig nach Maßtabelle
 
 Lenny (Lagotto, 45 cm Widerristhöhe = 278 px) bekommt ein Skelett für den ganzen Körper: Wirbelsäule, Hals, Schädel mit Kiefer, Becken, Brustbein und sechs Rutenglieder als eine Vorwärtskinematik, die Beine als Pantograph daran. Alle Knochenlängen stehen in cm in `src/skeleton/measures.js`, geprüft gegen den FCI-Standard 298 und die Beagle-Studie von Fischer et al. Die ganze Kontur wird gewichtet gehäutet; Gänge und Sitz laufen auf dem neuen Rig ohne Überschneidungen. Details: [docs/07-ganzkoerper-rig.md](docs/07-ganzkoerper-rig.md).
+
+## Stufe G1 – Posen-Generator
+
+Zehn Posen als Presets mit verständlichen Reglern statt handgesetzter Gelenke: Locker, Sitz, Platz, Pfote geben, Spielverbeugung, Schnüffeln, Starr, Angst, Wegsehen, Schlafen. `pose(name, anteil, änderungen)` aus `src/poses/presets.js` liefert eine Rig-Pose, `anteil` 0–1 ist zugleich der Übergang aus dem Stand. Abnahmebilder: `node scripts/abnahme-g1.mjs`. Details: [docs/08-posen-generator.md](docs/08-posen-generator.md).
