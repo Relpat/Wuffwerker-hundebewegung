@@ -15,7 +15,7 @@
  * them as JSON and draw them without any rig code (stage G3).
  */
 import { contourAt } from '../geometry/animated-contour.js';
-import { sampleContour } from '../geometry/contour.js';
+import { sampleContour, CONTOUR_REGIONS } from '../geometry/contour.js';
 import { farContours, nearContours } from '../geometry/far-limbs.js';
 import { projector, projectCommands, DEFAULT_VIEW } from './camera.js';
 import { wolke, flaeche } from './formen.js';
@@ -55,6 +55,16 @@ const fell = (cmds, bogen) => wolke(points(cmds), bogen, { glaetten: false });
  * evenodd, the flag only documents that the second path cuts the first. */
 const pathData = cmds => cmds.map(([op, ...p]) => op + p.map(r1).join(' ')).join('');
 
+/** Body outline without the rig's own head: the Baukasten head replaces it,
+ * so skull and jaw are cut off at the neck (poll → back of the lower jaw).
+ * Otherwise the rig head would stick out wherever the drawn head does not
+ * lie exactly on it (looking away, sniffing). */
+export function bodyWithoutHead(cmds) {
+  const [h0] = CONTOUR_REGIONS.head, [, j1] = CONTOUR_REGIONS.jaw;
+  const jawEnd = cmds[j1].slice(-2);
+  return [...cmds.slice(0, h0), ['L', ...jawEnd], ...cmds.slice(j1 + 1)];
+}
+
 /** Where the Baukasten head sits: nose tip, rotation, scale. The Baukasten
  * head faces left with its nose at (0,0), ~250 units from nose to the back
  * of the skull; Lenny here faces right, so it is mirrored. */
@@ -69,7 +79,8 @@ export function headAnchor(pose, project) {
   if (!zurueck) return { x: r1(n.x + 4), y: r1(n.y + 2), dreh: r1(ang - 12), s: +s.toFixed(3), spiegeln: true };
   // Looking back over the shoulder: the head turns to the far side and
   // points backwards; the back of the skull stays where the neck ends.
-  return { x: r1(o.x + 30 - 300 * s), y: r1(n.y - 6), dreh: 4, s: +s.toFixed(3), spiegeln: false };
+  const k = project(j.jaw.x, j.jaw.y, z);
+  return { x: r1(o.x + 40 - 330 * s), y: r1((o.y + k.y) / 2 + 30 * s), dreh: 6, s: +s.toFixed(3), spiegeln: false };
 }
 
 /** Simple stand-in head (no wuffwerk): cloud skull, beard, eye, nose, ear. */
@@ -91,7 +102,7 @@ export function lennyLayers(pose, { camera = DEFAULT_VIEW, farben = LENNY_FARBEN
   const depth = camera?.depth || 0;
   const project = projector(camera || {});
   const far = farContours(pose), near = nearContours(pose);
-  const body = projectCommands(contourAt(pose), project, 0);
+  const body = projectCommands(bodyWithoutHead(contourAt(pose)), project, 0);
   const layers = [];
   // Soft ground shadow under the body, between the paws.
   const xs = points(body).map(p => p[0]);
