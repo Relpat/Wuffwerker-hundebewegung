@@ -30,7 +30,7 @@ mit dem echten Baukasten-Kopf (ohne Pfad mit Ersatzkopf).
 ## Export für den Baukasten (G3)
 
 `node scripts/export-baukasten.mjs ../wuffwerk` schreibt alle Presets nach
-`site/illustrationen/generiert/hund-posen.json` im Website-Repo. Darin stehen
+`site/illustrationen/generiert/hund-posen.mjs` (ES-Modul) im Website-Repo. Darin stehen
 nur Daten: Ebenen, Farben (hell und dunkel), Kopf-Anker, `ursprung` (Vorbrust
 am Boden = x/y des Bausteins), `massstab` 0,82 (Rig → bisherige Baustein-Größe)
 und `kopfFaktor` 1,25 (Kopf etwas größer als anatomisch, Lenny bleibt niedlich).

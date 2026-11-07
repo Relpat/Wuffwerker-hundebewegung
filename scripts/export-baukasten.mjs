@@ -1,7 +1,8 @@
 /** Stage G3 – exports every preset in the Lenny look for the wuffwerk
  * Baukasten (Baustein "hund"):
  *   node scripts/export-baukasten.mjs ../wuffwerk
- * writes ../wuffwerk/site/illustrationen/generiert/hund-posen.json.
+ * writes ../wuffwerk/site/illustrationen/generiert/hund-posen.mjs
+ * (an ES module, so both the Node build scripts and the Nuxt pages can import it).
  *
  * The file holds plain data only (paths, colours, head anchor), so the
  * website needs no rig code. Coordinates stay in rig space; `ursprung` is
@@ -37,8 +38,9 @@ export function exportPosen() {
 
 const ziel = process.argv[2];
 if (ziel) {
-  const datei = path.resolve(ziel, 'site/illustrationen/generiert/hund-posen.json');
+  const datei = path.resolve(ziel, 'site/illustrationen/generiert/hund-posen.mjs');
   fs.mkdirSync(path.dirname(datei), { recursive: true });
-  fs.writeFileSync(datei, JSON.stringify(exportPosen()) + '\n');
+  fs.writeFileSync(datei, '// Erzeugt von Relpat/Wuffwerker-hundebewegung (scripts/export-baukasten.mjs). Nicht von Hand ändern.\n'
+    + `export const hundDaten = ${JSON.stringify(exportPosen())}\n`);
   console.log('geschrieben:', datei, Math.round(fs.statSync(datei).size / 1024), 'KB');
 }
