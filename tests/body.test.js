@@ -67,7 +67,7 @@ test('feet remain on their ground targets in stance while shoulder/hip move',()=
 });
 
 test('turning body motion off restores static torso without removing leg cycles',()=>{
-  const pose=poseAt('run',.17,{bodyMotion:false,headMotion:false,tailMotion:false});
+  const pose=poseAt('gallop',.17,{bodyMotion:false,headMotion:false,tailMotion:false});
   for(const key of ['hip','scapula','spine','pelvis','neckBase','occiput'])
     assert.deepEqual(pose.joints[key],standJoint(key));
   assert.deepEqual(contourAt(pose).slice(0,15),CONTOUR.slice(0,15));

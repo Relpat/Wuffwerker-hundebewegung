@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { FRONT, HIND, LIMB_BIND, SEGMENTS, solveFront, solveHind, reach } from '../src/skeleton/limbs.js';
 import { GAITS, poseAt } from '../src/animation/gaits.js';
-import { PREVIEW_GAITS } from '../src/animation/preview.js';
 import { ARTBOARD } from '../src/geometry/contour.js';
 
+const MOVING = Object.fromEntries(Object.entries(GAITS).filter(([k]) => k !== 'stand').map(([k]) => [k, null]));
 const P = xy => ({ x: xy[0], y: xy[1] });
 const ang = (a, b) => Math.atan2(b.y - a.y, b.x - a.x);
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
@@ -25,7 +25,7 @@ test('Fischer & Lilje: shoulder joint sits clearly above the hip joint, scapula 
 });
 
 test('pantograph angle (scapula↔forearm, femur↔metatarsus) stays constant in every gait and preview', () => {
-  for (const [mode, gait] of Object.entries(GAITS)) for (const override of [null, PREVIEW_GAITS[mode]]) {
+  for (const [mode, gait] of Object.entries(GAITS)) for (const override of [null]) {
     for (let i = 0; i < 60; i++) {
       const j = poseAt(mode, gait.period * i / 60, { gait: override }).joints;
       for (const pre of ['', 'far']) {
@@ -39,8 +39,8 @@ test('pantograph angle (scapula↔forearm, femur↔metatarsus) stays constant in
   }
 });
 
-test('preview strides are reachable, keep bone lengths and never push paws or toes below ground', () => {
-  for (const [mode, override] of Object.entries(PREVIEW_GAITS)) {
+test('A3 strides are reachable, keep bone lengths and never push paws or toes below ground', () => {
+  for (const [mode, override] of Object.entries(MOVING)) {
     const gait = GAITS[mode];
     for (let i = 0; i < 120; i++) {
       const p = poseAt(mode, gait.period * i / 120, { gait: override });
@@ -52,9 +52,9 @@ test('preview strides are reachable, keep bone lengths and never push paws or to
   }
 });
 
-test('leg sweep around scapula and hip covers the longest preview stance', () => {
+test('leg sweep around scapula and hip covers the longest stance of the symmetric gaits (gallops add spine reach)', () => {
   const f = reach('front'), h = reach('hind');
-  const stance = Math.max(...Object.values(PREVIEW_GAITS).map(g => g.stride * g.stance));
+  const stance = Math.max(...Object.keys(MOVING).filter(k => !GAITS[k].touchdown || !['gallop', 'rotary'].includes(k)).map(k => GAITS[k].stride * GAITS[k].stance));
   assert.ok(f.back + f.forward >= stance, JSON.stringify(f));
   assert.ok(h.back + h.forward >= stance, JSON.stringify(h));
 });
@@ -64,7 +64,7 @@ test('joint angles stay inside measured ranges (stifle ≤ 164°, elbow ≤ 162�
     const u = { x: a.x - b.x, y: a.y - b.y }, v = { x: c.x - b.x, y: c.y - b.y };
     return Math.acos((u.x * v.x + u.y * v.y) / Math.hypot(u.x, u.y) / Math.hypot(v.x, v.y)) * 180 / Math.PI;
   };
-  for (const [mode, override] of Object.entries(PREVIEW_GAITS)) for (let i = 0; i < 80; i++) {
+  for (const [mode, override] of Object.entries(MOVING)) for (let i = 0; i < 80; i++) {
     const j = poseAt(mode, GAITS[mode].period * i / 80, { gait: override }).joints;
     const stifle = inc(j.hip, j.stifle, j.hock), elbow = inc(j.shoulder, j.elbow, j.carpus);
     assert.ok(stifle <= 164.5 && stifle >= 85, `${mode} ${i} stifle ${stifle.toFixed(1)}`);

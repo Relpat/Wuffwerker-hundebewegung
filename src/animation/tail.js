@@ -18,7 +18,7 @@ export const NATURAL_TAIL = Object.freeze({
   name:'Neutral', widths:[17,15,12,9,5,1.6], lengths:[20,18,17,15,12],
   rootPitch:0,curl:0,rootYOffset:0,curlExp:1.22,distalCurl:0,
 });
-const AUTO_EXPRESSION=Object.freeze({walk:'calm',trot:'excited',run:'excited',pace:'calm',stand:'calm'});
+const AUTO_EXPRESSION=Object.freeze({walk:'calm',trot:'excited',gallop:'excited',rotary:'excited',pace:'calm',stand:'calm'});
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const lerp=(a,b,t)=>a+(b-a)*t;
 

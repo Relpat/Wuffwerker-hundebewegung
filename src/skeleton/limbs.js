@@ -115,9 +115,9 @@ function toeDrop(limb, flex) {
 export function solveFront(root, paw, { carpalFlex = 0, toeFlex = 0, lift = 0 } = {}) {
   const ta = FRONT.toeAngle;
   // In stance the carpus keeps its bind angle: the metacarpus turns with the
-  // forearm while the pad stays on the ground (a few fixed-point iterations).
+  // forearm while the pad stays on the ground (fixed-point iterations).
   let ma = FRONT.metaAngle, s, carpusTarget;
-  for (let it = 0; it < 4; it++) {
+  for (let it = 0; it < 8; it++) {
     const x = paw.x - FRONT.meta * Math.cos(ma);
     let y = paw.y - FRONT.meta * Math.sin(ma) - lift / 2;
     const toeTip = y + FRONT.meta * Math.sin(ma + carpalFlex) + FRONT.toe * Math.sin(ta + carpalFlex + toeFlex);

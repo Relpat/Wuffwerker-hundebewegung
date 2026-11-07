@@ -28,18 +28,26 @@ const sole=(paw,toeJoint,bindAngle,dx,dy)=>{
   const k=1-.5*Math.min(1,Math.abs(Math.atan2(s,c))/(Math.PI/2));
   return {x:paw.x+k*(dx*c-dy*s),y:paw.y+k*(dx*s+dy*c)};
 };
+/** Heel pad: turns with the metapodium, but never below its standing level
+ * and never above the back edge of the metapodium (`back`), so the sole line
+ * cannot cross the heel curve in long strides. */
+const heelPt=(paw,joint,bindAngle,dx,dy,back)=>{
+  const p=sole(paw,joint,bindAngle,dx,dy);
+  const q=p.y>paw.y+dy ? {x:paw.x+dx,y:paw.y+dy} : p;
+  return back ? {x:q.x,y:Math.max(q.y,back[1]+2)} : q;
+};
 function frontOutline(root,elbow,carpus,paw,toeJoint,FRONT_HEEL) {
   // Full-size foreleg: near-side lower limb ~38px across, paw ~67px wide.
   const a=normal(root,elbow,23),b=normal(elbow,carpus,18),c=normal(carpus,paw,11);
   const toe=sole(paw,toeJoint,FRONT.toeAngle,30,15);
-  const back=sole(paw,carpus,FRONT_HEEL,-38,15);
+  const back=heelPt(paw,carpus,FRONT_HEEL,-38,15,off(paw,c,1));
   return [
     ['M',...off(root,a,-1)],
     ['C',...off(add(root,elbow,.45),a,-1),...off(elbow,b,-1),...off(elbow,b,-1)],
     ['C',...off(add(elbow,carpus,.55),b,-1),...off(carpus,c,-1),...off(paw,c,-1)],
     ['C',...xy(sole(paw,toeJoint,FRONT.toeAngle,4,3)),toe.x,toe.y,toe.x,toe.y],
     ['L',back.x,back.y],
-    ['C',...xy(sole(paw,carpus,FRONT_HEEL,-41,11)),...off(paw,c,1),...off(paw,c,1)],
+    ['C',...xy(heelPt(paw,carpus,FRONT_HEEL,-41,11,off(paw,c,1))),...off(paw,c,1),...off(paw,c,1)],
     ['C',...off(carpus,c,1),...off(add(elbow,carpus,.6),b,1),...off(elbow,b,1)],
     ['C',...off(elbow,b,1),...off(add(root,elbow,.45),a,1),...off(root,a,1)],
     ['Z'],
@@ -50,14 +58,14 @@ function hindOutline(hip,stifle,hock,paw,toeJoint,HIND_HEEL) {
   const a=normal(hip,stifle,30),b=normal(stifle,hock,17),c=normal(hock,paw,11);
   const k=blend(a,b,20);
   const toe=sole(paw,toeJoint,HIND.toeAngle,42,13);
-  const heel=sole(paw,hock,HIND_HEEL,-31,13);
+  const heel=heelPt(paw,hock,HIND_HEEL,-31,13,off(paw,c,1));
   return [
     ['M',...off(hip,a,-1)],
     ['C',...off(add(hip,stifle,.55),a,-1),...off(stifle,k,-1),...off(stifle,k,-1)],
     ['C',...off(add(stifle,hock,.5),b,-1),...off(hock,c,-1),...off(hock,c,-1)],
     ['C',...off(add(hock,paw,.55),c,-1),...off(paw,c,-1),toe.x,toe.y],
     ['L',heel.x,heel.y],
-    ['C',...xy(sole(paw,hock,HIND_HEEL,-33,9)),...off(paw,c,1),...off(paw,c,1)],
+    ['C',...xy(heelPt(paw,hock,HIND_HEEL,-33,9,off(paw,c,1))),...off(paw,c,1),...off(paw,c,1)],
     ['C',...off(hock,c,1),...off(add(stifle,hock,.5),b,1),...off(stifle,k,1)],
     ['C',...off(stifle,k,1),...off(add(hip,stifle,.55),a,1),...off(hip,a,1)],
     ['Z'],

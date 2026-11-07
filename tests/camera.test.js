@@ -20,6 +20,6 @@ test('true far bind has no fake offsets and keeps all targets reachable', () => 
   assert.equal(TRUE_FAR_BIND.farHip[0], JOINTS.hip[0]);
   assert.equal(TRUE_FAR_BIND.farScapula[0], JOINTS.scapula[0]);
   assert.notEqual(LEGACY_FAR_BIND.farHip[0], JOINTS.hip[0]);
-  for (const mode of ['walk', 'trot', 'pace', 'run'])
+  for (const mode of ['walk', 'trot', 'pace', 'gallop', 'rotary'])
     for (let i = 0; i < 40; i++) assert.ok(poseAt(mode, i / 40, { farBind: TRUE_FAR_BIND }).targetError < .01, mode);
 });

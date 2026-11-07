@@ -13,10 +13,21 @@ const len=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const point=xy=>({x:xy[0],y:xy[1]});
 const near=(a,b,eps=.015)=>assert.ok(Math.abs(a-b)<eps,`${a} != ${b}`);
 
-test('all four touchdown offsets reproduce v7.5.1 exactly',()=>{
+test('touchdown timing follows Maes et al. 2008 (lateral walk, trot, pace, transverse and rotary gallop)',()=>{
   assert.deepEqual(GAITS.walk.offsets,{hindNear:0,frontNear:.75,hindFar:.50,frontFar:.25});
   assert.deepEqual(GAITS.trot.offsets,{hindNear:0,frontNear:.50,hindFar:.50,frontFar:0});
-  assert.deepEqual(GAITS.run.offsets,{hindNear:0,frontNear:.515,hindFar:.035,frontFar:.55});
+  const td=g=>Object.fromEntries(Object.entries(g.offsets).map(([k,v])=>[k,+((1-v)%1).toFixed(3)]));
+  // walk: ipsilateral fore lands 25 % after the hind
+  assert.equal(td(GAITS.walk).frontNear,.25);
+  // transverse gallop: hind pair ~20 %, fore pair ~29 %, same lead side (near hind & fore first)
+  const g=td(GAITS.gallop);
+  assert.ok(Math.abs(g.hindFar-g.hindNear-.20)<.03 && Math.abs(g.frontFar-g.frontNear-.29)<.03);
+  // rotary gallop: fore pair ~20 %, circular sequence HL → HR → VR → VL
+  const r=td(GAITS.rotary);
+  assert.ok(r.hindNear<r.hindFar && r.hindFar<r.frontFar && r.frontFar<r.frontNear);
+  assert.ok(Math.abs(r.frontNear-r.frontFar-.20)<.03);
+  // duty factors: walk > .6 (no flight), gallops < .35 with flight phases
+  assert.ok(GAITS.walk.stance>.6 && GAITS.gallop.stance<.35 && GAITS.rotary.stance<.3);
   assert.deepEqual(GAITS.pace.offsets,{hindNear:0,frontNear:0,hindFar:.50,frontFar:.50});
   for(const gait of Object.values(GAITS)){
     assert.equal(Object.keys(gait.offsets).length,4);

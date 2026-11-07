@@ -4,7 +4,6 @@ import { BINDINGS, SKIN_REGIONS } from '../src/geometry/skin.js';
 import { contourAt } from '../src/geometry/animated-contour.js';
 import { CONTOUR, sampleContour } from '../src/geometry/contour.js';
 import { GAITS, poseAt } from '../src/animation/gaits.js';
-import { PREVIEW_GAITS } from '../src/animation/preview.js';
 
 function crossing(points) {
   const o = (a, b, c) => (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
@@ -15,6 +14,7 @@ function crossing(points) {
   }
   return null;
 }
+const MOVING = Object.fromEntries(Object.entries(GAITS).filter(([k]) => k !== 'stand').map(([k]) => [k, null]));
 
 test('every skinned point has normalised, finite, non-negative weights (bound once)', () => {
   for (const { region, points } of BINDINGS) {
@@ -36,7 +36,7 @@ test('skin reproduces the bind contour when leg bones do not move', () => {
 });
 
 test('preview strides: skinned outline stays one finite closed path without crossings', () => {
-  for (const [mode, override] of Object.entries(PREVIEW_GAITS)) {
+  for (const [mode, override] of Object.entries(MOVING)) {
     for (let n = 0; n < 24; n++) {
       const cmds = contourAt(poseAt(mode, n * GAITS[mode].period / 24, { gait: override }));
       assert.equal(cmds.length, CONTOUR.length);

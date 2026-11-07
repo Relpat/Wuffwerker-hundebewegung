@@ -7,7 +7,7 @@ const out = new URL('../docs/abnahme/a1/', import.meta.url);
 fs.mkdirSync(out, { recursive: true });
 const write = (name, svg) => fs.writeFileSync(new URL(name + '.svg', out), svg);
 write('stand', poseSvg(poseAt('stand'), { title: 'Stand: Beinskelett A1' }));
-for (const mode of ['walk', 'trot', 'run', 'pace']) {
+for (const mode of ['walk', 'trot', 'gallop', 'rotary', 'pace']) {
   for (let k = 0; k < 8; k++) {
     write(`${mode}-${k + 1}`, poseSvg(poseAt(mode, GAITS[mode].period * k / 8), { title: `${GAITS[mode].label} ${k + 1}/8` }));
   }

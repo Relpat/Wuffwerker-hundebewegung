@@ -9,7 +9,7 @@ export function headAt(mode, time, period, body, enabled=true) {
   if (!enabled || mode==='stand') return {enabled:false, cervical:0, cranium:0};
   const phase=2*Math.PI*time/period;
   const slope=Math.atan2(body?.shoulderY-body?.hipY || 0, 287);
-  const amount=mode==='run'?1.2:mode==='trot'?1:mode==='walk'?.7:.78;
+  const amount=mode==='gallop'||mode==='rotary'?1.2:mode==='trot'?1:mode==='walk'?.7:.78;
   return {
     enabled:true,
     cervical:-.65*slope+amount*.032*Math.sin(phase+.8),
