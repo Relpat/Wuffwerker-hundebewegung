@@ -2,7 +2,7 @@
  * pantograph skeleton (scapula pivot, three-segment legs, flexing paws).
  * Gait amplitudes are recalibrated in stage A3. Not yet weighted skinning.
  */
-import { JOINTS, FAR_BIND } from '../skeleton/stand.js';
+import { JOINTS, FAR_BIND as DEFAULT_FAR_BIND } from '../skeleton/stand.js';
 import { solveFront, solveHind } from '../skeleton/limbs.js';
 import { torsoAt, torsoDelta } from './body.js';
 import { headAt, headDelta } from './head.js';
@@ -71,7 +71,7 @@ const LIMB_NAMES = {
 const far = name => 'far'+name[0].toUpperCase()+name.slice(1);
 const P = xy => ({x:xy[0],y:xy[1]});
 
-function placeLimbs(joints, gait, paths) {
+function placeLimbs(joints, gait, paths, FAR_BIND) {
   // Stance centre: by default the bind paw; with `gait.center` the paw sweeps
   // around a point at that horizontal offset from its own pivot (scapula/hip).
   const flexFront = path => ({ carpalFlex: (gait.carpalFlex||0)*DEG*swingFlex(path.u), toeFlex: 10*DEG*swingFlex(path.u), lift: -path.y });
@@ -100,7 +100,7 @@ function placeLimbs(joints, gait, paths) {
 /** Four driven limbs on the A1 pantograph skeleton. Paw (MCP/MTP) points are the
  * IK targets; the scapula and hip pivots follow the torso deformation field.
  */
-export function poseAt(mode = 'stand', time = 0, { bodyMotion = true, headMotion = true, tailMotion = true, tailExpression = 'auto', gait: override = null } = {}) {
+export function poseAt(mode = 'stand', time = 0, { bodyMotion = true, headMotion = true, tailMotion = true, tailExpression = 'auto', gait: override = null, farBind: FAR_BIND = DEFAULT_FAR_BIND } = {}) {
   if (!GAITS[mode]) throw new Error(`Unknown gait: ${mode}`);
   // `gait` overrides single gait values, e.g. the stride preview in preview.js.
   const gait = override ? { ...GAITS[mode], ...override } : GAITS[mode];
@@ -119,8 +119,8 @@ export function poseAt(mode = 'stand', time = 0, { bodyMotion = true, headMotion
     p.x+=d.x+h.x+t.x;p.y+=d.y+h.y+t.y;
   }
   const paths=Object.fromEntries(Object.entries(gait.offsets).map(([key,offset])=>[key,pawPath(time,gait,offset)]));
-  const targetError = placeLimbs(joints, gait, paths);
+  const targetError = placeLimbs(joints, gait, paths, FAR_BIND);
   const support = {front:paths.frontNear.support,hind:paths.hindNear.support,
     frontFar:paths.frontFar.support,hindFar:paths.hindFar.support};
-  return {mode,time,joints,body,head,tail,support,targetError};
+  return {mode,time,joints,body,head,tail,support,targetError,farBind:FAR_BIND};
 }

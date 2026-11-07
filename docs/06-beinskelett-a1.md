@@ -39,3 +39,6 @@ Rückmeldung: Die Beine wirkten froschig. Ursache laut Messung der Gelenkwinkel:
 - Hinterbein hebt in der Schwungphase weniger an, die Zehen krümmen sich weniger.
 - Vorschau-Schrittlängen neu bestimmt: größte Werte, bei denen Ellbogen ≤ 162° und Knie ≤ 164° bleiben (Gehen 150, Trab 240, Pass 210, Laufen 390 px).
 - Test: Gelenkwinkel bleiben in diesen Bereichen, Stand-Winkel von Knie und Sprunggelenk anatomisch.
+
+## Kamera (Vorschlag, standardmäßig aus)
+Bisher gab es keine Kamera: reine Seitenansicht, die fernen Beine nur seitlich verschoben (vorgetäuschte Tiefe). `src/render/camera.js` ist eine einfache orthografische Kamera: Gelenke bekommen eine Tiefe (nahe Seite 0, Mittellinie halbe, ferne Seite ganze Körperbreite ≈ 65 px), `pitch` = Blick von oben, `yaw` = schräg von vorn. Mit Kamera nutzt man `TRUE_FAR_BIND` (ferne Beine ohne Verschiebung). `poseSvg(pose, { camera })` zeichnet Boden-Streifen und projiziert Kontur, ferne Beine und Skelett. Tests: `tests/camera.test.js`.

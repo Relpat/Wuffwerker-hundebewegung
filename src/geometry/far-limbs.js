@@ -7,9 +7,8 @@
  */
 import { FRONT, HIND } from '../skeleton/limbs.js';
 import { FAR_BIND } from '../skeleton/stand.js';
-const bindAngle=(from,to)=>Math.atan2(FAR_BIND[to][1]-FAR_BIND[from][1],FAR_BIND[to][0]-FAR_BIND[from][0]);
+const bindAngle=(B,from,to)=>Math.atan2(B[to][1]-B[from][1],B[to][0]-B[from][0]);
 // Heel/carpal pad follow the metapodium, measured against the far bind pose.
-const FRONT_HEEL=bindAngle('farFrontPaw','farCarpus'), HIND_HEEL=bindAngle('farHindPaw','farHock');
 const add=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
 const normal=(a,b,w)=>{const dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;
   return {x:-dy*w/l,y:dx*w/l};};
@@ -29,7 +28,7 @@ const sole=(paw,toeJoint,bindAngle,dx,dy)=>{
   const k=1-.5*Math.min(1,Math.abs(Math.atan2(s,c))/(Math.PI/2));
   return {x:paw.x+k*(dx*c-dy*s),y:paw.y+k*(dx*s+dy*c)};
 };
-function frontOutline(root,elbow,carpus,paw,toeJoint) {
+function frontOutline(root,elbow,carpus,paw,toeJoint,FRONT_HEEL) {
   // Full-size foreleg: near-side lower limb ~38px across, paw ~67px wide.
   const a=normal(root,elbow,23),b=normal(elbow,carpus,19),c=normal(carpus,paw,16);
   const toe=sole(paw,toeJoint,FRONT.toeAngle,30,15);
@@ -46,7 +45,7 @@ function frontOutline(root,elbow,carpus,paw,toeJoint) {
     ['Z'],
   ];
 }
-function hindOutline(hip,stifle,hock,paw,toeJoint) {
+function hindOutline(hip,stifle,hock,paw,toeJoint,HIND_HEEL) {
   // Full-size hind leg: near-side paw about 73px wide in neutral stance.
   const a=normal(hip,stifle,29),b=normal(stifle,hock,18),c=normal(hock,paw,15);
   const k=blend(a,b,20);
@@ -65,9 +64,9 @@ function hindOutline(hip,stifle,hock,paw,toeJoint) {
   ];
 }
 export function farContours(pose) {
-  const j=pose.joints;
+  const j=pose.joints, B=pose.farBind||FAR_BIND;
   return {
-    hind:hindOutline(j.farHip,j.farStifle,j.farHock,j.farHindPaw,j.farHindToe),
-    front:frontOutline(j.farShoulder,j.farElbow,j.farCarpus,j.farFrontPaw,j.farFrontToe),
+    hind:hindOutline(j.farHip,j.farStifle,j.farHock,j.farHindPaw,j.farHindToe,bindAngle(B,'farHindPaw','farHock')),
+    front:frontOutline(j.farShoulder,j.farElbow,j.farCarpus,j.farFrontPaw,j.farFrontToe,bindAngle(B,'farFrontPaw','farCarpus')),
   };
 }
