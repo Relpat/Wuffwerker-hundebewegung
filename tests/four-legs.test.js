@@ -6,6 +6,8 @@ import { farContours } from '../src/geometry/far-limbs.js';
 import { CONTOUR, sampleContour } from '../src/geometry/contour.js';
 import { contourAt } from '../src/geometry/animated-contour.js';
 import { torsoDelta } from '../src/animation/body.js';
+import { SEGMENTS } from '../src/skeleton/limbs.js';
+const far=n=>'far'+n[0].toUpperCase()+n.slice(1);
 
 const len=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const point=xy=>({x:xy[0],y:xy[1]});
@@ -43,11 +45,7 @@ test('far-side legs obey fixed bone lengths and all four feet reach their cycle 
     for(let i=0;i<80;i++){
       const t=i*gait.period/80,p=poseAt(mode,t),j=p.joints;
       assert.ok(p.targetError<.01,`${mode} ${i} error ${p.targetError}`);
-      for(const [a,b,l] of [
-        ['farShoulder','farElbow',80],['farElbow','farFrontPaw',94],
-        ['farHip','farStifle',77],['farStifle','farHock',70],
-        ['farHock','farHindPaw',Math.hypot(17,48)],
-      ]) near(len(j[a],j[b]),l,.02);
+      for(const [a,b,l] of SEGMENTS) near(len(j[far(a)],j[far(b)]),l,.02);
       for(const name of ['front','hind','frontFar','hindFar'])assert.equal(typeof p.support[name],'boolean');
       if(p.support.frontFar)near(j.farFrontPaw.y,FAR_BIND.farFrontPaw[1]);
       if(p.support.hindFar)near(j.farHindPaw.y,FAR_BIND.farHindPaw[1]);
@@ -59,7 +57,7 @@ test('far-side legs obey fixed bone lengths and all four feet reach their cycle 
 test('far hips/shoulders attach to the same torso deformation field',()=>{
   for(const [mode,gait] of Object.entries(GAITS)){
     const p=poseAt(mode,.21*gait.period);
-    for(const name of ['farHip','farShoulder']) {
+    for(const name of ['farHip','farScapula']) {
       const at=point(FAR_BIND[name]);
       const d=torsoDelta(at.x,at.y,p.body);
       near(p.joints[name].x,at.x+d.x);

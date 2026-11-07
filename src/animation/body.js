@@ -40,9 +40,37 @@ export function torsoAt(mode = 'stand', time = 0, period = 1, enabled = true) {
  */
 export function torsoDelta(x, y, body) {
   if (!body?.enabled) return { x: 0, y: 0 };
+  if (body.tilt) return tiltDelta(x, y, body);
   const longitudinal = smooth((x - 275) / (562 - 275));
   const rootY = body.hipY*(1-longitudinal) + body.shoulderY*longitudinal;
   const spineEnvelope = Math.exp(-.5*((x - 439)/105)**2);
   const dorsalWeight = smooth((390-y)/180);
   return { x: 0, y: rootY - body.spineFlex*spineEnvelope*dorsalWeight };
+}
+
+function rotateAbout(p, c, angle) {
+  const cs = Math.cos(angle), sn = Math.sin(angle), dx = p.x - c.x, dy = p.y - c.y;
+  return { x: c.x + dx*cs - dy*sn, y: c.y + dx*sn + dy*cs };
+}
+
+/** Pose field for floor poses (sit, later down): the trunk behind the
+ * shoulders turns as one block about `body.pivot` (negative `tilt` = rump
+ * down), fading out between the withers and the neck so neck and head are not
+ * turned. `lumbar` additionally bends the loin and croup about the lumbar
+ * spine (the back rounds and the pelvis tucks under, as in a real sit).
+ * `rise` lifts the front, `tailAngle` turns the tail about its moved root. */
+function tiltPoint(x, y, body) {
+  const front = smooth((x - 430) / 132);
+  let p = { x, y: y - (body.rise || 0) * front };
+  p = rotateAbout(p, body.pivot, body.tilt * (1 - smooth((x - 540) / 110)));
+  if (body.lumbar) {
+    const lumbarPivot = rotateAbout({ x: 430, y: 285 }, body.pivot, body.tilt);
+    p = rotateAbout(p, lumbarPivot, body.lumbar * (1 - smooth((x - 330) / 130)));
+  }
+  return p;
+}
+function tiltDelta(x, y, body) {
+  let p = tiltPoint(x, y, body);
+  if (body.tailAngle) p = rotateAbout(p, tiltPoint(243, 250, body), body.tailAngle * smooth((250 - x) / 30));
+  return { x: p.x - x, y: p.y - y };
 }

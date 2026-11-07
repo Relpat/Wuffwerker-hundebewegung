@@ -1,6 +1,8 @@
 import { Application } from 'pixi.js';
 import { createScene } from './render/scene.js';
 import { GAITS, poseAt } from './animation/gaits.js';
+import { PREVIEW_GAITS } from './animation/preview.js';
+import { sitPose } from './animation/poses.js';
 import './style.css';
 
 const stage=document.querySelector('#stage');
@@ -11,6 +13,7 @@ const bodyToggle=document.querySelector('#body-toggle');
 const headToggle=document.querySelector('#head-toggle');
 const tailToggle=document.querySelector('#tail-toggle');
 const tailExpression=document.querySelector('#tail-expression');
+const previewToggle=document.querySelector('#preview-toggle');
 const gaitButtons=[...document.querySelectorAll('[data-gait]')];
 const pauseButton=document.querySelector('#pause');
 const speed=document.querySelector('#speed');
@@ -29,7 +32,9 @@ async function start() {
   stage.appendChild(app.canvas);
   const scene=createScene();
   app.stage.addChild(scene.root);
-  const draw=()=>{scene.setPose(poseAt(mode,playTime,{bodyMotion:bodyToggle.checked,headMotion:headToggle.checked,tailMotion:tailToggle.checked,tailExpression:tailExpression.value}));app.render();};
+  // Sitz: hinsetzen in 1,2 s (bei reduzierter Bewegung sofort).
+  const sitAmount=()=>reducedMotion?1:Math.min(1,playTime/1.2);
+  const draw=()=>{scene.setPose(mode==='sit'?sitPose(sitAmount()):poseAt(mode,playTime,{bodyMotion:bodyToggle.checked,headMotion:headToggle.checked,tailMotion:tailToggle.checked,tailExpression:tailExpression.value,gait:previewToggle.checked?PREVIEW_GAITS[mode]:null}));app.render();};
   const resizeObserver=new ResizeObserver(()=>{
     app.renderer.resize(stage.clientWidth,stage.clientHeight);
     scene.fit(app.screen.width,app.screen.height);
@@ -42,7 +47,7 @@ async function start() {
     pauseButton.textContent=paused?'Weiter':'Pause';
     pauseButton.disabled=mode==='stand' && !(tailToggle.checked && tailExpression.value!=='auto');
     speedOutput.textContent=`${Number(speed.value).toFixed(2).replace('.',',')} ×`;
-    hint.textContent=mode==='stand'&&tailExpression.value==='auto'?'Statische anatomische Vergleichspose.':
+    hint.textContent=mode==='sit'?'Sitz: Der Rumpf kippt über die Schultern nach hinten, die Lende rundet sich, die Hinterbeine falten ein, bis das Sprunggelenk am Boden liegt. Vorderbeine bleiben gerade.':mode==='stand'&&tailExpression.value==='auto'?'Statische anatomische Vergleichspose.':
       `${GAITS[mode].label}: ${bodyToggle.checked?'Rumpf aktiv.':'Rumpf aus.'} ${headToggle.checked?'Kopfausgleich aktiv.':'Kopfausgleich aus.'} ${tailToggle.checked?'Rute: '+(tailExpression.selectedOptions[0]?.textContent||'automatisch')+'.':'Rute aus.'} Vier getrennte Gangphasen, noch kein gewichtetes Skinning.`;
   };
   gaitButtons.forEach(button=>button.addEventListener('click',()=>{
@@ -57,6 +62,7 @@ async function start() {
   farToggle.addEventListener('change',()=>{scene.farLegs.visible=farToggle.checked;draw();});
   toggle.addEventListener('change',()=>{scene.skeleton.visible=toggle.checked;draw();});
   bodyToggle.addEventListener('change',()=>{syncControls();draw();});
+  previewToggle.addEventListener('change',()=>{if(previewToggle.checked){toggle.checked=true;scene.skeleton.visible=true;}draw();});
   for (const control of [headToggle,tailToggle,tailExpression]) control.addEventListener('change',()=>{syncControls();draw();});
   let last=0,raf=0;
   const tick=(now)=>{
@@ -70,7 +76,7 @@ async function start() {
   };
   syncControls(); draw();
   raf=requestAnimationFrame(tick);
-  status.textContent='PixiJS 8 · Vierbein-Ganganalyse · Stufe 05';
+  status.textContent='PixiJS 8 · Vierbein-Ganganalyse · Stufe A1';
   document.documentElement.dataset.ready='true';
   window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);resizeObserver.disconnect();app.destroy(true);},{once:true});
 }

@@ -72,3 +72,7 @@ Details: [docs/05-vierbein-gangarten.md](docs/05-vierbein-gangarten.md).
 ## Korrektur 05.1 – fernliegende Beine in voller Größe
 
 Die fernliegenden Vorder- und Hinterbeine haben jetzt **an die nahen Beine angeglichene Schaft- und Pfotenbreiten** und gleiche Ansatzhöhen. Die Knochenlängen waren bereits korrekt; die alte Zeichengeometrie ließ sie zu klein aussehen. Tiefenstaffelung erfolgt über Verdeckung und dezente Farbe, nicht durch Miniaturisierung. Der neue Proportionstest vergleicht Fußbreiten, Bodenkontakt und alle IK-Ketten; `docs/05-vierbein-gangarten.md` enthält die Details. Keine Änderungen an der bestehenden nahen Körperkontur.
+
+## Stufe A1 – Beinskelett nach Fischer & Lilje
+
+Schulterblatt als Drehpunkt des Vorderbeins, dreigliedrige Beine als Pantograph, einklappende Handwurzel und Zehen. Schalter **Große Schritte** zeigt die neuen Schrittlängen (Haut folgt erst mit A2, daher Skelett-Ansicht). Reine SVG-Abnahmebilder: `node scripts/abnahme-a1.mjs`. Details: [docs/06-beinskelett-a1.md](docs/06-beinskelett-a1.md).
