@@ -17,7 +17,7 @@ export const JOINTS = Object.freeze({
 const chainBones = c => c.slice(1).map((b, i) => [c[i], b]);
 export const BONES = Object.freeze([
   ...chainBones(FRONT_CHAIN), ...chainBones(REAR_CHAIN),
-  ['occiput', 'jaw'], ['jaw', 'chin'], ['ilium', 'ischium'], ['manubrium', 'sternum'],
+  ['occiput', 'jaw'], ['jaw', 'chin'], ['ilium', 'ischium'], ['manubrium', 'sternum'], ['sternum', 'xiphoid'],
   ['pelvis', 'hip'], ['hip', 'stifle'], ['stifle', 'hock'], ['hock', 'hindPaw'], ['hindPaw', 'hindToe'],
   ['withers', 'scapula'], ['scapula', 'shoulder'], ['shoulder', 'elbow'], ['elbow', 'carpus'],
   ['carpus', 'frontPaw'], ['frontPaw', 'frontToe'],

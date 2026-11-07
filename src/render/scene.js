@@ -6,9 +6,10 @@ import { BONES, FAR_BONES } from '../skeleton/stand.js';
 import { farContours } from '../geometry/far-limbs.js';
 import { projector, projectCommands, DEFAULT_VIEW } from './camera.js';
 import { coatPx, COAT_CM } from './coat.js';
+import { ribsAt } from '../skeleton/ribs.js';
 
 const project = projector(DEFAULT_VIEW);
-const MID = /^(tail|pelvis|spine|withers|neck|occiput|jaw|thorax|lumbar|nose|chin|ilium|ischium|manubrium|sternum)/;
+const MID = /^(tail|pelvis|spine|withers|neck|occiput|jaw|thorax|lumbar|nose|chin|ilium|ischium|manubrium|sternum|xiphoid)/;
 const zOf = name => name.startsWith('far') ? DEFAULT_VIEW.depth : MID.test(name) ? DEFAULT_VIEW.depth / 2 : 0;
 
 export function createScene() {
@@ -55,6 +56,12 @@ export function createScene() {
       const from=J[a],to=J[b];
       skeleton.moveTo(from.x,from.y).lineTo(to.x,to.y)
         .stroke({color:0x345c74,width:1.8,alpha:.65});
+    }
+    // Ribs (drawing only), at the depth of the breastbone.
+    for (const [p0,c,p1] of ribsAt(pose.joints)) {
+      const q0=project(p0.x,p0.y,d/2),qc=project(c.x,c.y,d/2),q1=project(p1.x,p1.y,d/2);
+      skeleton.moveTo(q0.x,q0.y).quadraticCurveTo(qc.x,qc.y,q1.x,q1.y)
+        .stroke({color:0x26334a,width:1.4,alpha:.45});
     }
     for (const [a,b] of BONES) {
       const from=J[a],to=J[b];

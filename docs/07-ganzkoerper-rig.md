@@ -65,6 +65,15 @@ Oberschenkel nach hinten wandert.
   gezeichnet, nicht gehäutet (Kontur mit doppelter Fellstärke umrandet), kann
   also in keiner Pose falten. Unter dem Boden wird es abgeschnitten.
 
+## Brustbein und Rippen (07.11.2026)
+
+Das Brustbein läuft jetzt vom Manubrium am Brusteingang über das Sternum bis
+zum Schwertfortsatz (Xiphoid) am Brustboden, gut 20 cm lang. In der
+Skelett-Ansicht zeigen 8 Rippenbögen (`src/skeleton/ribs.js`), wie es über die
+Rippen mit der Brustwirbelsäule verbunden ist: die vorderen Rippen enden am
+Brustbein, die hinteren am Rippenbogen. Rippen und Brustbein sitzen starr am
+Brustkorb. Sie sind nur gezeichnet, die Körperkontur nutzt sie nicht.
+
 ## Sitz
 
 Rumpf kippt 44° um die Schultern, Lende rundet sich, Vorderpfoten bleiben

@@ -9,7 +9,8 @@
  *   thoracic inlet, the crest above it is muscle and the nuchal ligament)
  *   backwards: thorax → spine (T13) → lumbar (L4) → pelvis (lumbosacral) → tailRoot (sacrum end)
  *              → tail1 … tail5 → tailTip
- * Rigid attachments: scapula pivot, manubrium and sternum ride on the
+ * Rigid attachments: scapula pivot and the breastbone (manubrium → sternum →
+ * xiphoid, ≈ 20 cm along the floor of the chest) ride on the
  * thorax→withers segment; hip, ischium and ilium on the pelvis (sacrum)
  * segment; jaw joint and chin on the skull (plus the jaw opening).
  *
@@ -23,14 +24,14 @@ export const TRUNK_BIND = Object.freeze({
   occiput: [640, 176], nose: [748, 203], jaw: [657, 201], chin: [726, 222],
   spine: [463, 257], lumbar: [425, 255], pelvis: [386, 249], tailRoot: [357, 243],
   tail1: [331, 248], tail2: [308, 259], tail3: [289, 276], tail4: [274, 297], tail5: [262, 319], tailTip: [252, 342],
-  ilium: [396, 236], ischium: [326, 274], manubrium: [603, 300], sternum: [540, 350],
+  ilium: [396, 236], ischium: [326, 274], manubrium: [603, 300], sternum: [540, 350], xiphoid: [492, 346],
 });
 
 export const FRONT_CHAIN = Object.freeze(['thorax', 'withers', 'neckBase', 'neckMid', 'occiput', 'nose']);
 export const REAR_CHAIN = Object.freeze(['thorax', 'spine', 'lumbar', 'pelvis', 'tailRoot', 'tail1', 'tail2', 'tail3', 'tail4', 'tail5', 'tailTip']);
 /** Rigid attachments: point → the chain segment [from, to] it rides on. */
 export const ATTACH = Object.freeze({
-  scapula: ['thorax', 'withers'], manubrium: ['thorax', 'withers'], sternum: ['thorax', 'withers'],
+  scapula: ['thorax', 'withers'], manubrium: ['thorax', 'withers'], sternum: ['thorax', 'withers'], xiphoid: ['thorax', 'withers'],
   hip: ['pelvis', 'tailRoot'], ischium: ['pelvis', 'tailRoot'], ilium: ['pelvis', 'tailRoot'],
   jaw: ['occiput', 'nose'], chin: ['occiput', 'nose'],
 });
