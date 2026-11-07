@@ -17,19 +17,3 @@ export function headAt(mode, time, period, body, enabled=true) {
   };
 }
 
-function rotateDelta(x,y,px,py,angle) {
-  const dx=x-px,dy=y-py,c=Math.cos(angle),s=Math.sin(angle);
-  return {x:dx*(c-1)-dy*s,y:dx*s+dy*(c-1)};
-}
-
-export function headDelta(x,y,head) {
-  if (!head?.enabled) return {x:0,y:0};
-  // Zero at withers x<=562; full neck at occiput. Head rotates additionally
-  // around the skull pivot with a fade-in at the cranio-cervical junction.
-  const nw=smoothstep((x-562)/130);
-  const cw=smoothstep((x-675)/53);
-  const vertical=smoothstep((305-y)/65); // Exclude the foreleg/shoulder below the throat.
-  const neck=rotateDelta(x,y,562,257,head.cervical*nw*vertical);
-  const skull=rotateDelta(x,y,705,177,head.cranium*cw*vertical);
-  return {x:neck.x+skull.x,y:neck.y+skull.y};
-}

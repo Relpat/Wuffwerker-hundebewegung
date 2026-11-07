@@ -1,13 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { TORSO_PARAMS, torsoAt, torsoDelta } from '../src/animation/body.js';
+import { TORSO_PARAMS, torsoAt, trunkPose } from '../src/animation/body.js';
+import { trunkFK, FRONT_CHAIN, REAR_CHAIN } from '../src/skeleton/rig.js';
 import { GAITS, poseAt } from '../src/animation/gaits.js';
 import { CONTOUR, sampleContour } from '../src/geometry/contour.js';
 import { contourAt } from '../src/geometry/animated-contour.js';
 import { JOINTS } from '../src/skeleton/stand.js';
 import { SEGMENTS } from '../src/skeleton/limbs.js';
-import {headDelta} from '../src/animation/head.js';
-import {tailDelta} from '../src/animation/tail.js';
 
 const modes = Object.keys(GAITS).filter(mode => mode !== 'stand');
 const dist = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
@@ -29,24 +28,26 @@ test('body motion is periodic, mode-specific, and disabled explicitly',()=>{
     for(const k of ['hipY','shoulderY','spineFlex']) assert.ok(Math.abs(once[k]-next[k])<1e-8,`${mode} ${k}`);
     const disabled=torsoAt(mode,.13*gait.period,gait.period,false);
     assert.equal(disabled.enabled,false);
-    assert.deepEqual(torsoDelta(450,230,disabled),{x:0,y:0});
+    const still=trunkPose(disabled,{enabled:false},null);
+    assert.equal(still.x,0); assert.equal(still.y,0); assert.equal(still.pitch,0);
+    assert.ok(Object.values(still.angles).every(a=>a===0));
     assert.ok(TORSO_PARAMS[mode].bob>0);
     assert.ok(Math.abs(once.hipY)+Math.abs(once.shoulderY)>0);
   }
 });
 
-test('pelvis/withers/spine are linked to the same deformation field used by the outline',()=>{
+test('spine, neck and tail joints are posed by one forward-kinematics chain (bone lengths kept)',()=>{
+  const chainLengths=chain=>chain.slice(1).map((k,i)=>[chain[i],k]);
   for(const mode of modes){
     const gait=GAITS[mode];
     let moved=false;
     for(let i=0;i<32;i++){
       const pose=poseAt(mode,i*gait.period/32);
-      for(const key of ['pelvis','withers','spine','neckBase','tailRoot']){
-        const original=standJoint(key), delta=torsoDelta(original.x,original.y,pose.body);
-        const h=headDelta(original.x,original.y,pose.head);
-        const t=key==='tailRoot'?tailDelta(original.x,pose.tail):{x:0,y:0};
-        assert.ok(dist(pose.joints[key],{x:original.x+delta.x+h.x+t.x,y:original.y+delta.y+h.y+t.y})<1e-8,`${mode} ${key}`);
-      }
+      const {joints}=trunkFK(pose.trunk);
+      for(const key of [...FRONT_CHAIN,...REAR_CHAIN])
+        assert.ok(dist(pose.joints[key],joints[key])<1e-8,`${mode} ${key}`);
+      for(const [a,b] of [...chainLengths(FRONT_CHAIN),...chainLengths(REAR_CHAIN)])
+        assert.ok(Math.abs(dist(pose.joints[a],pose.joints[b])-dist(standJoint(a),standJoint(b)))<1e-6,`${mode} ${a}/${b}`);
       moved ||= Math.abs(pose.joints.spine.y-JOINTS.spine[1])>2;
     }
     assert.ok(moved,`${mode}: missing spine motion`);
@@ -70,7 +71,7 @@ test('turning body motion off restores static torso without removing leg cycles'
   const pose=poseAt('run',.17,{bodyMotion:false,headMotion:false,tailMotion:false});
   for(const key of ['hip','scapula','spine','pelvis','neckBase','occiput'])
     assert.deepEqual(pose.joints[key],standJoint(key));
-  assert.deepEqual(contourAt(pose).slice(0,15),CONTOUR.slice(0,15));
+  contourAt(pose).slice(0,15).forEach((c,i)=>c.slice(1).forEach((v,k)=>assert.ok(Math.abs(v-CONTOUR[i][k+1])<1e-9,`cmd ${i}`)));
   assert.notDeepEqual(pose.joints.frontPaw,standJoint('frontPaw'));
 });
 

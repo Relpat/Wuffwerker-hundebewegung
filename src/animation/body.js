@@ -35,42 +35,45 @@ export function torsoAt(mode = 'stand', time = 0, period = 1, enabled = true) {
   };
 }
 
-/** Smooth deformation field shared by the body silhouette and torso landmarks.
- * The head and tail inherit their anchors' movement without independent motion.
- */
-export function torsoDelta(x, y, body) {
-  if (!body?.enabled) return { x: 0, y: 0 };
-  if (body.tilt) return tiltDelta(x, y, body);
-  const longitudinal = smooth((x - 275) / (562 - 275));
-  const rootY = body.hipY*(1-longitudinal) + body.shoulderY*longitudinal;
-  const spineEnvelope = Math.exp(-.5*((x - 439)/105)**2);
-  const dorsalWeight = smooth((390-y)/180);
-  return { x: 0, y: rootY - body.spineFlex*spineEnvelope*dorsalWeight };
-}
+import { tailAngles } from './tail.js';
 
-function rotateAbout(p, c, angle) {
-  const cs = Math.cos(angle), sn = Math.sin(angle), dx = p.x - c.x, dy = p.y - c.y;
-  return { x: c.x + dx*cs - dy*sn, y: c.y + dx*sn + dy*cs };
-}
-
-/** Pose field for floor poses (sit, later down): the trunk behind the
- * shoulders turns as one block about `body.pivot` (negative `tilt` = rump
- * down), fading out between the withers and the neck so neck and head are not
- * turned. `lumbar` additionally bends the loin and croup about the lumbar
- * spine (the back rounds and the pelvis tucks under, as in a real sit).
- * `rise` lifts the front, `tailAngle` turns the tail about its moved root. */
-function tiltPoint(x, y, body) {
-  const front = smooth((x - 430) / 132);
-  let p = { x, y: y - (body.rise || 0) * front };
-  p = rotateAbout(p, body.pivot, body.tilt * (1 - smooth((x - 540) / 110)));
-  if (body.lumbar) {
-    const lumbarPivot = rotateAbout({ x: 430, y: 285 }, body.pivot, body.tilt);
-    p = rotateAbout(p, lumbarPivot, body.lumbar * (1 - smooth((x - 330) / 130)));
+/** Trunk part of a pose for the whole-body rig (rig.js): root offset, pitch
+ * and joint rotations, from the gait's trunk motion (`body`), the neck/head
+ * compensation (`head`) and the tail kernel (`tail`). Floor poses (sit) add
+ * `tilt` (rump down), `lumbar` (loin rounds), `rise` (front up) and
+ * `tailAngles` (per tail joint) to the body. */
+const HIP_X = 350, SCAPULA_X = 548, THORAX_X = 505, THORAX = [505, 256];
+const TILT_PIVOT = Object.freeze({ x: 560, y: 300 });
+export function trunkPose(body, head, tail) {
+  const angles = {};
+  const add = (k, v) => { if (v) angles[k] = (angles[k] || 0) + v; };
+  let x = 0, y = 0, pitch = 0;
+  if (body?.enabled) {
+    const w = (THORAX_X - HIP_X) / (SCAPULA_X - HIP_X);
+    y = body.hipY * (1 - w) + body.shoulderY * w;
+    pitch = -Math.atan2(body.hipY - body.shoulderY, SCAPULA_X - HIP_X);
+    // Dorsal arch: the loin bends, the croup drops a little, the back rises.
+    add('spine', -(body.spineFlex || 0) / 120);
+    y -= (body.spineFlex || 0) * .3;
+    add('lumbar', body.lumbar || 0);
+    add('spine', body.thoracolumbar || 0);
+    add('pelvis', body.tuck || 0);
+    if (body.tilt) {
+      // Floor poses turn the trunk about the shoulders, not about the root.
+      const pv = body.pivot || TILT_PIVOT, dx = THORAX[0] - pv.x, dy = THORAX[1] - pv.y;
+      const c = Math.cos(body.tilt), s = Math.sin(body.tilt);
+      x += pv.x + dx * c - dy * s - THORAX[0];
+      y += pv.y + dx * s + dy * c - THORAX[1];
+      pitch += body.tilt;
+    }
+    y -= body.rise || 0;
+    (body.tailAngles || []).forEach((a, i) => add(TAIL_JOINTS[i], a));
   }
-  return p;
+  // The neck keeps its carriage when the trunk pitches; head.js adds the
+  // gait's own neck and skull compensation on top.
+  add('withers', -pitch);
+  if (head?.enabled) { add('withers', head.cervical); add('occiput', head.cranium); }
+  if (tail?.enabled) tailAngles(tail).forEach((a, i) => add(TAIL_JOINTS[i], a));
+  return { x, y, pitch, angles };
 }
-function tiltDelta(x, y, body) {
-  let p = tiltPoint(x, y, body);
-  if (body.tailAngle) p = rotateAbout(p, tiltPoint(243, 250, body), body.tailAngle * smooth((250 - x) / 30));
-  return { x: p.x - x, y: p.y - y };
-}
+const TAIL_JOINTS = ['tailRoot', 'tail1', 'tail2', 'tail3', 'tail4', 'tail5'];

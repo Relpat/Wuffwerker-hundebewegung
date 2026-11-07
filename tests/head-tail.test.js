@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { GAITS, poseAt } from '../src/animation/gaits.js';
-import { headAt, headDelta } from '../src/animation/head.js';
-import { EXPRESSIONS, NATURAL_TAIL, buildNaturalTail, tailExpressionTargets, tailAt, tailDelta } from '../src/animation/tail.js';
+import { headAt } from '../src/animation/head.js';
+import { EXPRESSIONS, NATURAL_TAIL, buildNaturalTail, tailExpressionTargets, tailAt, tailAngles } from '../src/animation/tail.js';
+import { JOINTS } from '../src/skeleton/stand.js';
 import { contourAt } from '../src/geometry/animated-contour.js';
-import { CONTOUR, sampleContour } from '../src/geometry/contour.js';
+import { CONTOUR, CONTOUR_REGIONS, sampleContour } from '../src/geometry/contour.js';
 const D = (a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const V = v=>Object.values(v).every(Number.isFinite);
 
@@ -13,7 +14,8 @@ test('neutral stand unchanged; selected tail expression can animate in stand',()
   assert.strictEqual(contourAt(poseAt('stand',9,{tailMotion:false,tailExpression:'happy'})),CONTOUR);
   const happy=poseAt('stand',.23,{tailExpression:'happy'});
   assert.notStrictEqual(contourAt(happy),CONTOUR);
-  assert.deepEqual(contourAt(happy)[2],CONTOUR[2]);
+  const back=CONTOUR_REGIONS.back[1];
+  assert.deepEqual(contourAt(happy)[back].map(v=>typeof v==='number'?+v.toFixed(6):v),CONTOUR[back]);
 });
 
 test('v6.6 natural-tail pitch targets and expression presets are retained',()=>{
@@ -28,30 +30,31 @@ test('v6.6 natural-tail pitch targets and expression presets are retained',()=>{
   assert.equal(buildNaturalTail(0,'happy').points.length,NATURAL_TAIL.lengths.length+1);
 });
 
-test('tail root stays attached and expression displacements remain continuous',()=>{
+test('tail root stays attached and expression angles remain continuous',()=>{
+  const bind=Math.hypot(JOINTS.tailRoot[0]-JOINTS.pelvis[0],JOINTS.tailRoot[1]-JOINTS.pelvis[1]);
   for(const expression of Object.keys(EXPRESSIONS)){
     for(const time of [0,.08,.22,.45,1.05]){
       const t=tailAt('walk',time,{expression});
-      assert.deepEqual(tailDelta(248,t),{x:0,y:0});
-      assert.ok(V(tailDelta(128,t)));
-      assert.ok(D(tailDelta(128,t),tailDelta(128.001,t))<.1);
+      const a=tailAngles(t),b=tailAngles(tailAt('walk',time+.001,{expression}));
+      assert.equal(a.length,6);
+      assert.ok(a.every(Number.isFinite));
+      assert.ok(a.every((v,i)=>Math.abs(v-b[i])<.05),expression);
+      const j=poseAt('walk',time,{tailExpression:expression}).joints;
+      assert.ok(Math.abs(D(j.tailRoot,j.pelvis)-bind)<1e-8);
     }
   }
-  const happy=tailAt('stand',.125,{expression:'happy'});
-  const fear=tailAt('stand',.125,{expression:'fearful'});
-  assert.ok(tailDelta(128,happy).y<tailDelta(128,fear).y);
-  assert.deepEqual(tailDelta(128,tailAt('trot',.2,{enabled:false})),{x:0,y:0});
+  const tip=expression=>poseAt('stand',.125,{tailExpression:expression}).joints.tailTip;
+  assert.ok(tip('happy').y<tip('fearful').y);
+  assert.ok(tailAngles(tailAt('trot',.2,{enabled:false})).every(v=>v===0));
 });
 
 test('head compensation moves the skull without moving the shoulder joint',()=>{
   for(const [mode,g] of Object.entries(GAITS)){
     const p=poseAt(mode,.23*g.period),base=poseAt(mode,.23*g.period,{headMotion:false});
-    assert.deepEqual(headDelta(562,257,p.head),{x:0,y:0});
-    assert.deepEqual(headDelta(620,314,p.head),{x:0,y:0});
-    assert.deepEqual(p.joints.shoulder,base.joints.shoulder);
+    for(const k of ['shoulder','scapula','withers','thorax'])assert.deepEqual(p.joints[k],base.joints[k],k);
     if(mode==='stand')assert.deepEqual(p.joints.occiput,base.joints.occiput);
     else assert.ok(D(p.joints.occiput,base.joints.occiput)>.05,mode);
-    assert.ok(V(headDelta(730,170,p.head)));
+    assert.ok(V(p.joints.nose));
   }
   assert.equal(headAt('stand',.3,1,{},true).enabled,false);
 });

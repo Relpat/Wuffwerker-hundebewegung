@@ -5,7 +5,6 @@ import { FAR_BIND, FAR_BONES, JOINTS } from '../src/skeleton/stand.js';
 import { farContours } from '../src/geometry/far-limbs.js';
 import { CONTOUR, sampleContour } from '../src/geometry/contour.js';
 import { contourAt } from '../src/geometry/animated-contour.js';
-import { torsoDelta } from '../src/animation/body.js';
 import { SEGMENTS } from '../src/skeleton/limbs.js';
 const far=n=>'far'+n[0].toUpperCase()+n.slice(1);
 
@@ -54,14 +53,12 @@ test('far-side legs obey fixed bone lengths and all four feet reach their cycle 
   }
 });
 
-test('far hips/shoulders attach to the same torso deformation field',()=>{
+test('far hips/shoulders ride with the near pivots of the posed trunk',()=>{
   for(const [mode,gait] of Object.entries(GAITS)){
     const p=poseAt(mode,.21*gait.period);
-    for(const name of ['farHip','farScapula']) {
-      const at=point(FAR_BIND[name]);
-      const d=torsoDelta(at.x,at.y,p.body);
-      near(p.joints[name].x,at.x+d.x);
-      near(p.joints[name].y,at.y+d.y);
+    for(const [farName,nearName] of [['farHip','hip'],['farScapula','scapula']]) {
+      near(p.joints[farName].x-p.joints[nearName].x,FAR_BIND[farName][0]-JOINTS[nearName][0]);
+      near(p.joints[farName].y-p.joints[nearName].y,FAR_BIND[farName][1]-JOINTS[nearName][1]);
     }
   }
 });

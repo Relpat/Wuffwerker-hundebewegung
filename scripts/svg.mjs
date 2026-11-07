@@ -3,15 +3,17 @@ import { contourAt } from '../src/geometry/animated-contour.js';
 import { farContours } from '../src/geometry/far-limbs.js';
 import { BONES, FAR_BONES } from '../src/skeleton/stand.js';
 import { projector, projectCommands, DEFAULT_VIEW } from '../src/render/camera.js';
+import { coatPx, COAT_CM } from '../src/render/coat.js';
+import { ribsAt } from '../src/skeleton/ribs.js';
 
 const r = v => +v.toFixed(1);
 export const pathData = cmds => cmds.map(([op, ...p]) => op + p.map(r).join(' ')).join('');
 
-export function poseSvg(pose, { skeleton = true, skin = true, title = '', view = [60, 120, 840, 380], camera = DEFAULT_VIEW } = {}) {
+export function poseSvg(pose, { skeleton = true, skin = true, title = '', view = [60, 120, 840, 380], camera = DEFAULT_VIEW, coat = COAT_CM } = {}) {
   const depth = camera?.depth || 0;
   const project = projector(camera || {});
   // Far legs at full depth, the spine/head/tail on the midline, near legs in front.
-  const zOf = name => name.startsWith('far') ? depth : /^(tail|pelvis|spine|withers|neck|occiput|jaw)/.test(name) ? depth / 2 : 0;
+  const zOf = name => name.startsWith('far') ? depth : /^(tail|pelvis|spine|withers|neck|occiput|jaw|thorax|lumbar|nose|chin|ilium|ischium|manubrium|sternum|xiphoid)/.test(name) ? depth / 2 : 0;
   const J = Object.fromEntries(Object.entries(pose.joints).map(([n, p]) => [n, project(p.x, p.y, zOf(n))]));
   const [vx, vy, vw, vh] = view;
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${view.join(' ')}">`;
@@ -24,15 +26,30 @@ export function poseSvg(pose, { skeleton = true, skin = true, title = '', view =
     s += `<line x1="${r(a.x)}" x2="${r(b.x)}" y1="${r(a.y)}" y2="${r(b.y)}" stroke="#c3b7a6" stroke-width="2"/>`; }
   if (skin) {
     const far = farContours(pose);
-    for (const c of [far.hind, far.front]) s += `<path d="${pathData(projectCommands(c, project, depth))}" fill="#956b50" opacity="${skeleton ? .35 : 1}"/>`;
-    s += `<path d="${pathData(projectCommands(contourAt(pose), project, 0))}" fill="#a87554" opacity="${skeleton ? .35 : 1}"/>`;
+    const c = coatPx(coat);
+    // Coat: the outline stroked with twice the coat thickness, clipped at the
+    // layer's own ground line so the pads stay on the floor.
+    const groundAt = z => { const a = project(vx, 483, z), b = project(vx + vw, 483, z); return Math.min(a.y, b.y); };
+    const id = 'c' + Math.random().toString(36).slice(2, 8);
+    s += `<defs><clipPath id="${id}f"><rect x="${vx}" y="${vy}" width="${vw}" height="${r(groundAt(depth) - vy)}"/></clipPath><clipPath id="${id}n"><rect x="${vx}" y="${vy}" width="${vw}" height="${r(groundAt(0) - vy)}"/></clipPath></defs>`;
+    const shape = (d, color, clip) => `<path d="${d}" fill="${color}"${c > 0 ? ` stroke="${color}" stroke-width="${r(2 * c)}" stroke-linejoin="round"` : ''} clip-path="url(#${clip})"/>`;
+    const op = skeleton ? .35 : 1;
+    s += `<g opacity="${op}">`;
+    for (const k of [far.hind, far.front]) s += shape(pathData(projectCommands(k, project, depth)), '#956b50', id + 'f');
+    s += shape(pathData(projectCommands(contourAt(pose), project, 0)), '#a87554', id + 'n');
+    s += '</g>';
   }
   if (skeleton) {
     const line = (list, color, w) => list.map(([a, b]) => {
       const p = J[a], q = J[b];
       return `<line x1="${r(p.x)}" y1="${r(p.y)}" x2="${r(q.x)}" y2="${r(q.y)}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
     }).join('');
-    s += line(FAR_BONES, '#7d93a6', 6) + line(BONES, '#26334a', 7);
+    s += line(FAR_BONES, '#7d93a6', 6);
+    for (const [p0, c, p1] of ribsAt(pose.joints)) {
+      const [q0, qc, q1] = [p0, c, p1].map(p => project(p.x, p.y, depth / 2));
+      s += `<path d="M${r(q0.x)} ${r(q0.y)}Q${r(qc.x)} ${r(qc.y)} ${r(q1.x)} ${r(q1.y)}" fill="none" stroke="#26334a" stroke-width="3" stroke-linecap="round" opacity=".45"/>`;
+    }
+    s += line(BONES, '#26334a', 7);
     for (const [name, p] of Object.entries(J)) {
       const isFar = name.startsWith('far');
       s += `<circle cx="${r(p.x)}" cy="${r(p.y)}" r="${isFar ? 3.5 : 4.5}" fill="${isFar ? '#dfe7ee' : '#e1ec93'}" stroke="#26334a" stroke-width="1"/>`;
