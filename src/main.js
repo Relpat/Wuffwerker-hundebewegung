@@ -9,6 +9,8 @@ const stage=document.querySelector('#stage');
 const status=document.querySelector('#renderer-status');
 const toggle=document.querySelector('#skeleton-toggle');
 const farToggle=document.querySelector('#far-toggle');
+const coatInput=document.querySelector('#coat');
+const coatOutput=document.querySelector('#coat-output');
 const bodyToggle=document.querySelector('#body-toggle');
 const headToggle=document.querySelector('#head-toggle');
 const tailToggle=document.querySelector('#tail-toggle');
@@ -59,6 +61,7 @@ async function start() {
   }));
   pauseButton.addEventListener('click',()=>{paused=!paused;syncControls();});
   speed.addEventListener('input',syncControls);
+  coatInput.addEventListener('input',()=>{const cm=Number(coatInput.value);coatOutput.textContent=cm.toLocaleString('de-DE',{minimumFractionDigits:1})+' cm';scene.setCoat(cm);app.render();});
   farToggle.addEventListener('change',()=>{scene.farLegs.visible=farToggle.checked;draw();});
   toggle.addEventListener('change',()=>{scene.skeleton.visible=toggle.checked;draw();});
   bodyToggle.addEventListener('change',()=>{syncControls();draw();});

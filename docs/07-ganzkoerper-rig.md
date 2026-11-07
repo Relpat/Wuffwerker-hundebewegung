@@ -53,6 +53,18 @@ an den Knochen seines Bereichs (`SKIN_REGIONS` in `src/geometry/skin.js`).
 Der Sitzbeinhöcker hängt am Becken, damit er beim Schreiten nicht mit dem
 Oberschenkel nach hinten wandert.
 
+## Muskeln und Fell (07.11.2026, Patricks Wahl „Muskeln + 1,5 cm Fell“)
+
+- **Halswirbelsäule tiefer:** C7 sitzt unten am Brusteingang, die Halswirbel
+  laufen in der unteren Hälfte des Halses. Darüber liegen Nackenmuskeln und
+  Nackenband, der Nacken ist voller.
+- **Keule voller:** Rückseite des Oberschenkels (Sitzbeinmuskeln) und das Knie
+  vorn bekommen mehr Masse.
+- **Fell als eigene Schicht** (`src/render/coat.js`): 1,5 cm rundum, Regler
+  „Fell“ 0–3 cm in der Werkstatt, Option `coat` in `poseSvg`. Das Fell wird
+  gezeichnet, nicht gehäutet (Kontur mit doppelter Fellstärke umrandet), kann
+  also in keiner Pose falten. Unter dem Boden wird es abgeschnitten.
+
 ## Sitz
 
 Rumpf kippt 44° um die Schultern, Lende rundet sich, Vorderpfoten bleiben
@@ -65,7 +77,7 @@ Sprunggelenk bis zum Sitzbeinhöcker. Keine Überschneidungen von 0 bis 1.
 
 - Ein stark eingeklemmter Schwanz würde zwischen den Hinterbeinen
   verschwinden. Das kann eine einzelne Seitenkontur nicht zeigen, deshalb
-  bleibt die Rute an der Rückseite der Oberschenkel (`TUCK_LIMIT` −14°).
+  bleibt die Rute an der Rückseite der Oberschenkel (`TUCK_LIMIT` −10°).
 - Beim großen „Laufen“-Schritt der Vorschau überlappen Vorder- und Hinterpfote
   kurz. Das ist eine echte Überdeckung zweier Beine, keine Faltung; der
   Galopp aus A3 ersetzt diesen Gang.

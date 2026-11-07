@@ -5,6 +5,8 @@
  *
  * Chain from the root (mid thorax, T8):
  *   forwards:  thorax → withers (T2) → neckBase (C7) → neckMid (C4) → occiput (C1) → nose
+ *   (the cervical spine runs in the lower half of the neck: C7 sits low at the
+ *   thoracic inlet, the crest above it is muscle and the nuchal ligament)
  *   backwards: thorax → spine (T13) → lumbar (L4) → pelvis (lumbosacral) → tailRoot (sacrum end)
  *              → tail1 … tail5 → tailTip
  * Rigid attachments: scapula pivot, manubrium and sternum ride on the
@@ -17,7 +19,7 @@
 import { LIMB_BIND } from './limbs.js';
 
 export const TRUNK_BIND = Object.freeze({
-  thorax: [505, 256], withers: [550, 252], neckBase: [585, 250], neckMid: [611, 213],
+  thorax: [505, 256], withers: [550, 252], neckBase: [584, 266], neckMid: [606, 226],
   occiput: [640, 176], nose: [748, 203], jaw: [657, 201], chin: [726, 222],
   spine: [463, 257], lumbar: [425, 255], pelvis: [386, 249], tailRoot: [357, 243],
   tail1: [331, 248], tail2: [308, 259], tail3: [289, 276], tail4: [274, 297], tail5: [262, 319], tailTip: [252, 342],

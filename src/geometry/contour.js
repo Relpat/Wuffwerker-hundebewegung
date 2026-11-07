@@ -20,8 +20,8 @@ export const CONTOUR_PARTS = Object.freeze([
     ['C', 525, 207, 540, 204, 553, 203],   // withers
   ]],
   ['neck', [
-    ['C', 575, 199, 598, 186, 615, 170],   // crest of the neck
-    ['C', 625, 160, 633, 154, 643, 151],   // poll
+    ['C', 577, 196, 601, 182, 616, 166],   // crest of the neck
+    ['C', 626, 156, 634, 151, 643, 150],   // poll
   ]],
   ['head', [
     ['C', 656, 143, 683, 142, 698, 156],   // rounded skull
@@ -59,7 +59,7 @@ export const CONTOUR_PARTS = Object.freeze([
   ]],
   ['hind', [
     ['C', 418, 328, 413, 327, 410, 331],   // flank fold to the stifle
-    ['C', 393, 348, 387, 359, 378, 372],   // stifle (patella), front of the lower thigh
+    ['C', 396, 347, 391, 360, 381, 373],   // stifle (patella), front of the lower thigh
     ['C', 367, 388, 356, 402, 351, 414],   // lower thigh, slim front
     ['C', 348, 426, 354, 440, 356, 452],   // front of hock and metatarsus
     ['C', 358, 459, 364, 463, 370, 465],
@@ -70,11 +70,11 @@ export const CONTOUR_PARTS = Object.freeze([
     ['C', 334, 462, 329, 439, 328, 423],   // back of the metatarsus
     ['C', 327, 417, 325, 413, 325, 408],   // point of hock (calcaneus)
     ['C', 326, 399, 333, 391, 333, 379],   // Achilles tendon → gaskin
-    ['C', 333, 363, 331, 345, 325, 329],   // gaskin, back of the thigh
-    ['C', 318, 313, 315, 302, 315, 287],   // thigh (semitendinosus)
+    ['C', 331, 362, 324, 344, 317, 327],   // gaskin, back of the thigh
+    ['C', 310, 310, 308, 298, 311, 286],   // thigh (semitendinosus)
   ]],
   ['tailUnder', [
-    ['C', 317, 280, 320, 271, 326, 264],   // point of the buttock (follows the pelvis)
+    ['C', 314, 278, 319, 270, 326, 264],   // point of the buttock (follows the pelvis)
     ['C', 321, 262, 315, 265, 310, 268],   // tail meets the rump
     ['C', 298, 277, 287, 291, 279, 306],   // inner edge of the tail
     ['C', 271, 321, 263, 337, 256, 349],

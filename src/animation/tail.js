@@ -82,7 +82,7 @@ function projection(p){return {x:p.x+p.z*.10,y:p.y-p.z*.075};}
 /** Tail joint rotations for the whole-body rig: the v6.6 kernel's segment
  * directions (side projection, so lateral wag shows a little) relative to the
  * calm reference, as relative angles per joint (tailRoot … tail5). */
-const TUCK_LIMIT = -14 * Math.PI / 180;
+const TUCK_LIMIT = -10 * Math.PI / 180;
 export function tailAngles(tail) {
   if (!tail?.enabled) return [];
   const dirs = pts => pts.slice(1).map((p, i) => { const a = projection(pts[i]), b = projection(p); return Math.atan2(b.y - a.y, b.x - a.x); });

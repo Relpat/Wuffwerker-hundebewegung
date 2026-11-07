@@ -5,6 +5,7 @@ import { poseAt } from '../animation/gaits.js';
 import { BONES, FAR_BONES } from '../skeleton/stand.js';
 import { farContours } from '../geometry/far-limbs.js';
 import { projector, projectCommands, DEFAULT_VIEW } from './camera.js';
+import { coatPx, COAT_CM } from './coat.js';
 
 const project = projector(DEFAULT_VIEW);
 const MID = /^(tail|pelvis|spine|withers|neck|occiput|jaw|thorax|lumbar|nose|chin|ilium|ischium|manubrium|sternum)/;
@@ -20,23 +21,34 @@ export function createScene() {
   floor.moveTo(n0.x, n0.y).lineTo(n1.x, n1.y).stroke({ color: 0xc3b7a6, width: 1.4 });
   const farLegs = new Graphics();
   const silhouette = new Graphics();
+  // Coat stroke must not reach under the floor: clip each layer at its own ground line.
+  const clip = z => { const a = project(0, g0, z), b = project(ARTBOARD.width, g0, z);
+    return new Graphics().rect(0, -200, ARTBOARD.width, Math.min(a.y, b.y) + 200).fill({ color: 0xffffff }); };
+  const farClip = clip(d), nearClip = clip(0);
+  farLegs.mask = farClip; silhouette.mask = nearClip;
+  let coat = COAT_CM;
   const skeleton = new Graphics();
   skeleton.visible = false;
-  root.addChild(floor, farLegs, silhouette, skeleton);
+  root.addChild(floor, farClip, nearClip, farLegs, silhouette, skeleton);
+  // Body outline: dark edge outside the coat, coat stroke, then the fill.
+  const body = (g, cmds, color, edge) => {
+    const c = coatPx(coat);
+    if (c > 0) {
+      traceContour(g, cmds).stroke({ color: 0x293b50, width: 2 * c + edge, join: 'round' });
+      traceContour(g, cmds).stroke({ color, width: 2 * c, join: 'round' });
+      traceContour(g, cmds).fill({ color });
+    } else traceContour(g, cmds).fill({ color }).stroke({ color: 0x293b50, width: edge, join: 'round' });
+  };
   let current = poseAt('stand', 0);
   function setPose(pose) {
     current = pose;
     farLegs.clear();
     const far=farContours(pose);
     for(const commands of [far.hind,far.front]) {
-      traceContour(farLegs,projectCommands(commands,project,d))
-        .fill({color:0x956b50})
-        .stroke({color:0x293b50,width:2.1,join:'round'});
+      body(farLegs, projectCommands(commands, project, d), 0x956b50, 2.1);
     }
     silhouette.clear();
-    traceContour(silhouette, projectCommands(contourAt(pose), project, 0))
-      .fill({ color: 0xa87554 })
-      .stroke({ color: 0x293b50, width: 2.6, join: 'round' });
+    body(silhouette, projectCommands(contourAt(pose), project, 0), 0xa87554, 2.6);
     skeleton.clear();
     const J=Object.fromEntries(Object.entries(pose.joints).map(([n,p])=>[n,project(p.x,p.y,zOf(n))]));
     for (const [a,b] of FAR_BONES) {
@@ -56,6 +68,7 @@ export function createScene() {
   }
   setPose(current);
   return { root, farLegs, skeleton, silhouette, setPose,
+    setCoat(cm) { coat = cm; setPose(current); },
     fit(width,height) {
       const s=Math.min(width/ARTBOARD.width,height/ARTBOARD.height);
       root.scale.set(s);
