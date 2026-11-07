@@ -19,29 +19,36 @@ export const CONTOUR = Object.freeze([
   ['C', 798, 200, 786, 204, 772, 208],
   ['C', 758, 223, 744, 226, 727, 221], // lower jaw
   ['C', 699, 221, 681, 237, 671, 258], // throat
-  ['C', 660, 284, 656, 310, 640, 330], // forechest / prosternum, in front of the leg
-  ['C', 622, 342, 612, 372, 612, 410], // front edge of the foreleg (under the withers)
-  ['C', 612, 430, 611, 447, 612, 458],
-  ['C', 612, 466, 622, 470, 632, 471],
-  ['C', 642, 473, 643, 483, 632, 483], // forepaw
-  ['L', 582, 483],
-  ['C', 575, 483, 571, 479, 574, 471],
-  ['C', 578, 449, 573, 400, 573, 370], // back edge of the forearm up to the elbow
-  ['C', 570, 350, 530, 347, 495, 346], // elbow → chest → abdomen
+  // Forelimb (A2.3, shaped after the muscles over the A1 bones):
+  ['C', 664, 276, 652, 292, 648, 306], // forechest → point of shoulder
+  ['C', 642, 322, 618, 345, 609, 368], // front of the upper arm (biceps/brachiocephalicus)
+  ['C', 607, 382, 608, 398, 606, 412], // forearm front: extensor bulge
+  ['C', 604, 426, 601, 438, 602, 446], // tapers to the carpus (tendons only)
+  ['C', 603, 454, 607, 461, 612, 464], // front of the pastern
+  ['C', 622, 466, 636, 469, 640, 476], // toes
+  ['C', 643, 481, 640, 483, 632, 483], // toe tip
+  ['L', 586, 483],                     // main pad on the ground
+  ['C', 579, 483, 577, 479, 579, 474],
+  ['C', 581, 467, 579, 458, 574, 452], // back of the pastern
+  ['C', 571, 447, 573, 438, 573, 430], // carpal pad (accessory carpal bone)
+  ['C', 573, 410, 568, 388, 566, 372], // forearm back: flexors widen towards the elbow
+  ['C', 564, 352, 530, 347, 495, 346], // point of the elbow (olecranon) → triceps → brisket
   ['C', 474, 347, 441, 340, 406, 330], // tuck-up
-  ['C', 392, 335, 382, 343, 377, 354],
-  ['C', 366, 371, 372, 387, 359, 400], // stifle
-  ['C', 351, 413, 337, 421, 321, 431], // hock
-  ['C', 325, 446, 329, 457, 331, 465],
-  ['C', 338, 471, 350, 472, 360, 473],
-  ['C', 369, 477, 367, 483, 356, 483], // hind paw
-  ['L', 309, 483],
-  ['C', 293, 481, 290, 477, 293, 464],
-  ['L', 291, 428],
-  ['C', 290, 408, 288, 396, 280, 381],
-  ['C', 274, 365, 269, 349, 263, 328],
-  ['C', 258, 315, 251, 299, 248, 287], // haunch
-  ['C', 239, 275, 233, 269, 221, 270], // tail underside
+  // Hindlimb:
+  ['C', 392, 334, 368, 342, 352, 358], // flank fold to the stifle
+  ['C', 343, 366, 340, 374, 339, 384], // stifle (patella), most forward point
+  ['C', 337, 398, 324, 418, 316, 436], // front of the lower thigh (slim, tibia)
+  ['C', 313, 446, 322, 458, 330, 462], // front of the hock and metatarsus
+  ['C', 340, 466, 352, 469, 360, 473], // toes
+  ['C', 368, 477, 366, 483, 356, 483], // toe tip
+  ['L', 308, 483],                     // pads on the ground
+  ['C', 298, 483, 294, 479, 297, 471],
+  ['C', 299, 462, 292, 448, 288, 438], // back of the metatarsus → point of hock
+  ['C', 286, 431, 291, 424, 290, 414], // Achilles tendon (narrow)
+  ['C', 289, 402, 281, 392, 279, 378], // gaskin (gastrocnemius) bulge
+  ['C', 276, 358, 262, 338, 252, 318], // back of the thigh (semitendinosus)
+  ['C', 245, 302, 243, 293, 244, 284], // point of the buttock
+  ['C', 240, 276, 233, 269, 221, 270], // tail underside
   ['C', 193, 273, 164, 282, 135, 286],
   ['C', 122, 289, 119, 280, 128, 269],
   ['Z'],

@@ -42,3 +42,14 @@ Rückmeldung: Die Beine wirkten froschig. Ursache laut Messung der Gelenkwinkel:
 
 ## Kamera (Vorschlag, standardmäßig aus)
 Bisher gab es keine Kamera: reine Seitenansicht, die fernen Beine nur seitlich verschoben (vorgetäuschte Tiefe). `src/render/camera.js` ist eine einfache orthografische Kamera: Gelenke bekommen eine Tiefe (nahe Seite 0, Mittellinie halbe, ferne Seite ganze Körperbreite ≈ 65 px), `pitch` = Blick von oben, `yaw` = schräg von vorn. Mit Kamera nutzt man `TRUE_FAR_BIND` (ferne Beine ohne Verschiebung). `poseSvg(pose, { camera })` zeichnet Boden-Streifen und projiziert Kontur, ferne Beine und Skelett. Tests: `tests/camera.test.js`.
+
+## A2.3 Beinformen nach Muskulatur und erste Pose „Sitz“ (07.11.2026)
+
+**Beinformen.** Die Kontur der nahen Beine folgt jetzt den Muskeln über den A1-Knochen statt einer gleichmäßig dicken Röhre:
+
+- Vorderbein: Vorbrust → Bugspitze (Schultergelenk), Oberarm vorn (Bizeps/Brachiocephalicus), Unterarm oben breit (Strecker vorn, Beuger hinten) und zur Handwurzel schmal (nur Sehnen), Karpalballen hinten an der Handwurzel, Ellbogenhöcker (Olecranon) hinten, Trizeps in die Brust.
+- Hinterbein: Kniefalte → Kniescheibe als vorderster Punkt, schlanker Unterschenkel vorn, Sprunggelenkshöcker (Fersenbein) hinten, schmale Achillessehne, Wade (Gastrocnemius), breiter Oberschenkel hinten (Semitendinosus) bis zum Sitzbeinhöcker.
+- Die fernen Beine verjüngen sich ebenso (Mittelfuß 11 px statt 15/16 px).
+- Skinning: Knochen können einen Muskelradius haben (`['hip','stifle',28]`); die ganze Oberschenkelmuskulatur folgt damit dem Oberschenkelknochen. Das braucht der Sitz, die Gänge bleiben überschneidungsfrei.
+
+**Sitz** (`src/animation/poses.js`, `sitPose(amount)`, 0 = Stand, 1 = Sitz): Der Rumpf kippt um die Schultern (−6°), die Lende rundet sich (−52° um die Lendenwirbelsäule, das Becken kippt unter), die Front hebt sich um 20 px, die Rute legt sich auf den Boden. Hinterbein: Hüfte knapp über dem Boden, Knie nach vorn, Sprunggelenk am Boden, Mittelfuß flach. Der Pantograph (Oberschenkel ∥ Mittelfuß) gilt auch hier. Für die tiefe Faltung gibt es Korrektur-Formen (`correctives`): Wade und Vorderkante des Sprunggelenks legen sich unter den Oberschenkel, statt die Kontur zu überschlagen. Haut, die auf den Boden gedrückt wird, bleibt auf dem Boden. Tests: `tests/poses.test.js` (Knochenlängen, IK, Winkel, keine Überschneidung im ganzen Übergang). In der App: Knopf „Sitz“.

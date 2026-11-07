@@ -15,10 +15,10 @@ const P = k => ({ x: JOINTS[k][0], y: JOINTS[k][1] });
 
 /** Leg regions: contour command ranges, bones, and the trunk attachment line. */
 export const SKIN_REGIONS = Object.freeze([
-  Object.freeze({ name: 'front', commands: [15, 22], attachY: 345,
+  Object.freeze({ name: 'front', commands: [15, 26], attachY: 345,
     bones: [['shoulder', 'elbow'], ['elbow', 'carpus'], ['carpus', 'frontPaw'], ['frontPaw', 'frontToe']] }),
-  Object.freeze({ name: 'hind', commands: [23, 35], attachY: 305,
-    bones: [['hip', 'stifle'], ['stifle', 'hock'], ['hock', 'hindPaw'], ['hindPaw', 'hindToe']] }),
+  Object.freeze({ name: 'hind', commands: [27, 40], attachY: 305,
+    bones: [['hip', 'stifle', 28], ['stifle', 'hock'], ['hock', 'hindPaw'], ['hindPaw', 'hindToe']] }),
 ]);
 
 const EXP = 3, EPS = 3;
@@ -31,7 +31,9 @@ function segDist(p, a, b) {
 /** Bind weights per region point: [{cmd, coord, weights:[trunk, bone0, …]}]. */
 export function bindWeights(p, region) {
   const trunkDist = Math.max(0, p.y - region.attachY);
-  const ds = [trunkDist, ...region.bones.map(([a, b]) => segDist(p, P(a), P(b)))];
+  // A bone may carry a muscle radius (third entry): skin within it follows that
+  // bone, e.g. the whole thigh follows the femur (needed for sit and down).
+  const ds = [trunkDist, ...region.bones.map(([a, b, r = 0]) => Math.max(0, segDist(p, P(a), P(b)) - r))];
   const raw = ds.map(d => 1 / (d + EPS) ** EXP);
   const sum = raw.reduce((s, v) => s + v, 0);
   return raw.map(v => v / sum);

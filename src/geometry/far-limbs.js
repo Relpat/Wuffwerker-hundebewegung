@@ -30,7 +30,7 @@ const sole=(paw,toeJoint,bindAngle,dx,dy)=>{
 };
 function frontOutline(root,elbow,carpus,paw,toeJoint,FRONT_HEEL) {
   // Full-size foreleg: near-side lower limb ~38px across, paw ~67px wide.
-  const a=normal(root,elbow,23),b=normal(elbow,carpus,19),c=normal(carpus,paw,16);
+  const a=normal(root,elbow,23),b=normal(elbow,carpus,18),c=normal(carpus,paw,11);
   const toe=sole(paw,toeJoint,FRONT.toeAngle,30,15);
   const back=sole(paw,carpus,FRONT_HEEL,-38,15);
   return [
@@ -47,7 +47,7 @@ function frontOutline(root,elbow,carpus,paw,toeJoint,FRONT_HEEL) {
 }
 function hindOutline(hip,stifle,hock,paw,toeJoint,HIND_HEEL) {
   // Full-size hind leg: near-side paw about 73px wide in neutral stance.
-  const a=normal(hip,stifle,29),b=normal(stifle,hock,18),c=normal(hock,paw,15);
+  const a=normal(hip,stifle,30),b=normal(stifle,hock,17),c=normal(hock,paw,11);
   const k=blend(a,b,20);
   const toe=sole(paw,toeJoint,HIND.toeAngle,42,13);
   const heel=sole(paw,hock,HIND_HEEL,-31,13);

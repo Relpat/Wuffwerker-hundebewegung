@@ -32,7 +32,7 @@ test('skin reproduces the bind contour when leg bones do not move', () => {
   // Stand with a tail expression runs the full skinning path, but no leg bone moves.
   const stand = poseAt('stand', 0, { tailExpression: 'calm' });
   const c = contourAt(stand);
-  for (let i = 2; i <= 35; i++) assert.deepEqual(c[i].map(v => typeof v === 'number' ? +v.toFixed(6) : v), CONTOUR[i], `cmd ${i}`);
+  for (let i = 2; i <= 40; i++) assert.deepEqual(c[i].map(v => typeof v === 'number' ? +v.toFixed(6) : v), CONTOUR[i], `cmd ${i}`);
 });
 
 test('preview strides: skinned outline stays one finite closed path without crossings', () => {
