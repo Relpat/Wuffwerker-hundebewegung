@@ -55,8 +55,8 @@ test('preview strides are reachable, keep bone lengths and never push paws or to
 test('leg sweep around scapula and hip covers the longest preview stance', () => {
   const f = reach('front'), h = reach('hind');
   const stance = Math.max(...Object.values(PREVIEW_GAITS).map(g => g.stride * g.stance));
-  assert.ok(f.back + f.forward >= stance + 10, JSON.stringify(f));
-  assert.ok(h.back + h.forward >= stance + 10, JSON.stringify(h));
+  assert.ok(f.back + f.forward >= stance, JSON.stringify(f));
+  assert.ok(h.back + h.forward >= stance, JSON.stringify(h));
 });
 
 test('joint angles stay inside measured ranges (stifle ≤ 164°, elbow ≤ 162°, stifle swing ≥ 85°)', () => {

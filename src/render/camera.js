@@ -24,3 +24,7 @@ export const projectCommands = (cmds, project, z = 0) => cmds.map(([op, ...p]) =
   for (let k = 0; k < p.length; k += 2) { const q = project(p[k], p[k + 1], z); out.push(q.x, q.y); }
   return [op, ...out];
 });
+
+/** Standard view agreed with Patrick (07.11.2026): 12° from above, far side
+ * one body width (≈ 65 px) behind the near side. */
+export const DEFAULT_VIEW = Object.freeze({ pitch: 12 * Math.PI / 180, yaw: 0, depth: 65 });

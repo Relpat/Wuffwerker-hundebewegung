@@ -26,10 +26,15 @@ export const BONES = Object.freeze([
 ]);
 
 /** Far-side limbs: same bone lengths as the near side (no miniaturisation).
- * Roots share the near-side heights; only horizontal offsets differ so the
- * far feet stay readable in side view.
+ * Since the camera (src/render/camera.js) gives the far side real depth, the
+ * far legs need no horizontal fake offset any more (Patrick, 07.11.2026).
+ * LEGACY_FAR_OFFSET is the old pure side-view offset, kept for comparison.
  */
 export const FAR_OFFSET = Object.freeze({
+  front: Object.freeze({ root: 0, paw: 0 }),
+  hind: Object.freeze({ root: 0, paw: 0 }),
+});
+export const LEGACY_FAR_OFFSET = Object.freeze({
   front: Object.freeze({ root: -20, paw: -70 }),
   hind: Object.freeze({ root: 27, paw: 15 }),
 });
@@ -50,7 +55,8 @@ export function makeFarBind(offset = FAR_OFFSET) {
   });
 }
 export const FAR_BIND = makeFarBind(FAR_OFFSET);
-export const TRUE_FAR_BIND = makeFarBind({ front: { root: 0, paw: 0 }, hind: { root: 0, paw: 0 } });
+export const TRUE_FAR_BIND = FAR_BIND;
+export const LEGACY_FAR_BIND = makeFarBind(LEGACY_FAR_OFFSET);
 
 export const FAR_BONES = Object.freeze([
   ['pelvis', 'farHip'], ['farHip', 'farStifle'], ['farStifle', 'farHock'], ['farHock', 'farHindPaw'], ['farHindPaw', 'farHindToe'],

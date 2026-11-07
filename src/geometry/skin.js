@@ -15,13 +15,13 @@ const P = k => ({ x: JOINTS[k][0], y: JOINTS[k][1] });
 
 /** Leg regions: contour command ranges, bones, and the trunk attachment line. */
 export const SKIN_REGIONS = Object.freeze([
-  Object.freeze({ name: 'front', commands: [15, 21], attachY: 345,
+  Object.freeze({ name: 'front', commands: [15, 22], attachY: 345,
     bones: [['shoulder', 'elbow'], ['elbow', 'carpus'], ['carpus', 'frontPaw'], ['frontPaw', 'frontToe']] }),
   Object.freeze({ name: 'hind', commands: [23, 35], attachY: 305,
     bones: [['hip', 'stifle'], ['stifle', 'hock'], ['hock', 'hindPaw'], ['hindPaw', 'hindToe']] }),
 ]);
 
-const EXP = 4, EPS = 3;
+const EXP = 3, EPS = 3;
 function segDist(p, a, b) {
   const dx = b.x - a.x, dy = b.y - a.y, l2 = dx * dx + dy * dy;
   const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / l2));
@@ -37,12 +37,22 @@ export function bindWeights(p, region) {
   return raw.map(v => v / sum);
 }
 
+/** Anchor points get distance weights; Bézier handles inherit the weights of
+ * their own anchor (first handle → previous end point, second handle → this
+ * end point), so handles move rigidly with their anchors and curves cannot
+ * loop over themselves at strongly bent joints. */
 export const BINDINGS = Object.freeze(SKIN_REGIONS.map(region => {
   const points = new Map();
+  const at = i => { const c = CONTOUR[i]; return { x: c[c.length - 2], y: c[c.length - 1] }; };
   for (let i = region.commands[0]; i <= region.commands[1]; i++) {
-    const [, ...c] = CONTOUR[i];
-    for (let k = 0; k < c.length; k += 2) {
-      points.set(`${i}:${k}`, bindWeights({ x: c[k], y: c[k + 1] }, region));
+    const [op, ...c] = CONTOUR[i];
+    const end = bindWeights(at(i), region);
+    if (op === 'C') {
+      points.set(`${i}:0`, bindWeights(at(i - 1), region));
+      points.set(`${i}:2`, end);
+      points.set(`${i}:4`, end);
+    } else {
+      points.set(`${i}:0`, end);
     }
   }
   return { region, points };

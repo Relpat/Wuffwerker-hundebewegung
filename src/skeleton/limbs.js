@@ -65,12 +65,15 @@ export function solvePantograph(def, root, target, bend = def.bend) {
 /** Bind landmarks (neutral stand) of one side. Units: artboard pixels. */
 export const LIMB_BIND = Object.freeze({
   front: Object.freeze({
-    scapula: [583, 240],  // dorsal scapula = functional pivot of the forelimb
-    shoulder: [640, 298], // shoulder joint (point of shoulder)
-    elbow: [620, 352],    // at brisket level
-    carpus: [626, 446],
-    frontPaw: [634, 468], // metacarpophalangeal joint, pad centre
-    frontToe: [665, 476],
+    // Conformation: scapula ≈ upper arm in length (≈ 27 % each, Fischer & Lilje),
+    // scapula ≈ 55° to the ground, shoulder angle ≈ 110°, elbow under the
+    // withers at brisket level, forearm vertical, pastern ≈ 20° off vertical.
+    scapula: [585, 232],  // dorsal scapula = functional pivot of the forelimb
+    shoulder: [631, 297.5], // shoulder joint (point of shoulder)
+    elbow: [585, 362],
+    carpus: [590, 446],
+    frontPaw: [598, 468], // metacarpophalangeal joint, pad centre
+    frontToe: [629, 476],
   }),
   hind: Object.freeze({
     // Stifle ≈ 140°, hock ≈ 135° included angle in stance (standing flexion of

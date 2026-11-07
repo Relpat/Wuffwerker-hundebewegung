@@ -2,12 +2,12 @@
 import { contourAt } from '../src/geometry/animated-contour.js';
 import { farContours } from '../src/geometry/far-limbs.js';
 import { BONES, FAR_BONES } from '../src/skeleton/stand.js';
-import { projector, projectCommands } from '../src/render/camera.js';
+import { projector, projectCommands, DEFAULT_VIEW } from '../src/render/camera.js';
 
 const r = v => +v.toFixed(1);
 export const pathData = cmds => cmds.map(([op, ...p]) => op + p.map(r).join(' ')).join('');
 
-export function poseSvg(pose, { skeleton = true, skin = true, title = '', view = [60, 120, 840, 380], camera = null } = {}) {
+export function poseSvg(pose, { skeleton = true, skin = true, title = '', view = [60, 120, 840, 380], camera = DEFAULT_VIEW } = {}) {
   const depth = camera?.depth || 0;
   const project = projector(camera || {});
   // Far legs at full depth, the spine/head/tail on the midline, near legs in front.
