@@ -31,3 +31,11 @@ Die Analyse vom 07.11.2026 (Projektordner `hundebewegung/rig-plan/analyse.md`) z
 ## Quellen
 - Fischer, M. S. & Lilje, K. E. (2011): Hunde in Bewegung. Kosmos. Kurzfassung: https://phys.org/news/2011-05-dogs-motion.html
 - Maes, L. D. et al. (2008): Steady locomotion in dogs. J. Exp. Biol. 211, 138–149.
+
+## A2.1 – „froschig“ behoben (07.11.2026)
+Rückmeldung: Die Beine wirkten froschig. Ursache laut Messung der Gelenkwinkel: Das Knie (Stifle) stand schon in der Grundpose bei ≈ 85° Innenwinkel (≈ 95° Beugung). Echte Hunde stehen mit nur etwa 30–45° Beugung und beugen im Trab zwischen ≈ 16° und 89° (Ganganalyse an Schäferhund und Labrador, Brunel University, `bura.brunel.ac.uk/bitstream/2438/21753`).
+- Hinterbein-Bind neu: Knie ≈ 140°, Sprunggelenk ≈ 135°, Oberschenkel und Mittelfuß nahezu parallel (Pantograph).
+- Handwurzel bleibt in der Stützphase gestreckt (Mittelhand dreht mit dem Unterarm).
+- Hinterbein hebt in der Schwungphase weniger an, die Zehen krümmen sich weniger.
+- Vorschau-Schrittlängen neu bestimmt: größte Werte, bei denen Ellbogen ≤ 162° und Knie ≤ 164° bleiben (Gehen 150, Trab 240, Pass 210, Laufen 390 px).
+- Test: Gelenkwinkel bleiben in diesen Bereichen, Stand-Winkel von Knie und Sprunggelenk anatomisch.

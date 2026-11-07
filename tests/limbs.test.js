@@ -52,12 +52,29 @@ test('preview strides are reachable, keep bone lengths and never push paws or to
   }
 });
 
-test('forelimb reach around the scapula is large enough for the preview stance lengths', () => {
+test('leg sweep around scapula and hip covers the longest preview stance', () => {
   const f = reach('front'), h = reach('hind');
-  const pivotOffset = F.frontPaw[0] - F.scapula[0];
-  const half = Math.max(...Object.values(PREVIEW_GAITS).map(g => g.stride * g.stance / 2));
-  assert.ok(f.back - pivotOffset + 8 >= half && f.forward + pivotOffset - 8 >= half, JSON.stringify(f));
-  assert.ok(h.back >= half && h.forward >= half);
+  const stance = Math.max(...Object.values(PREVIEW_GAITS).map(g => g.stride * g.stance));
+  assert.ok(f.back + f.forward >= stance + 10, JSON.stringify(f));
+  assert.ok(h.back + h.forward >= stance + 10, JSON.stringify(h));
+});
+
+test('joint angles stay inside measured ranges (stifle ≤ 164°, elbow ≤ 162°, stifle swing ≥ 85°)', () => {
+  const inc = (a, b, c) => {
+    const u = { x: a.x - b.x, y: a.y - b.y }, v = { x: c.x - b.x, y: c.y - b.y };
+    return Math.acos((u.x * v.x + u.y * v.y) / Math.hypot(u.x, u.y) / Math.hypot(v.x, v.y)) * 180 / Math.PI;
+  };
+  for (const [mode, override] of Object.entries(PREVIEW_GAITS)) for (let i = 0; i < 80; i++) {
+    const j = poseAt(mode, GAITS[mode].period * i / 80, { gait: override }).joints;
+    const stifle = inc(j.hip, j.stifle, j.hock), elbow = inc(j.shoulder, j.elbow, j.carpus);
+    assert.ok(stifle <= 164.5 && stifle >= 85, `${mode} ${i} stifle ${stifle.toFixed(1)}`);
+    assert.ok(elbow <= 162.5, `${mode} ${i} elbow ${elbow.toFixed(1)}`);
+  }
+  // Standing: stifle flexion ~30–45° (included ~135–150°), hock ~125–150°.
+  const s = poseAt('stand').joints;
+  const st = inc(s.hip, s.stifle, s.hock), ho = inc(s.stifle, s.hock, s.hindPaw);
+  assert.ok(st >= 130 && st <= 152, `stand stifle ${st}`);
+  assert.ok(ho >= 125 && ho <= 152, `stand hock ${ho}`);
 });
 
 test('carpus folds and the paw lifts during front swing', () => {

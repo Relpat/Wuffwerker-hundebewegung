@@ -76,15 +76,18 @@ function placeLimbs(joints, gait, paths) {
   // around a point at that horizontal offset from its own pivot (scapula/hip).
   const flexFront = path => ({ carpalFlex: (gait.carpalFlex||0)*DEG*swingFlex(path.u), toeFlex: 10*DEG*swingFlex(path.u), lift: -path.y });
   const ground = path => ({ ...path, y: 0 });
-  const flexHind = path => ({ toeFlex: 25*DEG*swingFlex(path.u) });
+  // Hind swing: smaller lift and toe curl keep stifle/hock flexion in the
+  // measured range (stifle ≥ ~90° included angle in trot swing).
+  const flexHind = path => ({ toeFlex: 10*DEG*swingFlex(path.u) });
+  const hindPath = path => ({ ...path, y: path.y*.7 });
   const target = (paw, pivot, offset, path) => ({
     x: (gait.center ? pivot[0] + offset : paw[0]) + path.x, y: paw[1] + path.y });
   const c = gait.center || { front: 0, hind: 0 };
   const legs = [
     [false, 'front', solveFront(joints.scapula, target(JOINTS.frontPaw, JOINTS.scapula, c.front, ground(paths.frontNear)), flexFront(paths.frontNear))],
-    [false, 'hind', solveHind(joints.hip, target(JOINTS.hindPaw, JOINTS.hip, c.hind, paths.hindNear), flexHind(paths.hindNear))],
+    [false, 'hind', solveHind(joints.hip, target(JOINTS.hindPaw, JOINTS.hip, c.hind, hindPath(paths.hindNear)), flexHind(paths.hindNear))],
     [true, 'front', solveFront(joints.farScapula, target(FAR_BIND.farFrontPaw, FAR_BIND.farScapula, c.front, ground(paths.frontFar)), flexFront(paths.frontFar))],
-    [true, 'hind', solveHind(joints.farHip, target(FAR_BIND.farHindPaw, FAR_BIND.farHip, c.hind, paths.hindFar), flexHind(paths.hindFar))],
+    [true, 'hind', solveHind(joints.farHip, target(FAR_BIND.farHindPaw, FAR_BIND.farHip, c.hind, hindPath(paths.hindFar)), flexHind(paths.hindFar))],
   ];
   let error = 0;
   for (const [isFar, kind, solved] of legs) {

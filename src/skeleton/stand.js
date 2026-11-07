@@ -31,7 +31,7 @@ export const BONES = Object.freeze([
  */
 export const FAR_OFFSET = Object.freeze({
   front: Object.freeze({ root: -20, paw: -70 }),
-  hind: Object.freeze({ root: 27, paw: 40 }),
+  hind: Object.freeze({ root: 27, paw: 15 }),
 });
 
 const F = LIMB_BIND.front, H = LIMB_BIND.hind;

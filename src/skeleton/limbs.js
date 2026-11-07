@@ -73,9 +73,11 @@ export const LIMB_BIND = Object.freeze({
     frontToe: [665, 476],
   }),
   hind: Object.freeze({
+    // Stifle ≈ 140°, hock ≈ 135° included angle in stance (standing flexion of
+    // ~30–45° at the stifle in GSD/Labrador, Brunel gait study); femur ∥ metatarsus.
     hip: [283, 317],
-    stifle: [354, 369],
-    hock: [303, 428],
+    stifle: [315, 377],
+    hock: [301, 443.5],
     hindPaw: [318, 470],  // metatarsophalangeal joint, pad centre
     hindToe: [349, 477],
   }),
@@ -86,6 +88,7 @@ export const FRONT = Object.freeze({
   ...pantograph(P(F.scapula), P(F.shoulder), P(F.elbow), P(F.carpus)),
   meta: len(sub(P(F.frontPaw), P(F.carpus))),
   metaAngle: angle(sub(P(F.frontPaw), P(F.carpus))),
+  carpusOffset: angle(sub(P(F.frontPaw), P(F.carpus))) - angle(sub(P(F.carpus), P(F.elbow))),
   toe: len(sub(P(F.frontToe), P(F.frontPaw))),
   toeAngle: angle(sub(P(F.frontToe), P(F.frontPaw))),
 });
@@ -107,13 +110,19 @@ function toeDrop(limb, flex) {
  * as in a real dog, so the elbow is not pulled up into the chest. The fold
  * never lets the toes sink below their stance level minus half the lift. */
 export function solveFront(root, paw, { carpalFlex = 0, toeFlex = 0, lift = 0 } = {}) {
-  const ma = FRONT.metaAngle, ta = FRONT.toeAngle;
-  const x = paw.x - FRONT.meta * Math.cos(ma);
-  let y = paw.y - FRONT.meta * Math.sin(ma) - lift / 2;
-  const toeTip = y + FRONT.meta * Math.sin(ma + carpalFlex) + FRONT.toe * Math.sin(ta + carpalFlex + toeFlex);
-  y -= Math.max(0, toeTip - (paw.y + FRONT.toe * Math.sin(ta) - lift / 2));
-  const carpusTarget = { x, y };
-  const s = solvePantograph(FRONT, root, carpusTarget);
+  const ta = FRONT.toeAngle;
+  // In stance the carpus keeps its bind angle: the metacarpus turns with the
+  // forearm while the pad stays on the ground (a few fixed-point iterations).
+  let ma = FRONT.metaAngle, s, carpusTarget;
+  for (let it = 0; it < 4; it++) {
+    const x = paw.x - FRONT.meta * Math.cos(ma);
+    let y = paw.y - FRONT.meta * Math.sin(ma) - lift / 2;
+    const toeTip = y + FRONT.meta * Math.sin(ma + carpalFlex) + FRONT.toe * Math.sin(ta + carpalFlex + toeFlex);
+    y -= Math.max(0, toeTip - (paw.y + FRONT.toe * Math.sin(ta) - lift / 2));
+    carpusTarget = { x, y };
+    s = solvePantograph(FRONT, root, carpusTarget);
+    ma = angle(sub(s.j3, s.j2)) + FRONT.carpusOffset;
+  }
   const frontPaw = add(s.j3, scale(dir(ma + carpalFlex), FRONT.meta));
   const frontToe = add(frontPaw, scale(dir(ta + carpalFlex + toeFlex), FRONT.toe));
   return { scapula: root, shoulder: s.j1, elbow: s.j2, carpus: s.j3, frontPaw, frontToe,
