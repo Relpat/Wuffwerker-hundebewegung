@@ -79,24 +79,19 @@ function sample(tail,t) {
 }
 function projection(p){return {x:p.x+p.z*.10,y:p.y-p.z*.075};}
 
-/** Displacement of an existing outline point, zero at the tail root.
- * The v6.6 side projection is reused so lateral wag has subtle 2D travel.
- * Normalized longitudinal distance is based on the undeformed neutral path.
- */
-export function tailDelta(x,tail) {
-  if(!tail?.enabled) return {x:0,y:0};
-  const t=clamp((248-x)/120,0,1);
-  if(t===0) return {x:0,y:0};
-  const now=projection(sample(tail.current,t)),rest=projection(sample(tail.reference,t));
-  // Avoid a hard transverse cusp where tail merges into rump.
-  const attachment=t*t*(3-2*t);
-  // Side-view projection guard: extreme fearful pitch can put the tip under
-  // the root in 3D. Constrain only its foreshortening to avoid folding the
-  // 2D silhouette back across itself; keep the downward carriage visible.
-  const rawX=(now.x-rest.x)*attachment;
-  const maxX=48*t;
-  const visibleX=maxX>1e-9?maxX*Math.tanh(rawX/maxX):0;
-  return {x:visibleX,y:(now.y-rest.y)*attachment};
+/** Tail joint rotations for the whole-body rig: the v6.6 kernel's segment
+ * directions (side projection, so lateral wag shows a little) relative to the
+ * calm reference, as relative angles per joint (tailRoot … tail5). */
+const TUCK_LIMIT = -14 * Math.PI / 180;
+export function tailAngles(tail) {
+  if (!tail?.enabled) return [];
+  const dirs = pts => pts.slice(1).map((p, i) => { const a = projection(pts[i]), b = projection(p); return Math.atan2(b.y - a.y, b.x - a.x); });
+  const now = dirs(tail.current.points), ref = dirs(tail.reference.points);
+  // A tucked tail would pass between the hind legs; the single side outline
+  // cannot show that, so it stays pressed against the back of the thighs.
+  const abs = now.map((d, i) => Math.max(TUCK_LIMIT, Math.atan2(Math.sin(d - ref[i]), Math.cos(d - ref[i]))));
+  abs.push(abs.at(-1));
+  return abs.map((a, i) => i ? a - abs[i - 1] : a);
 }
 
 export function tailAt(mode,time,{enabled=true,expression='auto'}={}) {

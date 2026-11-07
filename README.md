@@ -76,3 +76,7 @@ Die fernliegenden Vorder- und Hinterbeine haben jetzt **an die nahen Beine angeg
 ## Stufe A1 – Beinskelett nach Fischer & Lilje
 
 Schulterblatt als Drehpunkt des Vorderbeins, dreigliedrige Beine als Pantograph, einklappende Handwurzel und Zehen. Schalter **Große Schritte** zeigt die neuen Schrittlängen (Haut folgt erst mit A2, daher Skelett-Ansicht). Reine SVG-Abnahmebilder: `node scripts/abnahme-a1.mjs`. Details: [docs/06-beinskelett-a1.md](docs/06-beinskelett-a1.md).
+
+## Stufe B1 – Ganzkörper-Rig nach Maßtabelle
+
+Lenny (Lagotto, 45 cm Widerristhöhe = 278 px) bekommt ein Skelett für den ganzen Körper: Wirbelsäule, Hals, Schädel mit Kiefer, Becken, Brustbein und sechs Rutenglieder als eine Vorwärtskinematik, die Beine als Pantograph daran. Alle Knochenlängen stehen in cm in `src/skeleton/measures.js`, geprüft gegen den FCI-Standard 298 und die Beagle-Studie von Fischer et al. Die ganze Kontur wird gewichtet gehäutet; Gänge und Sitz laufen auf dem neuen Rig ohne Überschneidungen. Details: [docs/07-ganzkoerper-rig.md](docs/07-ganzkoerper-rig.md).

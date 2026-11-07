@@ -4,9 +4,10 @@
  */
 import { JOINTS, FAR_BIND as DEFAULT_FAR_BIND } from '../skeleton/stand.js';
 import { solveFront, solveHind } from '../skeleton/limbs.js';
-import { torsoAt, torsoDelta } from './body.js';
-import { headAt, headDelta } from './head.js';
-import { tailAt, tailDelta } from './tail.js';
+import { torsoAt, trunkPose } from './body.js';
+import { headAt } from './head.js';
+import { tailAt } from './tail.js';
+import { posedTrunk } from './assemble.js';
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const smooth = x => { const t = clamp(x, 0, 1); return t*t*(3 - 2*t); };
@@ -97,30 +98,22 @@ function placeLimbs(joints, gait, paths, FAR_BIND) {
   return error;
 }
 
-/** Four driven limbs on the A1 pantograph skeleton. Paw (MCP/MTP) points are the
- * IK targets; the scapula and hip pivots follow the torso deformation field.
+/** Four driven limbs on the A1 pantograph skeleton, hanging from the
+ * whole-body rig: the trunk (spine, neck, head, pelvis, tail) is posed by
+ * forward kinematics, the scapula and hip pivots ride on it.
  */
 export function poseAt(mode = 'stand', time = 0, { bodyMotion = true, headMotion = true, tailMotion = true, tailExpression = 'auto', gait: override = null, farBind: FAR_BIND = DEFAULT_FAR_BIND } = {}) {
   if (!GAITS[mode]) throw new Error(`Unknown gait: ${mode}`);
-  // `gait` overrides single gait values, e.g. the stride preview in preview.js.
+  // `gait` overrides single gait values (tuning, tests).
   const gait = override ? { ...GAITS[mode], ...override } : GAITS[mode];
-  const joints = Object.fromEntries(Object.entries({...JOINTS,...FAR_BIND}).map(([key,xy]) => [key,P(xy)]));
   const body = torsoAt(mode,time,gait.period,bodyMotion);
   const head = headAt(mode,time,gait.period,body,headMotion);
   const tail = tailAt(mode,time,{enabled:tailMotion,expression:tailExpression});
-  const limbJoints = new Set([...LIMB_NAMES.front, ...LIMB_NAMES.hind].flatMap(n => [n, far(n)]));
-  const roots = new Set(['scapula','hip','farScapula','farHip']);
-  for(const [name,p] of Object.entries(joints)) {
-    if(limbJoints.has(name) && !roots.has(name)) continue;
-    const d=torsoDelta(p.x,p.y,body);
-    // Limb pivots follow only the trunk; neck rotation must not drag the scapula.
-    const h=roots.has(name)?{x:0,y:0}:headDelta(p.x,p.y,head);
-    const t=(name==='tailTip'||name==='tailRoot')?tailDelta(p.x,tail):{x:0,y:0};
-    p.x+=d.x+h.x+t.x;p.y+=d.y+h.y+t.y;
-  }
+  const trunk = trunkPose(body, head, tail);
+  const joints = posedTrunk(trunk, FAR_BIND);
   const paths=Object.fromEntries(Object.entries(gait.offsets).map(([key,offset])=>[key,pawPath(time,gait,offset)]));
   const targetError = placeLimbs(joints, gait, paths, FAR_BIND);
   const support = {front:paths.frontNear.support,hind:paths.hindNear.support,
     frontFar:paths.frontFar.support,hindFar:paths.hindFar.support};
-  return {mode,time,joints,body,head,tail,support,targetError,farBind:FAR_BIND};
+  return {mode,time,joints,trunk,body,head,tail,support,targetError,farBind:FAR_BIND};
 }

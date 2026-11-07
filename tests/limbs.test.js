@@ -4,6 +4,7 @@ import { FRONT, HIND, LIMB_BIND, SEGMENTS, solveFront, solveHind, reach } from '
 import { GAITS, poseAt } from '../src/animation/gaits.js';
 import { PREVIEW_GAITS } from '../src/animation/preview.js';
 import { ARTBOARD } from '../src/geometry/contour.js';
+import { WITHERS_PX } from '../src/skeleton/measures.js';
 
 const P = xy => ({ x: xy[0], y: xy[1] });
 const ang = (a, b) => Math.atan2(b.y - a.y, b.x - a.x);
@@ -17,8 +18,16 @@ test('bind pose is reproduced exactly by the pantograph solvers', () => {
   for (const k of Object.keys(H)) assert.ok(Math.hypot(h[k].x - H[k][0], h[k].y - H[k][1]) < 1e-6, k);
 });
 
-test('Fischer & Lilje: shoulder joint sits clearly above the hip joint, scapula is the forelimb pivot', () => {
-  assert.ok(F.shoulder[1] < H.hip[1] - 10);
+test('Lenny 45 cm: joint heights follow the measures, scapula is the forelimb pivot', () => {
+  const height = y => (ARTBOARD.groundY - y) / WITHERS_PX;
+  // FCI 298: elbow (point) at ~56 % of the withers height; the joint itself sits a little lower.
+  assert.ok(height(F.elbow[1]) >= .45 && height(F.elbow[1]) <= .56, `elbow ${height(F.elbow[1])}`);
+  // shoulder and hip joint both at roughly two thirds to four fifths of the height
+  for (const [k, y] of [['shoulder', F.shoulder[1]], ['hip', H.hip[1]]]) assert.ok(height(y) >= .62 && height(y) <= .84, `${k} ${height(y)}`);
+  // hock at about a quarter of the withers height
+  assert.ok(height(H.hock[1]) >= .2 && height(H.hock[1]) <= .3, `hock ${height(H.hock[1])}`);
+  // the scapula ends under the withers skin
+  assert.ok(F.scapula[1] > ARTBOARD.groundY - WITHERS_PX);
   assert.ok(F.scapula[1] < F.shoulder[1]);
   const share = FRONT.La / (FRONT.La + FRONT.Lb + FRONT.Lc + FRONT.meta + FRONT.toe);
   assert.ok(share >= .24 && share <= .34, `scapula share ${share.toFixed(2)}`);

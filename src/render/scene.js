@@ -7,7 +7,7 @@ import { farContours } from '../geometry/far-limbs.js';
 import { projector, projectCommands, DEFAULT_VIEW } from './camera.js';
 
 const project = projector(DEFAULT_VIEW);
-const MID = /^(tail|pelvis|spine|withers|neck|occiput|jaw)/;
+const MID = /^(tail|pelvis|spine|withers|neck|occiput|jaw|thorax|lumbar|nose|chin|ilium|ischium|manubrium|sternum)/;
 const zOf = name => name.startsWith('far') ? DEFAULT_VIEW.depth : MID.test(name) ? DEFAULT_VIEW.depth / 2 : 0;
 
 export function createScene() {

@@ -11,7 +11,7 @@ export function poseSvg(pose, { skeleton = true, skin = true, title = '', view =
   const depth = camera?.depth || 0;
   const project = projector(camera || {});
   // Far legs at full depth, the spine/head/tail on the midline, near legs in front.
-  const zOf = name => name.startsWith('far') ? depth : /^(tail|pelvis|spine|withers|neck|occiput|jaw)/.test(name) ? depth / 2 : 0;
+  const zOf = name => name.startsWith('far') ? depth : /^(tail|pelvis|spine|withers|neck|occiput|jaw|thorax|lumbar|nose|chin|ilium|ischium|manubrium|sternum)/.test(name) ? depth / 2 : 0;
   const J = Object.fromEntries(Object.entries(pose.joints).map(([n, p]) => [n, project(p.x, p.y, zOf(n))]));
   const [vx, vy, vw, vh] = view;
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${view.join(' ')}">`;

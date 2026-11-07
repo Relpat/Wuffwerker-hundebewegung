@@ -13,6 +13,7 @@
  * offset φ. Bone lengths and the pantograph offset are derived ONCE from the
  * bind pose and never recomputed per frame.
  */
+import { px, STAND_DIRECTIONS } from "./measures.js";
 const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y });
 const add = (a, b) => ({ x: a.x + b.x, y: a.y + b.y });
 const scale = (a, s) => ({ x: a.x * s, y: a.y * s });
@@ -62,28 +63,27 @@ export function solvePantograph(def, root, target, bend = def.bend) {
   return { j1, j2, j3, error };
 }
 
-/** Bind landmarks (neutral stand) of one side. Units: artboard pixels. */
+/** Bind landmarks (neutral stand) of one side, built from Lenny's measures
+ * in cm (measures.js) and the standing segment directions. Each limb is laid
+ * out from the paw pad upwards, so the pads sit exactly on their heights and
+ * the pivot lands where the bones end. Units: artboard pixels. */
+function layLimb(pivotX, padY, names, measures) {
+  const dir = m => STAND_DIRECTIONS[m] * Math.PI / 180;
+  const body = measures.slice(0, -1);
+  let y = padY;
+  for (const m of body) y -= px(m) * Math.sin(dir(m));
+  let x = pivotX;
+  const out = { [names[0]]: [x, y] };
+  body.forEach((m, i) => { x += px(m) * Math.cos(dir(m)); y += px(m) * Math.sin(dir(m)); out[names[i + 1]] = [x, y]; });
+  const t = measures.at(-1);
+  out[names.at(-1)] = [x + px(t) * Math.cos(dir(t)), y + px(t) * Math.sin(dir(t))];
+  return Object.freeze(Object.fromEntries(Object.entries(out).map(([k, v]) => [k, Object.freeze(v.map(c => +c.toFixed(2)))])));
+}
 export const LIMB_BIND = Object.freeze({
-  front: Object.freeze({
-    // Conformation: scapula ≈ upper arm in length (≈ 27 % each, Fischer & Lilje),
-    // scapula ≈ 55° to the ground, shoulder angle ≈ 110°, elbow under the
-    // withers at brisket level, forearm vertical, pastern ≈ 20° off vertical.
-    scapula: [585, 232],  // dorsal scapula = functional pivot of the forelimb
-    shoulder: [631, 297.5], // shoulder joint (point of shoulder)
-    elbow: [585, 362],
-    carpus: [590, 446],
-    frontPaw: [598, 468], // metacarpophalangeal joint, pad centre
-    frontToe: [629, 476],
-  }),
-  hind: Object.freeze({
-    // Stifle ≈ 140°, hock ≈ 135° included angle in stance (standing flexion of
-    // ~30–45° at the stifle in GSD/Labrador, Brunel gait study); femur ∥ metatarsus.
-    hip: [283, 317],
-    stifle: [315, 377],
-    hock: [301, 443.5],
-    hindPaw: [318, 470],  // metatarsophalangeal joint, pad centre
-    hindToe: [349, 477],
-  }),
+  front: layLimb(548, 471, ['scapula', 'shoulder', 'elbow', 'carpus', 'frontPaw', 'frontToe'],
+    ['scapula', 'humerus', 'forearm', 'metacarpus', 'frontToes']),
+  hind: layLimb(350, 470, ['hip', 'stifle', 'hock', 'hindPaw', 'hindToe'],
+    ['femur', 'tibia', 'metatarsus', 'hindToes']),
 });
 
 const F = LIMB_BIND.front, H = LIMB_BIND.hind;
@@ -117,7 +117,7 @@ export function solveFront(root, paw, { carpalFlex = 0, toeFlex = 0, lift = 0 } 
   // In stance the carpus keeps its bind angle: the metacarpus turns with the
   // forearm while the pad stays on the ground (a few fixed-point iterations).
   let ma = FRONT.metaAngle, s, carpusTarget;
-  for (let it = 0; it < 4; it++) {
+  for (let it = 0; it < 8; it++) {
     const x = paw.x - FRONT.meta * Math.cos(ma);
     let y = paw.y - FRONT.meta * Math.sin(ma) - lift / 2;
     const toeTip = y + FRONT.meta * Math.sin(ma + carpalFlex) + FRONT.toe * Math.sin(ta + carpalFlex + toeFlex);

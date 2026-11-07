@@ -5,6 +5,7 @@ import { poseAt } from '../src/animation/gaits.js';
 import { contourAt } from '../src/geometry/animated-contour.js';
 import { CONTOUR, ARTBOARD, sampleContour } from '../src/geometry/contour.js';
 import { SEGMENTS } from '../src/skeleton/limbs.js';
+import { JOINTS } from '../src/skeleton/stand.js';
 
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 const angle = (a, b, c) => {
@@ -24,7 +25,7 @@ test('sit: bones keep their length, all IK targets reached, paws on the floor', 
     const p = sitPose(i / 20), j = p.joints;
     assert.ok(p.targetError < .01, `amount ${i / 20}: IK ${p.targetError}`);
     for (const [a, b, l] of SEGMENTS) assert.ok(Math.abs(dist(j[a], j[b]) - l) < .01, `${a}/${b}`);
-    assert.ok(Math.abs(j.frontPaw.y - 468) < .01 && Math.abs(j.hindPaw.y - 470) < .01);
+    assert.ok(Math.abs(j.frontPaw.y - JOINTS.frontPaw[1]) < .01 && Math.abs(j.hindPaw.y - JOINTS.hindPaw[1]) < .01);
   }
 });
 
@@ -37,9 +38,9 @@ test('sit is anatomically a sit (Fischer & Lilje pantograph, folded hind leg)', 
   assert.ok(j.stifle.x > j.hip.x + 40, 'stifle points forward');
   assert.ok(angle(j.hip, j.stifle, j.hock) < 50, 'stifle fully flexed');
   assert.ok(angle(j.elbow, j.carpus, j.frontPaw) > 150 && angle(j.shoulder, j.elbow, j.carpus) > 120, 'forelegs straight');
-  // femur ∥ metatarsus (pantograph) within the bind offset
+  // femur ∥ metatarsus (pantograph) within the bind offset (12° in the stand)
   const fem = Math.atan2(j.stifle.y - j.hip.y, j.stifle.x - j.hip.x), met = Math.atan2(j.hindPaw.y - j.hock.y, j.hindPaw.x - j.hock.x);
-  assert.ok(Math.abs(fem - met) < 10 * Math.PI / 180);
+  assert.ok(Math.abs(fem - met) < 15 * Math.PI / 180);
 });
 
 test('sit transition keeps one closed contour without crossings, above the floor', () => {
