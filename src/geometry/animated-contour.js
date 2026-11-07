@@ -18,14 +18,15 @@ export function contourAt(pose) {
   const front = [
     [333, null],  // moving shoulder/forechest field at the limb attachment
     [390, delta(j.elbow, JOINTS.elbow)],
-    [459, delta(j.frontPaw, JOINTS.frontPaw)],
+    [446, delta(j.carpus, JOINTS.carpus)],
+    [468, delta(j.frontPaw, JOINTS.frontPaw)],
     [490, delta(j.frontPaw, JOINTS.frontPaw)],
   ];
   const hind = [
     [328, null],  // pelvis / haunch attachment
     [369, delta(j.stifle, JOINTS.stifle)],
     [428, delta(j.hock, JOINTS.hock)],
-    [465, delta(j.hindPaw, JOINTS.hindPaw)],
+    [470, delta(j.hindPaw, JOINTS.hindPaw)],
     [490, delta(j.hindPaw, JOINTS.hindPaw)],
   ];
   function deform(x,y,anchors) {

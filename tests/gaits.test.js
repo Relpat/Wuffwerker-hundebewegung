@@ -4,6 +4,7 @@ import {GAITS, poseAt, pawPath} from '../src/animation/gaits.js';
 import {CONTOUR, sampleContour} from '../src/geometry/contour.js';
 import {contourAt} from '../src/geometry/animated-contour.js';
 import {JOINTS} from '../src/skeleton/stand.js';
+import {SEGMENTS} from '../src/skeleton/limbs.js';
 const length=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 
 // A cheap sampled geometric check, independent of WebGL or browser animations.
@@ -25,14 +26,8 @@ test('near-leg IK lengths remain constant over the full gait cycles',()=>{
  for(const [mode,g] of Object.entries(GAITS)){
   for(let n=0;n<=32;n++){
    const p=poseAt(mode,n*g.period/32).joints;
-   const pts=[p.frontPaw,p.elbow,p.shoulder,p.hindPaw,p.hock,p.stifle,p.hip];
-   for(const pt of pts)assert.ok(Number.isFinite(pt.x)&&Number.isFinite(pt.y));
-   if(mode==='stand')continue;
-   assert.ok(Math.abs(length(p.shoulder,p.elbow)-80)<1e-5);
-   assert.ok(Math.abs(length(p.elbow,p.frontPaw)-94)<1e-5);
-   assert.ok(Math.abs(length(p.hip,p.stifle)-77)<1e-5);
-   assert.ok(Math.abs(length(p.stifle,p.hock)-70)<1e-5);
-   assert.ok(Math.abs(length(p.hock,p.hindPaw)-Math.hypot(17,48))<1e-5);
+   for(const pt of Object.values(p))assert.ok(Number.isFinite(pt.x)&&Number.isFinite(pt.y));
+   for(const [a,b,l] of SEGMENTS)assert.ok(Math.abs(length(p[a],p[b])-l)<1e-5,`${mode} ${a}/${b}`);
   }
  }
 });

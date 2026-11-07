@@ -5,6 +5,7 @@ import { GAITS, poseAt } from '../src/animation/gaits.js';
 import { CONTOUR, sampleContour } from '../src/geometry/contour.js';
 import { contourAt } from '../src/geometry/animated-contour.js';
 import { JOINTS } from '../src/skeleton/stand.js';
+import { SEGMENTS } from '../src/skeleton/limbs.js';
 import {headDelta} from '../src/animation/head.js';
 import {tailDelta} from '../src/animation/tail.js';
 
@@ -60,17 +61,14 @@ test('feet remain on their ground targets in stance while shoulder/hip move',()=
       assert.ok(pose.targetError<.01, `${mode} IK target error ${pose.targetError}`);
       if(pose.support.front)assert.ok(Math.abs(pose.joints.frontPaw.y-JOINTS.frontPaw[1])<.01);
       if(pose.support.hind)assert.ok(Math.abs(pose.joints.hindPaw.y-JOINTS.hindPaw[1])<.01);
-      assert.ok(Math.abs(dist(pose.joints.shoulder,pose.joints.elbow)-80)<.01);
-      assert.ok(Math.abs(dist(pose.joints.elbow,pose.joints.frontPaw)-94)<.01);
-      assert.ok(Math.abs(dist(pose.joints.hip,pose.joints.stifle)-77)<.01);
-      assert.ok(Math.abs(dist(pose.joints.stifle,pose.joints.hock)-70)<.01);
+      for(const [a,b,l] of SEGMENTS) assert.ok(Math.abs(dist(pose.joints[a],pose.joints[b])-l)<.01,`${mode} ${a}/${b}`);
     }
   }
 });
 
 test('turning body motion off restores static torso without removing leg cycles',()=>{
   const pose=poseAt('run',.17,{bodyMotion:false,headMotion:false,tailMotion:false});
-  for(const key of ['hip','shoulder','spine','pelvis','neckBase','occiput'])
+  for(const key of ['hip','scapula','spine','pelvis','neckBase','occiput'])
     assert.deepEqual(pose.joints[key],standJoint(key));
   assert.deepEqual(contourAt(pose).slice(0,15),CONTOUR.slice(0,15));
   assert.notDeepEqual(pose.joints.frontPaw,standJoint('frontPaw'));

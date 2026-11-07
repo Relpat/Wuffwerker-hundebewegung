@@ -1,8 +1,9 @@
-/** Gait timing and four-leg timing and two-bone IK adapted from the approved v7.5.1 study.
- * Four phase tracks now drive two near and two occluded far legs.
- * It is not yet production weighted skinning.
+/** Gait timing adapted from the v7.5.1 study; limbs use the stage A1
+ * pantograph skeleton (scapula pivot, three-segment legs, flexing paws).
+ * Gait amplitudes are recalibrated in stage A3. Not yet weighted skinning.
  */
 import { JOINTS, FAR_BIND } from '../skeleton/stand.js';
+import { solveFront, solveHind } from '../skeleton/limbs.js';
 import { torsoAt, torsoDelta } from './body.js';
 import { headAt, headDelta } from './head.js';
 import { tailAt, tailDelta } from './tail.js';
@@ -15,15 +16,15 @@ const smooth = x => { const t = clamp(x, 0, 1); return t*t*(3 - 2*t); };
  * Prior `front` and `hind` aliases are retained for existing callers/tests.
  */
 export const GAITS = Object.freeze({
-  stand: { label:'Stand',period:1,stride:0,stance:1,lift:0,hind:0,front:0,
+  stand: { label:'Stand',carpalFlex:0,period:1,stride:0,stance:1,lift:0,hind:0,front:0,
     offsets:{hindNear:0,frontNear:0,hindFar:0,frontFar:0},order:'Vierpunktstand' },
-  walk: { label:'Gehen',period:1.30,stride:58,stance:.72,lift:20,hind:0,front:.75,
+  walk: { label:'Gehen',carpalFlex:70,period:1.30,stride:58,stance:.72,lift:20,hind:0,front:.75,
     offsets:{hindNear:0,frontNear:.75,hindFar:.50,frontFar:.25},order:'HL → VL → HR → VR' },
-  trot: { label:'Trab',period:.80,stride:74,stance:.52,lift:25,hind:0,front:.50,
+  trot: { label:'Trab',carpalFlex:90,period:.80,stride:74,stance:.52,lift:25,hind:0,front:.50,
     offsets:{hindNear:0,frontNear:.50,hindFar:.50,frontFar:0},order:'HL + VR → HR + VL' },
-  run: { label:'Laufen',period:.76,stride:100,stance:.43,lift:15,hind:0,front:.515,
+  run: { label:'Laufen',carpalFlex:100,period:.76,stride:100,stance:.43,lift:15,hind:0,front:.515,
     offsets:{hindNear:0,frontNear:.515,hindFar:.035,frontFar:.55},order:'Hinterhand → Vorderhand' },
-  pace: { label:'Passgang',period:1.00,stride:62,stance:.57,lift:21,hind:0,front:0,
+  pace: { label:'Passgang',carpalFlex:75,period:1.00,stride:62,stance:.57,lift:21,hind:0,front:0,
     offsets:{hindNear:0,frontNear:0,hindFar:.50,frontFar:.50},order:'HL + VL → HR + VR' },
 });
 
@@ -46,77 +47,76 @@ export function solveLeg(root, target, upper, lower, bend) {
  * In the local stage, this appears as a backwards-moving foot; swing returns forward.
  */
 export function pawPath(time, gait, offset) {
-  if (!gait.stride) return { x: 0, y: 0, support: true };
+  if (!gait.stride) return { x: 0, y: 0, support: true, u: 0 };
   const phase = ((time/gait.period + offset) % 1 + 1) % 1;
   const reach = gait.stance*gait.stride / 2;
   if (phase < gait.stance) {
-    return { x: reach - phase*gait.stride, y: 0, support: true };
+    return { x: reach - phase*gait.stride, y: 0, support: true, u: 0 };
   }
   const u = (phase - gait.stance) / (1 - gait.stance);
-  return { x: -reach + 2*reach*smooth(u), y: -gait.lift*Math.sin(Math.PI*u), support: false };
+  return { x: -reach + 2*reach*smooth(u), y: -gait.lift*Math.sin(Math.PI*u), support: false, u };
 }
 
-/** Four driven limbs. Front paws are IK targets; rear hocks are IK targets
- * with a constant metatarsal offset to the paw, exactly as in the near-leg
- * prototype. Support flags reflect each independently phased foot trajectory.
+const DEG = Math.PI/180;
+/** Swing-phase flexion profile: carpus folds early in swing and opens before touchdown. */
+export function swingFlex(u) {
+  if (!(u > 0 && u < 1)) return 0;
+  return Math.sin(Math.PI*Math.pow(u, .75));
+}
+
+const LIMB_NAMES = {
+  front: ['scapula','shoulder','elbow','carpus','frontPaw','frontToe'],
+  hind: ['hip','stifle','hock','hindPaw','hindToe'],
+};
+const far = name => 'far'+name[0].toUpperCase()+name.slice(1);
+const P = xy => ({x:xy[0],y:xy[1]});
+
+function placeLimbs(joints, gait, paths) {
+  // Stance centre: by default the bind paw; with `gait.center` the paw sweeps
+  // around a point at that horizontal offset from its own pivot (scapula/hip).
+  const flexFront = path => ({ carpalFlex: (gait.carpalFlex||0)*DEG*swingFlex(path.u), toeFlex: 15*DEG*swingFlex(path.u) });
+  const flexHind = path => ({ toeFlex: 25*DEG*swingFlex(path.u) });
+  const target = (paw, pivot, offset, path) => ({
+    x: (gait.center ? pivot[0] + offset : paw[0]) + path.x, y: paw[1] + path.y });
+  const c = gait.center || { front: 0, hind: 0 };
+  const legs = [
+    [false, 'front', solveFront(joints.scapula, target(JOINTS.frontPaw, JOINTS.scapula, c.front, paths.frontNear), flexFront(paths.frontNear))],
+    [false, 'hind', solveHind(joints.hip, target(JOINTS.hindPaw, JOINTS.hip, c.hind, paths.hindNear), flexHind(paths.hindNear))],
+    [true, 'front', solveFront(joints.farScapula, target(FAR_BIND.farFrontPaw, FAR_BIND.farScapula, c.front, paths.frontFar), flexFront(paths.frontFar))],
+    [true, 'hind', solveHind(joints.farHip, target(FAR_BIND.farHindPaw, FAR_BIND.farHip, c.hind, paths.hindFar), flexHind(paths.hindFar))],
+  ];
+  let error = 0;
+  for (const [isFar, kind, solved] of legs) {
+    for (const name of LIMB_NAMES[kind]) joints[isFar ? far(name) : name] = solved[name];
+    error = Math.max(error, solved.error);
+  }
+  return error;
+}
+
+/** Four driven limbs on the A1 pantograph skeleton. Paw (MCP/MTP) points are the
+ * IK targets; the scapula and hip pivots follow the torso deformation field.
  */
-export function poseAt(mode = 'stand', time = 0, { bodyMotion = true, headMotion = true, tailMotion = true, tailExpression = 'auto' } = {}) {
-  const gait = GAITS[mode];
-  if (!gait) throw new Error(`Unknown gait: ${mode}`);
-  const joints = Object.fromEntries(Object.entries({...JOINTS,...FAR_BIND}).map(([key,xy]) => [key,{x:xy[0],y:xy[1]}]));
+export function poseAt(mode = 'stand', time = 0, { bodyMotion = true, headMotion = true, tailMotion = true, tailExpression = 'auto', gait: override = null } = {}) {
+  if (!GAITS[mode]) throw new Error(`Unknown gait: ${mode}`);
+  // `gait` overrides single gait values, e.g. the stride preview in preview.js.
+  const gait = override ? { ...GAITS[mode], ...override } : GAITS[mode];
+  const joints = Object.fromEntries(Object.entries({...JOINTS,...FAR_BIND}).map(([key,xy]) => [key,P(xy)]));
   const body = torsoAt(mode,time,gait.period,bodyMotion);
   const head = headAt(mode,time,gait.period,body,headMotion);
   const tail = tailAt(mode,time,{enabled:tailMotion,expression:tailExpression});
-  const support = {front:true,hind:true,frontFar:true,hindFar:true};
-  if(mode==='stand') {
-    if(tail.enabled) for(const key of ['tailTip','tailRoot']) {
-      const p=joints[key],d=tailDelta(p.x,tail);p.x+=d.x;p.y+=d.y;
-    }
-    // The near neutral bind pose is preserved byte-for-byte. Far limbs get
-    // solved from their static targets, so all four bone lengths are exact.
-    const frontFar=solveLeg(joints.farShoulder,joints.farFrontPaw,80,94,+1);
-    const hindFar=solveLeg(joints.farHip,joints.farHock,77,70,-1);
-    joints.farElbow=frontFar.knee;
-    joints.farFrontPaw=frontFar.foot;
-    joints.farCarpus={x:frontFar.knee.x+(frontFar.foot.x-frontFar.knee.x)*.79,
-                     y:frontFar.knee.y+(frontFar.foot.y-frontFar.knee.y)*.79};
-    joints.farStifle=hindFar.knee;
-    joints.farHock=hindFar.foot;
-    joints.farHindPaw={x:hindFar.foot.x+17,y:hindFar.foot.y+48};
-    return {mode,time,joints,body,head,tail,support,targetError:0};
-  }
-
-  const limbEnds = new Set(['elbow','carpus','frontPaw','stifle','hock','hindPaw',
-    'farElbow','farCarpus','farFrontPaw','farStifle','farHock','farHindPaw']);
+  const limbJoints = new Set([...LIMB_NAMES.front, ...LIMB_NAMES.hind].flatMap(n => [n, far(n)]));
+  const roots = new Set(['scapula','hip','farScapula','farHip']);
   for(const [name,p] of Object.entries(joints)) {
-    if(limbEnds.has(name))continue;
-    const d=torsoDelta(p.x,p.y,body), h=headDelta(p.x,p.y,head);
+    if(limbJoints.has(name) && !roots.has(name)) continue;
+    const d=torsoDelta(p.x,p.y,body);
+    // Limb pivots follow only the trunk; neck rotation must not drag the scapula.
+    const h=roots.has(name)?{x:0,y:0}:headDelta(p.x,p.y,head);
     const t=(name==='tailTip'||name==='tailRoot')?tailDelta(p.x,tail):{x:0,y:0};
     p.x+=d.x+h.x+t.x;p.y+=d.y+h.y+t.y;
   }
-
-  const footPaths=Object.fromEntries(Object.entries(gait.offsets).map(([key,offset])=>[
-    key,pawPath(time,gait,offset)
-  ]));
-  const target=(name,path)=>({x:name[0]+path.x,y:name[1]+path.y});
-  const front=solveLeg(joints.shoulder,target(JOINTS.frontPaw,footPaths.frontNear),80,94,+1);
-  const hind=solveLeg(joints.hip,target(JOINTS.hock,footPaths.hindNear),77,70,-1);
-  const frontFar=solveLeg(joints.farShoulder,target(FAR_BIND.farFrontPaw,footPaths.frontFar),80,94,+1);
-  const hindFar=solveLeg(joints.farHip,target(FAR_BIND.farHock,footPaths.hindFar),77,70,-1);
-  for(const [isFar,frontLeg,hindLeg] of [[false,front,hind],[true,frontFar,hindFar]]) {
-    const prefix=isFar?'far':'';
-    const elbow=prefix? 'farElbow':'elbow',carpus=prefix?'farCarpus':'carpus';
-    const frontPaw=prefix?'farFrontPaw':'frontPaw';
-    const stifle=prefix?'farStifle':'stifle',hock=prefix?'farHock':'hock';
-    const hindPaw=prefix?'farHindPaw':'hindPaw';
-    joints[elbow]=frontLeg.knee;joints[frontPaw]=frontLeg.foot;
-    joints[carpus]={x:frontLeg.knee.x+(frontLeg.foot.x-frontLeg.knee.x)*.79,
-                    y:frontLeg.knee.y+(frontLeg.foot.y-frontLeg.knee.y)*.79};
-    joints[stifle]=hindLeg.knee;joints[hock]=hindLeg.foot;
-    joints[hindPaw]={x:hindLeg.foot.x+17,y:hindLeg.foot.y+48};
-  }
-  support.front=footPaths.frontNear.support;support.hind=footPaths.hindNear.support;
-  support.frontFar=footPaths.frontFar.support;support.hindFar=footPaths.hindFar.support;
-  return {mode,time,joints,body,head,tail,support,
-    targetError:Math.max(front.error,hind.error,frontFar.error,hindFar.error)};
+  const paths=Object.fromEntries(Object.entries(gait.offsets).map(([key,offset])=>[key,pawPath(time,gait,offset)]));
+  const targetError = placeLimbs(joints, gait, paths);
+  const support = {front:paths.frontNear.support,hind:paths.hindNear.support,
+    frontFar:paths.frontFar.support,hindFar:paths.hindFar.support};
+  return {mode,time,joints,body,head,tail,support,targetError};
 }
